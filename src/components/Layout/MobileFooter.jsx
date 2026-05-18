@@ -1,0 +1,63 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ImgDog from "/src/assets/img/mascot.webp";
+import ImgBackground from "/src/assets/img/background.webp";
+import IconSport from "/src/assets/svg/sport.svg";
+import IconLiveBetting from "/src/assets/svg/live-betting.svg";
+import IconFooterCasino from "/src/assets/svg/footer-casino.svg";
+import IconLiveCasino from "/src/assets/svg/live-casino.svg";
+
+const MobileFooter = ({ isSlotsOnly }) => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="main-mobile-menu">
+            <a className="main-mobile-menu__ganamos-dog" onClick={() => navigate("/")}>
+                <img className="main-mobile-menu__ganamos-dog-img" src={ImgDog} alt="" />
+            </a>
+            <img className="main-mobile-menu__background" src={ImgBackground} alt="background" />
+            <nav className="main-mobile-menu__main">
+                {
+                    isSlotsOnly === "false" && <a className="main-mobile-menu__menu-item" onClick={() => navigate("/sports")}>
+                        <span className="SVGInline main-mobile-menu__menu-icon">
+                            <img className="SVGInline-svg main-mobile-menu__menu-icon-svg" src={IconSport} alt="sport" />
+                        </span>
+                        <span className="main-mobile-menu__menu-text">Deportes</span>
+                    </a>
+                }
+                {
+                    isSlotsOnly === "false" && <a className="main-mobile-menu__menu-item" onClick={() => navigate("/live-sports")}>
+                        <span className="SVGInline main-mobile-menu__menu-icon">
+                            <img className="SVGInline-svg main-mobile-menu__menu-icon-svg" src={IconLiveBetting} alt="live betting" />
+                        </span>
+                        <span className="main-mobile-menu__menu-text">Deportes en vivo</span>
+                    </a>
+                }
+                <a className="main-mobile-menu__menu-item" onClick={() => navigate("/")}>
+                    <div className="main-mobile-menu__menu-icon-container"></div>
+                    <span className="main-mobile-menu__menu-text">Inicio</span>
+                </a>
+                <a className="main-mobile-menu__menu-item main-mobile-menu__menu-item_active" onClick={() => navigate("/casino")}>
+                    <div className="main-mobile-menu__menu-icon-container">
+                        <span className="SVGInline main-mobile-menu__menu-icon main-mobile-menu__menu-icon_active">
+                            <img className="SVGInline-svg main-mobile-menu__menu-icon-svg main-mobile-menu__menu-icon_active-svg" src={IconFooterCasino} alt="casino" />
+                        </span>
+                    </div>
+                    <span className="main-mobile-menu__menu-text main-mobile-menu__menu-text_active">Casino</span>
+                </a>
+                {
+                    isSlotsOnly === "false" && <a className="main-mobile-menu__menu-item" onClick={() => navigate("/live-casino")}>
+                        <div className="main-mobile-menu__menu-icon-container">
+                            <span className="SVGInline main-mobile-menu__menu-icon">
+                                <img className="SVGInline-svg main-mobile-menu__menu-icon-svg" src={IconLiveCasino} alt="live casino" />
+                            </span>
+                        </div>
+                        <span className="main-mobile-menu__menu-text">Casino En Vivo</span>
+                    </a>
+                }
+            </nav>
+        </div>
+    )
+};
+
+export default MobileFooter;
