@@ -5878,6 +5878,7 @@
     --scroll-thumb-hover: #808187;
     --scroll-thumb-active: #5a5b5f;
     --color-gray-3: #8B8C90;
+    --button_background_color: #f78426;
 }
 
 body.dark {

@@ -1,18 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import UserMenu from "../UserMenu";
-import NavLinkHeader from "../NavLinkHeader";
 import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
 import ImgLiveCasino from "/src/assets/img/live-casino.png";
 import ImgSports from "/src/assets/img/sports.png";
 import ImgLiveSports from "/src/assets/img/live-sports.png";
-// import IconCurrency from "/src/assets/svg/currency.svg";
-// import IconProfile from "/src/assets/svg/profile.svg";
-// import IconLogout from "/src/assets/svg/logout.svg";
-// import ImgSupport from "/src/assets/svg/support-black.svg";
+import ImgUserIcon from "/src/assets/svg/user-icon.svg";
+import ImgDarkUserIcon from "/src/assets/svg/user-icon-dark-mode.svg";
+import ImgChevronDown from "/src/assets/svg/chevron-down.svg";
+import ImgDarkChevronDown from "/src/assets/svg/chevron-down-dark-mode.svg";
+import ImgSupport from "/src/assets/svg/support-black.svg";
 
-const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isSlotsOnly, supportParent, openSupportModal, openProfileModal }) => {
+const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isSlotsOnly, supportParent, openSupportModal }) => {
     const navigate = useNavigate();
     const [showUserMenu, setShowUserMenu] = useState(false);
     const userMenuRef = useRef(null);
@@ -48,6 +47,14 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
         { link: "/casino", label: "Casino", image: ImgCasino }
     ];
 
+    const formatBalance = (value) => {
+        const num = parseFloat(value) || 0;
+        return num.toLocaleString("de-DE", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
+    };
+
     return (
         <header className="ng-star-inserted">
             <app-header-top>
@@ -66,13 +73,13 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                             className="image image-light"
                                             src={ImgLogo}
                                             alt=""
-                                            style={{ height: "53px", width: "179px" }}
+                                            style={{ height: "53px", width: "179px", cursor: "pointer" }}
                                         />
                                         <img
                                             className="image image-dark"
                                             src={ImgLogo}
                                             alt=""
-                                            style={{ height: "53px", width: "179px" }}
+                                            style={{ height: "53px", width: "179px", cursor: "pointer" }}
                                         />
                                     </picture>
                                 </app-image>
@@ -83,22 +90,20 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                             {
                                 isLogin ? <>
                                     <div className="headertop-auth">
-                                        <div className="headertop-auth-user">
-                                            <div className="headertop-auth-user-content">
+                                        <div className="headertop-auth-user" ref={userMenuRef}>
+                                            <div className="headertop-auth-user-content" onClick={openMenu}>
                                                 <app-image
-                                                    darksrc="assets/images/header/header-top/user-icon-dark-mode.svg"
-                                                    lightsrc="assets/images/header/header-top/user-icon.svg"
                                                     className="headertop-auth-user-icon"
                                                 >
                                                     <picture>
                                                         <img
                                                             className="image image-light"
-                                                            src="assets/images/header/header-top/user-icon.svg"
+                                                            src={ImgUserIcon}
                                                             alt=""
                                                         />
                                                         <img
                                                             className="image image-dark"
-                                                            src="assets/images/header/header-top/user-icon-dark-mode.svg"
+                                                            src={ImgDarkUserIcon}
                                                             alt=""
                                                         />
                                                     </picture>
@@ -107,117 +112,60 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                                 <div className="headertop-auth-user-name">gato1889</div>
 
                                                 <app-image
-                                                    darksrc="assets/images/header/header-top/chevron-down-dark-mode.svg"
-                                                    lightsrc="assets/images/header/header-top/chevron-down.svg"
                                                     style={{ marginTop: "6px" }}
                                                 >
                                                     <picture>
                                                         <img
                                                             className="image image-light"
-                                                            src="assets/images/header/header-top/chevron-down.svg"
+                                                            src={ImgChevronDown}
                                                             alt=""
-                                                            style={{ marginTop: "6px" }}
+                                                            style={{ width: "16px" }}
                                                         />
                                                         <img
                                                             className="image image-dark"
-                                                            src="assets/images/header/header-top/chevron-down-dark-mode.svg"
+                                                            src={ImgDarkChevronDown}
                                                             alt=""
-                                                            style={{ marginTop: "6px" }}
+                                                            style={{ width: "16px" }}
                                                         />
                                                     </picture>
                                                 </app-image>
                                             </div>
 
-                                            <div className="headertop-auth-usermenu">
+                                            <div className={`headertop-auth-usermenu ${showUserMenu ? 'is-open' : ''}`}>
                                                 <a
-                                                    routerLink="/my-account"
                                                     className="headertop-auth-usermenu-item"
-                                                    href="/es/my-account"
+                                                    onClick={() => navigate("/profile")}
                                                 >
                                                     Mi cuenta
                                                 </a>
 
-                                                <a className="headertop-auth-usermenu-item">
+                                                <a
+                                                    className="headertop-auth-usermenu-item"
+                                                    onClick={() => handleLogoutClick()}
+                                                >
                                                     Salir
                                                 </a>
                                             </div>
                                         </div>
 
                                         <div className="headertop-pipe"></div>
-
-                                        <app-max-bet-limits className="dark ng-star-inserted">
-                                            <div className="totalbonus ng-star-inserted">
-                                                <div
-                                                    className="totalbonus-content"
-                                                    style={{ height: "40px" }}
-                                                >
-                                                    <div className="totalbonus-maintext is-shown">
-                                                        <span className="totalbonus-maintext-label">
-                                                            Límites por apuesta
-                                                        </span>
-                                                        &nbsp;
-                                                    </div>
-
-                                                    <ul className="totalbonus-list">
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Casino:&nbsp; ARS$ 500.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Bingo:&nbsp; ARS$ 100.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Deportes:&nbsp; ARS$ 500.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Slots:&nbsp; ARS$ 25.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Desconocido:&nbsp; ARS$ 500.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Poker:&nbsp; ARS$ 100.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Video Bingo:&nbsp; ARS$ 100.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Mini Slots:&nbsp; ARS$ 100.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Lotto:&nbsp; ARS$ 100.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Raspaditas:&nbsp; ARS$ 100.000,00
-                                                        </li>
-
-                                                        <li className="totalbonus-list-item ng-star-inserted">
-                                                            Caballos:&nbsp; ARS$ 500.000,00
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </app-max-bet-limits>
-
                                         <a
-                                            routerLink="/my-account"
                                             className="headertop-auth-balance"
-                                            href="/es/my-account"
+                                            onClick={() => navigate("/profile")}
                                         >
                                             <span className="headertop-auth-balance-label">
                                                 Saldo:
                                             </span>
                                             &nbsp;
-                                            <strong>$*****</strong>
+                                            <strong>${formatBalance(userBalance)}</strong>
                                         </a>
+
+                                        {
+                                            supportParent && 
+                                            <button className="button-support" onClick={() => { openSupportModal(true); }}>
+                                                <img src={ImgSupport} />
+                                            </button>
+                                        }
                                     </div>
                                 </> :
                                 <div className="headertop-notauth d-flex flex-row ng-star-inserted">
@@ -234,6 +182,9 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                             <span className="ng-star-inserted">Ingresar</span>
                                         </button>
                                     </app-button>
+                                    <button className="button-support" onClick={() => { openSupportModal(false); }}>
+                                        <img src={ImgSupport} />
+                                    </button>
                                 </div>
                             }
                         </div>
