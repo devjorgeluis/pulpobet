@@ -5,6 +5,7 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
+import ImgBanner0 from "/src/assets/img/banner0.jpg";
 import ImgBanner1 from "/src/assets/img/banner1.jpg";
 import ImgBanner2 from "/src/assets/img/banner2.jpg";
 import ImgBanner3 from "/src/assets/img/banner3.jpg";
@@ -14,6 +15,7 @@ import ImgBanner6 from "/src/assets/img/banner6.jpg";
 import ImgBanner7 from "/src/assets/img/banner7.jpg";
 import ImgBanner8 from "/src/assets/img/banner8.jpg";
 import ImgBanner9 from "/src/assets/img/banner9.jpg";
+import ImgMobileBanner0 from "/src/assets/img/mobile-banner0.jpg";
 import ImgMobileBanner1 from "/src/assets/img/mobile-banner1.jpg";
 import ImgMobileBanner2 from "/src/assets/img/mobile-banner2.jpg";
 import ImgMobileBanner3 from "/src/assets/img/mobile-banner3.jpg";
@@ -36,25 +38,27 @@ const Slideshow = () => {
   };
 
   const slides = isMobile ? [
-    { id: 0, image: ImgMobileBanner1 },
-    { id: 1, image: ImgMobileBanner2 },
-    { id: 2, image: ImgMobileBanner3 },
-    { id: 3, image: ImgMobileBanner4 },
-    { id: 4, image: ImgMobileBanner5 },
-    { id: 5, image: ImgMobileBanner6 },
-    { id: 6, image: ImgMobileBanner7 },
-    { id: 7, image: ImgMobileBanner8 },
-    { id: 8, image: ImgMobileBanner9 },
+    { id: 0, image: ImgMobileBanner0 },
+    { id: 1, image: ImgMobileBanner1 },
+    { id: 2, image: ImgMobileBanner2 },
+    { id: 3, image: ImgMobileBanner3 },
+    { id: 4, image: ImgMobileBanner4 },
+    { id: 5, image: ImgMobileBanner5 },
+    { id: 6, image: ImgMobileBanner6 },
+    { id: 7, image: ImgMobileBanner7 },
+    { id: 8, image: ImgMobileBanner8 },
+    { id: 9, image: ImgMobileBanner9 },
   ] : [
-    { id: 0, image: ImgBanner1 },
-    { id: 1, image: ImgBanner2 },
-    { id: 2, image: ImgBanner3 },
-    { id: 3, image: ImgBanner4 },
-    { id: 4, image: ImgBanner5 },
-    { id: 5, image: ImgBanner6 },
-    { id: 6, image: ImgBanner7 },
-    { id: 7, image: ImgBanner8 },
-    { id: 8, image: ImgBanner9 },
+    { id: 0, image: ImgBanner0 },
+    { id: 1, image: ImgBanner1 },
+    { id: 2, image: ImgBanner2 },
+    { id: 3, image: ImgBanner3 },
+    { id: 4, image: ImgBanner4 },
+    { id: 5, image: ImgBanner5 },
+    { id: 6, image: ImgBanner6 },
+    { id: 7, image: ImgBanner7 },
+    { id: 8, image: ImgBanner8 },
+    { id: 9, image: ImgBanner9 },
   ];
 
   const handleNext = () => {
