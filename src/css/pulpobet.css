@@ -922,6 +922,7 @@ a:hover {
     bottom: 0;
     margin: 50px 24px 0;
     width: 364px;
+    cursor: pointer;
 }
 
 .homegrid-card:hover {
@@ -3741,6 +3742,7 @@ body.has-menu-open .header-mobilemenu {
 .logo {
     width: 179px;
     height: 53px;
+    cursor: pointer;
 }
 
 @media(max-width: 500px) {

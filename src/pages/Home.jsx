@@ -7,6 +7,7 @@ import Slideshow from "../components/Home/Slideshow";
 import GameModal from "../components/Modal/GameModal";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameContainer from "../components/Home/GameContainer";
+import BannerContainer from "../components/Home/BannerContainer";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -104,6 +105,7 @@ const Home = () => {
   return (
     <>
       <Slideshow />
+      <BannerContainer isSlotsOnly={isSlotsOnly} />
       {/*
 
       {shouldShowGameModal && selectedGameId !== null ? (
