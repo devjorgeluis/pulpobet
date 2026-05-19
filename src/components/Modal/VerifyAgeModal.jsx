@@ -1,5 +1,3 @@
-import ImgMascot from "/src/assets/img/mascot.webp";
-
 const VerifyAgeModal = ({ isOpen, onConfirm }) => {
 
     if (!isOpen) return null;
@@ -9,8 +7,6 @@ const VerifyAgeModal = ({ isOpen, onConfirm }) => {
             <div className="modal" style={{ display: isOpen ? "block" : "none" }}>
                 <div className="modal__content-container">
                     <div className="age-verification-desktop">
-                        <img className="age-verification-desktop__mascot" src={ImgMascot} alt="mascot" />
-
                         <h2 className="age-verification-desktop__title">Verificación de Edad</h2>
                         <span className="age-verification-desktop__sub-title">¿Eres mayor de <span>18+</span> años?</span>
                         <div className="age-verification-desktop__button-group">

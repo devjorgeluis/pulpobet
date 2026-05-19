@@ -1,8 +1,8 @@
 // import LazyLoad from "react-lazyload";
 import { useRef } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import IconPlay from "/src/assets/img/play.webp";
-import IconFavorite from "/src/assets/img/favorite.webp";
+// import IconPlay from "/src/assets/img/play.webp";
+// import IconFavorite from "/src/assets/img/favorite.webp";
 
 const GameCard = (props) => {
   const imgRef = useRef(null);
@@ -47,14 +47,14 @@ const GameCard = (props) => {
             <div className="slots-icon-desktop__modal-top">
               <span className="slots-icon-desktop__play-icon">
                 <span className="SVGInline SVG-component__content">
-                  <img src={IconPlay} />
+                  {/* <img src={IconPlay} /> */}
                 </span>
               </span>
               <span className="slots-icon-desktop__game-name">{props.title}</span>
             </div>
             <span className="slots-icon-desktop__favorite">
               <span className="SVGInline SVG-component__content">
-                <img src={IconFavorite} />
+                {/* <img src={IconFavorite} /> */}
               </span>
             </span>
           </div>

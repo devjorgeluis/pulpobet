@@ -11,9 +11,6 @@ import DivLoading from "../components/Loading/DivLoading";
 import LoadApi from "../components/Loading/LoadApi";
 import CustomAlert from "../components/CustomAlert";
 
-import ImgLiveBanner from "/src/assets/img/live-banner.webp";
-import ImgMobileLiveBanner from "/src/assets/img/mobile-live-banner.webp";
-
 let selectedGameId = null;
 let selectedGameType = null;
 let selectedGameLauncher = null;
@@ -239,11 +236,6 @@ const LiveCasino = () => {
         />
       ) : (
         <div className="slots-layout-content-desktop">
-          <img
-            className="slots-main-desktop__banner"
-            src={isMobile ? ImgMobileLiveBanner : ImgLiveBanner}
-            alt="banner"
-          />
           <div className="slots-main-desktop__filter-container">
             <div className="slots-main-desktop__provider-filter-list">
               {categories && categories.length > 0 && (

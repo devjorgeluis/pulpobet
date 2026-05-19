@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import ImgLogo from "/src/assets/img/logo.png";
-import ImgBet from "/src/assets/img/bet-responsibility.png";
 
 const Footer = () => {
     const navigate = useNavigate();
@@ -31,12 +29,7 @@ const Footer = () => {
                 </nav>
                 <div className="footer__center">
                     <div className="footer__logo" onClick={() => navigate("/")}>
-                        <img
-                            title="Casino"
-                            alt="Casino"
-                            src={ImgLogo}
-                            className="logo-domain"
-                        />
+
                     </div>
                     <p className="footer__center-desc"></p>
                 </div>
@@ -53,7 +46,6 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className="footer__right-container">
-                        <img className="footer__icon" src={ImgBet} alt="18+" />
                     </div>
                 </div>
             </footer>

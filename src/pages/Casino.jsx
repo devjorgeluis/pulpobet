@@ -12,14 +12,14 @@ import ProviderContainer from "../components/ProviderContainer";
 import SearchInput from "../components/SearchInput";
 import LoadApi from "../components/Loading/LoadApi";
 
-import ImgTodo from "/src/assets/svg/todo.svg";
-import ImgHot from "/src/assets/svg/hot.svg";
-import ImgJoker from "/src/assets/svg/joker.svg";
-import ImgCrash from "/src/assets/svg/crash.svg";
-import ImgMegaway from "/src/assets/svg/megaway.svg";
-import ImgRuleta from "/src/assets/svg/ruleta.svg";
-import ImgSlotsBanner from "/src/assets/img/slots-banner.webp";
-import ImgMobileSlotsBanner from "/src/assets/img/mobile-slots-banner.webp";
+// import ImgTodo from "/src/assets/svg/todo.svg";
+// import ImgHot from "/src/assets/svg/hot.svg";
+// import ImgJoker from "/src/assets/svg/joker.svg";
+// import ImgCrash from "/src/assets/svg/crash.svg";
+// import ImgMegaway from "/src/assets/svg/megaway.svg";
+// import ImgRuleta from "/src/assets/svg/ruleta.svg";
+import ImgSlotsBanner from "/src/assets/img/logo.png";
+import ImgMobileSlotsBanner from "/src/assets/img/logo.png";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -102,18 +102,18 @@ const Casino = () => {
     const isSlotsOnlyFalse = isSlotsOnly === false || isSlotsOnly === "false";
     let tmpTags = isSlotsOnlyFalse
       ? [
-        { name: "Lobby", code: "home", image: ImgTodo },
-        { name: "Hot", code: "hot", image: ImgHot },
-        { name: "Jokers", code: "joker", image: ImgJoker },
-        { name: "Ruletas", code: "roulette", image: ImgRuleta },
-        { name: "Crash", code: "arcade", image: ImgCrash },
-        { name: "Megaways", code: "megaways", image: ImgMegaway },
+        // { name: "Lobby", code: "home", image: ImgTodo },
+        // { name: "Hot", code: "hot", image: ImgHot },
+        // { name: "Jokers", code: "joker", image: ImgJoker },
+        // { name: "Ruletas", code: "roulette", image: ImgRuleta },
+        // { name: "Crash", code: "arcade", image: ImgCrash },
+        // { name: "Megaways", code: "megaways", image: ImgMegaway },
       ]
       : [
-        { name: "Lobby", code: "home", image: ImgTodo },
-        { name: "Hot", code: "hot", image: ImgHot },
-        { name: "Jokers", code: "joker", image: ImgJoker },
-        { name: "Megaways", code: "megaways", image: ImgMegaway },
+        // { name: "Lobby", code: "home", image: ImgTodo },
+        // { name: "Hot", code: "hot", image: ImgHot },
+        // { name: "Jokers", code: "joker", image: ImgJoker },
+        // { name: "Megaways", code: "megaways", image: ImgMegaway },
       ];
 
     setTags(tmpTags);
