@@ -70,16 +70,14 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 <app-image>
                                     <picture>
                                         <img
-                                            className="image image-light"
+                                            className="image image-light logo"
                                             src={ImgLogo}
                                             alt=""
-                                            style={{ height: "53px", width: "179px", cursor: "pointer" }}
                                         />
                                         <img
-                                            className="image image-dark"
+                                            className="image image-dark logo"
                                             src={ImgLogo}
                                             alt=""
-                                            style={{ height: "53px", width: "179px", cursor: "pointer" }}
                                         />
                                     </picture>
                                 </app-image>

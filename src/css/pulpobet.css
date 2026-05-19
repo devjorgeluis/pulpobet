@@ -838,6 +838,7 @@ a:hover {
     display: flex;
     flex-direction: row;
     align-items: center;
+    z-index: 100;
 }
 
 .banners-paging-dot {
@@ -3735,4 +3736,16 @@ body.has-menu-open .header-mobilemenu {
 
 .z-1000 {
     z-index: 1000;
+}
+
+.logo {
+    width: 179px;
+    height: 53px;
+}
+
+@media(max-width: 500px) {
+    .logo {
+        width: 162px;
+        height: 48px;
+    }
 }

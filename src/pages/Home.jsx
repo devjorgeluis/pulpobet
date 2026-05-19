@@ -103,6 +103,7 @@ const Home = () => {
 
   return (
     <>
+      <Slideshow />
       {/*
 
       {shouldShowGameModal && selectedGameId !== null ? (
