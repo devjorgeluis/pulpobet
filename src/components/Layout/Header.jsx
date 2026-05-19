@@ -166,7 +166,7 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                         }
                                     </div>
                                 </> :
-                                <div className="headertop-notauth d-flex flex-row ng-star-inserted">
+                                <div className="headertop-notauth d-flex flex-row">
                                     <app-button
                                         label="Ingresar"
                                         style={{ display: "block", width: "100%" }}
@@ -194,17 +194,17 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 {navItems.map((item, idx) => (
                                     <a
                                         key={idx}
-                                        className="headertop-menu-item ng-star-inserted"
+                                        className="headertop-menu-item"
                                         onClick={() => navigate(item.link)}
                                         style={{ "--hover-color": "rgba(5,26,69,0.58)" }}
                                     >
                                         <img
                                             aria-hidden="true"
-                                            className="headertop-menu-item-img ng-star-inserted"
+                                            className="headertop-menu-item-img"
                                             src={item.image}
                                             alt={item.label}
                                         />
-                                        <span className="headertop-menu-item-label ng-star-inserted">
+                                        <span className="headertop-menu-item-label">
                                             {item.label}
                                         </span>
                                     </a>

@@ -1,68 +1,70 @@
-// import LazyLoad from "react-lazyload";
-import { useRef } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-// import IconPlay from "/src/assets/img/play.webp";
-// import IconFavorite from "/src/assets/img/favorite.webp";
+import { useContext } from "react";
+import { AppContext } from "../AppContext";
+import IconNotFavorite from "/src/assets/svg/not-favorite.svg";
+import IconFavorite from "/src/assets/svg/favorite.svg";
 
 const GameCard = (props) => {
-  const imgRef = useRef(null);
+    const { contextData } = useContext(AppContext);
 
-  const imageLoaded = () => {
-    // console.log(imgRef.current);
-    // imgRef.current?.classList.remove("d-none");
-    document
-      .getElementById("game-card-img-" + props.id)
-      .classList.add("fade-in");
+    const handleGameClick = (e) => {
+        e.stopPropagation();
 
-    document
-      .getElementById("game-card-img-" + props.id)
-      .classList.remove("visibility-hidden");
-  };
+        const gameData = props.game || {
+            id: props.id || props.gameId,
+            name: props.title,
+            image_local: props.imageSrc?.includes(contextData?.cdnUrl)
+                ? props.imageSrc.replace(contextData.cdnUrl, '')
+                : null,
+            image_url: props.imageSrc?.includes(contextData?.cdnUrl)
+                ? null
+                : props.imageSrc
+        };
 
-  const imageError = () => {
-    document
-      .getElementById("game-card-img-" + props.id)
-      .setAttribute("src", "/src/assets/img/no-image.jpg");
-  };
+        if (props.onGameClick) {
+            props.onGameClick(gameData);
+        }
+    };
 
-  return (
-    <div className="provider-section-desktop__slot-icon">
-      <div className="slots-icon-desktop">
-        <a
-          className="slots-icon-desktop__game-icon"
-          href="#"
-          onClick={(event) => {
-            event.preventDefault();
-            props.onClick?.();
-          }}
-        >
-          <div className="slots-icon-desktop__img slots-icon-desktop__img_loaded">
-            <div className="loadable-image loadable-image_loaded">
-              <div className="loadable-image__loader">
-                <img className="loadable-image__image loadable-image__image_isLoaded" src={props.imageSrc} alt={props.title} loading="lazy" />
-              </div>
+    return (
+        <div className="slots-game-card">
+            <div className="gc-container" onClick={handleGameClick} role="button" tabIndex={0}>
+                <div className="gc-card">
+                    <button className="gc-favorite-btn" type="button">
+                        <img
+                            src={IconNotFavorite}
+                            width={32}
+                            height={32}
+                            alt="Favorite"
+                        />
+                    </button>
+
+                    <div className="gc-badge-list"></div>
+
+                    <div className="gc-card-image">
+                        <img
+                            className="image"
+                            src={props.imageSrc}
+                            alt={props.title}
+                        />
+                    </div>
+
+                    <div className="gc-hover">
+                        <div className="gc-hover-button-wrapper">
+                            <button
+                                type="button"
+                                className="btn purple btn-block btn-regular"
+                                onClick={handleGameClick}
+                            >
+                                Jugar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <p className="gc-name" dark-mode="true">{props.title}</p>
             </div>
-          </div>
-          <div className="slots-icon-desktop__modal">
-            <div className="slots-icon-desktop__modal-top">
-              <span className="slots-icon-desktop__play-icon">
-                <span className="SVGInline SVG-component__content">
-                  {/* <img src={IconPlay} /> */}
-                </span>
-              </span>
-              <span className="slots-icon-desktop__game-name">{props.title}</span>
-            </div>
-            <span className="slots-icon-desktop__favorite">
-              <span className="SVGInline SVG-component__content">
-                {/* <img src={IconFavorite} /> */}
-              </span>
-            </span>
-          </div>
-        </a>
-        <div className="slots-icon-desktop__name">{props.title}</div>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default GameCard;

@@ -5,6 +5,7 @@ import AppContextProvider from './AppContext.jsx'
 import './css/placeholder-loading.min.css'
 import './css/home.css'
 import './css/pulpobet.css'
+import './css/game.css'
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(

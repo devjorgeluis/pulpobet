@@ -1,19 +1,25 @@
-import { useContext, useCallback, useRef, useState } from "react";
+import { useContext, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import GameCard from "../GameCard";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-const HotGameSlideshow = ({ isMobile, games, name, title, link, onGameClick, loadMoreContent }) => {
+import IconNotFavorite from "/src/assets/svg/not-favorite.svg";
+import IconFavorite from "/src/assets/svg/favorite.svg";
+
+const HotGameSlideshow = ({ isMobile, games, title, link, onGameClick, loadMoreContent }) => {
     const { contextData } = useContext(AppContext);
     const navigate = useNavigate();
     const swiperRef = useRef(null);
     const prevRef = useRef(null);
     const nextRef = useRef(null);
-    const [currentSlide, setCurrentSlide] = useState(0);
+    const [, setCurrentSlide] = useState(0);
+
+    const visibleGames = games.slice(0, isMobile ? 6 : 8);
 
     const handleGameClick = (game, isDemo = false) => {
         if (onGameClick) {
@@ -25,42 +31,100 @@ const HotGameSlideshow = ({ isMobile, games, name, title, link, onGameClick, loa
         setCurrentSlide(swiper.realIndex);
     }, []);
 
-    const handleIndicatorClick = (index) => {
-        if (swiperRef.current?.swiper) {
-            swiperRef.current.swiper.slideToLoop(index);
+    const onBeforeInit = (swiper) => {
+        if (swiper.params.navigation && typeof swiper.params.navigation !== "boolean") {
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
         }
     };
 
+    useEffect(() => {
+        const swiper = swiperRef.current;
+        if (!swiper || !prevRef.current || !nextRef.current) return;
+
+        if (swiper.params && swiper.params.navigation) {
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
+        }
+
+        if (swiper.navigation) {
+            try {
+                swiper.navigation.destroy();
+            } catch (e) {}
+            swiper.navigation.init();
+            swiper.navigation.update();
+        }
+    }, [prevRef.current, nextRef.current, swiperRef.current]);
+
     return (
-        <div className="slots-main-desktop__provider-section">
-            <div className="provider-section-desktop">
-                <div className="provider-section-desktop__header">
-                    <div className="provider-section-desktop__header-img-container">
-                        <div className="provider-section-desktop__header-img-top">
-                            <span className="provider-section-desktop__header-provider-text">
-                                {title}
-                            </span>
-                        </div>
-                        <div className="provider-section-desktop__header-line"></div>
-                    </div>
-                    <div className="provider-section-desktop__controls">
-                        <div className="carousel-arrows">
-                            <a className="carousel-arrows__title" onClick={link ? () => navigate(link) : loadMoreContent}>
-                                <span className="carousel-arrows__title-text">Mostrar Todo</span>
-                            </a>
-                        </div>
+        <div className="gd-slide-section">
+            <div className="d-none d-lg-block">
+                <div className="row mb-4">
+                    <div className="col-10">
+                        <div className="h3">{title}</div>
                     </div>
                 </div>
-                <div className="provider-section-desktop__games-container">
-                    {games.slice(0, isMobile? 6 : 8).map((game, gameIndex) => (
-                        <GameCard
-                            key={gameIndex}
-                            id={game.id}
-                            title={game.name}
-                            imageSrc={game.imageDataSrc || game.image_url || (game.image_local ? contextData.cdnUrl + game.image_local : "")}
-                            onClick={() => handleGameClick(game)}
-                        />
-                    ))}
+
+                <div className="p-carousel p-component p-carousel-horizontal">
+                    <div className="p-carousel-content">
+                        <div className="p-carousel-container">
+                            <button
+                                type="button"
+                                className="p-ripple p-element p-carousel-prev p-link"
+                                ref={prevRef}
+                            >
+                                ‹
+                            </button>
+
+                            <div className="p-carousel-items-content">
+                                <div className="p-carousel-items-container">
+                                    <Swiper
+                                        onSwiper={(swiper) => {
+                                            swiperRef.current = swiper;
+                                        }}
+                                        onBeforeInit={onBeforeInit}
+                                        modules={[Navigation]}
+                                        navigation={{
+                                            prevEl: prevRef.current,
+                                            nextEl: nextRef.current,
+                                            disabledClass: "p-link-disabled",
+                                        }}
+                                        slidesPerView={isMobile ? 2 : 5}
+                                        spaceBetween={20}
+                                        loop={true}
+                                        onSlideChange={handleSlideChange}
+                                        className="slots-game-carousel"
+                                    >
+                                        {visibleGames.map((game, index) => (
+                                            <SwiperSlide key={game.id}>
+                                                <div className="mb-4">
+                                                    <GameCard
+                                                        key={`hotcard-${name}-${game.id ?? index}-${index}`}
+                                                        id={game.id}
+                                                        provider={'Casino'}
+                                                        title={game.name}
+                                                        type="slideshow"
+                                                        imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
+                                                        onGameClick={() => {
+                                                            handleGameClick(game);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </SwiperSlide>
+                                        ))}
+                                    </Swiper>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                className="p-ripple p-element p-carousel-next p-link"
+                                ref={nextRef}
+                            >
+                                ›
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

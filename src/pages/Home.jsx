@@ -6,7 +6,6 @@ import { callApi } from "../utils/Utils";
 import Slideshow from "../components/Home/Slideshow";
 import GameModal from "../components/Modal/GameModal";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
-import GameContainer from "../components/Home/GameContainer";
 import BannerContainer from "../components/Home/BannerContainer";
 
 let selectedGameId = null;
@@ -104,10 +103,6 @@ const Home = () => {
 
   return (
     <>
-      <Slideshow />
-      <BannerContainer isSlotsOnly={isSlotsOnly} />
-      {/*
-
       {shouldShowGameModal && selectedGameId !== null ? (
         <GameModal
           gameUrl={gameUrl}
@@ -150,32 +145,16 @@ const Home = () => {
       ) : (
         <>
           <Slideshow />
-          <GameContainer />
+          <BannerContainer isSlotsOnly={isSlotsOnly} />
 
-          <div className="slots-main-desktop__content-container">
-            {topGames.length > 0 && (
-              <HotGameSlideshow
-                isMobile={isMobile}
-                games={topGames}
-                name="games"
-                title="Juegos populares"
-                link="/casino"
-                onGameClick={(game) => {
-                  if (isLogin) {
-                    launchGame(game, "slot", "modal");
-                  } else {
-                    handleLoginClick();
-                  }
-                }}
-              />
-            )}
-            {topArcade.length > 0 &&
-              isSlotsOnly === "false" && (
+          <main className="game-main-container">
+            <div className="inner">
+              {topGames.length > 0 && (
                 <HotGameSlideshow
                   isMobile={isMobile}
-                  games={topArcade}
-                  name="arcade"
-                  title="Tragamonedas"
+                  games={topGames}
+                  name="games"
+                  title="Juegos populares"
                   link="/casino"
                   onGameClick={(game) => {
                     if (isLogin) {
@@ -186,43 +165,61 @@ const Home = () => {
                   }}
                 />
               )}
-            {topCasino.length > 0 &&
-              isSlotsOnly === "false" && (
-                <HotGameSlideshow
-                  isMobile={isMobile}
-                  games={topCasino}
-                  name="casino"
-                  title="Casino"
-                  link="/casino"
-                  onGameClick={(game) => {
-                    if (isLogin) {
-                      launchGame(game, "slot", "modal");
-                    } else {
-                      handleLoginClick();
-                    }
-                  }}
-                />
-              )}
-            {topLiveCasino.length > 0 &&
-              isSlotsOnly === "false" && (
-                <HotGameSlideshow
-                  isMobile={isMobile}
-                  games={topLiveCasino}
-                  name="liveCasino"
-                  title="Casino En Vivo"
-                  link="/live-casino"
-                  onGameClick={(game) => {
-                    if (isLogin) {
-                      launchGame(game, "slot", "modal");
-                    } else {
-                      handleLoginClick();
-                    }
-                  }}
-                />
-              )}
-          </div>
+              {topArcade.length > 0 &&
+                isSlotsOnly === "false" && (
+                  <HotGameSlideshow
+                    isMobile={isMobile}
+                    games={topArcade}
+                    name="arcade"
+                    title="Tragamonedas"
+                    link="/casino"
+                    onGameClick={(game) => {
+                      if (isLogin) {
+                        launchGame(game, "slot", "modal");
+                      } else {
+                        handleLoginClick();
+                      }
+                    }}
+                  />
+                )}
+              {topCasino.length > 0 &&
+                isSlotsOnly === "false" && (
+                  <HotGameSlideshow
+                    isMobile={isMobile}
+                    games={topCasino}
+                    name="casino"
+                    title="Casino"
+                    link="/casino"
+                    onGameClick={(game) => {
+                      if (isLogin) {
+                        launchGame(game, "slot", "modal");
+                      } else {
+                        handleLoginClick();
+                      }
+                    }}
+                  />
+                )}
+              {topLiveCasino.length > 0 &&
+                isSlotsOnly === "false" && (
+                  <HotGameSlideshow
+                    isMobile={isMobile}
+                    games={topLiveCasino}
+                    name="liveCasino"
+                    title="Casino En Vivo"
+                    link="/live-casino"
+                    onGameClick={(game) => {
+                      if (isLogin) {
+                        launchGame(game, "slot", "modal");
+                      } else {
+                        handleLoginClick();
+                      }
+                    }}
+                  />
+                )}
+              </div>
+            </main>
         </>
-      )} */}
+      )}
     </>
   );
 };
