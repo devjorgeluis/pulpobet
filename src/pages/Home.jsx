@@ -5,7 +5,6 @@ import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
 import Slideshow from "../components/Home/Slideshow";
 import GameModal from "../components/Modal/GameModal";
-import CustomAlert from "../components/CustomAlert";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameContainer from "../components/Home/GameContainer";
 
@@ -21,7 +20,6 @@ const Home = () => {
   const { setShowFullDivLoading, setIsGameModalOpen } = useContext(NavigationContext);
   const { isSlotsOnly, isLogin, isMobile, handleLoginClick, topGames, topArcade, topCasino, topLiveCasino } = useOutletContext();
   const [gameUrl, setGameUrl] = useState("");
-  const [messageCustomAlert, setMessageCustomAlert] = useState(["", ""]);
   const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
   const refGameModal = useRef();
   const navigate = useNavigate();
@@ -103,13 +101,9 @@ const Home = () => {
     setIsGameModalOpen(false);
   };
 
-  const handleAlertClose = () => {
-    setMessageCustomAlert(["", ""]);
-  };
-
   return (
     <>
-      {/* <CustomAlert message={messageCustomAlert} onClose={handleAlertClose} />
+      {/*
 
       {shouldShowGameModal && selectedGameId !== null ? (
         <GameModal

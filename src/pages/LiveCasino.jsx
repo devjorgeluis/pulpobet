@@ -9,7 +9,6 @@ import CategoryButton from "../components/CategoryButton";
 import GameModal from "../components/Modal/GameModal";
 import DivLoading from "../components/Loading/DivLoading";
 import LoadApi from "../components/Loading/LoadApi";
-import CustomAlert from "../components/CustomAlert";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -29,7 +28,6 @@ const LiveCasino = () => {
   const [pageData, setPageData] = useState({});
   const [games, setGames] = useState([]);
   const [gameUrl, setGameUrl] = useState("");
-  const [messageCustomAlert, setMessageCustomAlert] = useState(["", ""]);
   const [isLoadingGames, setIsLoadingGames] = useState(false);
   const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
   const refGameModal = useRef();
@@ -56,7 +54,6 @@ const LiveCasino = () => {
 
   const callbackGetPage = (result) => {
     if (result.status === 500 || result.status === 422) {
-      setMessageCustomAlert(["error", result.message]);
     } else {
       setCategories(result && result.data.categories);
       setPageData(result && result.data);
@@ -120,7 +117,7 @@ const LiveCasino = () => {
 
   const callbackFetchContent = (result) => {
     if (result.status === 500 || result.status === 422) {
-      setMessageCustomAlert(["error", result.message]);
+
     } else {
       if (pageCurrent == 0) {
         configureImageSrc(result);
@@ -163,7 +160,6 @@ const LiveCasino = () => {
           break;
       }
     } else if (result.status == "500" || result.status == "422") {
-      setMessageCustomAlert(["error", result.message]);
     }
     setShowFullDivLoading(false);
   };
@@ -187,14 +183,8 @@ const LiveCasino = () => {
     });
   };
 
-  const handleAlertClose = () => {
-    setMessageCustomAlert(["", ""]);
-  };
-
   return (
     <>
-      <CustomAlert message={messageCustomAlert} onClose={handleAlertClose} />
-
       {shouldShowGameModal && selectedGameId !== null ? (
         <GameModal
           gameUrl={gameUrl}

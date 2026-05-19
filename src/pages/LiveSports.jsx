@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
-import CustomAlert from "../components/CustomAlert";
 import DivLoading from "../components/Loading/DivLoading";
 
 const LiveSports = () => {
@@ -12,7 +11,6 @@ const LiveSports = () => {
     const [sportsEmbedUrl, setSportsEmbedUrl] = useState("");
     const { setShowFullDivLoading } = useContext(NavigationContext);
     const [isLoading, setIsLoading] = useState(true);
-    const [messageCustomAlert, setMessageCustomAlert] = useState(["", ""]);
     const location = useLocation();
 
     useEffect(() => {
@@ -27,7 +25,6 @@ const LiveSports = () => {
 
     const callbackGetPage = (result) => {        
         if (result.status === 500 || result.status === 422) {
-            setMessageCustomAlert(["error", result.message]);
             setShowFullDivLoading(false);
             setIsLoading(false);
         } else {
@@ -36,14 +33,9 @@ const LiveSports = () => {
             setShowFullDivLoading(false);
         }
     };
-    const handleAlertClose = () => {
-        setMessageCustomAlert(["", ""]);
-    };
 
     return (
         <>
-            <CustomAlert message={messageCustomAlert} onClose={handleAlertClose} />
-
             <>
                 {isLoading ? (
                     <></>
@@ -57,9 +49,6 @@ const LiveSports = () => {
                                     className="sports-iframe"
                                     allowFullScreen
                                     loading="lazy"
-                                    onError={(e) => {
-                                        setMessageCustomAlert(["error", "No se pudo cargar el sportsbook. Intente recargar la página."]);
-                                    }}
                                 />
                             </div>
                         </div>

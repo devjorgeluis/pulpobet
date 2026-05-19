@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import UserMenu from "../UserMenu";
+// import UserMenu from "../UserMenu";
 import NavLinkHeader from "../NavLinkHeader";
 import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
 import ImgLiveCasino from "/src/assets/img/live-casino.png";
 import ImgSports from "/src/assets/img/sports.png";
 import ImgLiveSports from "/src/assets/img/live-sports.png";
-import IconCurrency from "/src/assets/svg/currency.svg";
-import IconProfile from "/src/assets/svg/profile.svg";
-import IconLogout from "/src/assets/svg/logout.svg";
-import ImgSupport from "/src/assets/svg/support-black.svg";
+// import IconCurrency from "/src/assets/svg/currency.svg";
+// import IconProfile from "/src/assets/svg/profile.svg";
+// import IconLogout from "/src/assets/svg/logout.svg";
+// import ImgSupport from "/src/assets/svg/support-black.svg";
 
 const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isSlotsOnly, supportParent, openSupportModal, openProfileModal }) => {
     const navigate = useNavigate();

@@ -1,5 +1,3 @@
-import IconClose from "/src/assets/svg/close.svg";
-
 const LogoutConfirmModal = ({ onConfirm, onCancel }) => {
     return (
         <div className="modal" style={{display: "block"}}>
@@ -7,7 +5,6 @@ const LogoutConfirmModal = ({ onConfirm, onCancel }) => {
                 <div className="logout-modal-desktop">
                     <span className="logout-modal-desktop__cross" onClick={onCancel}>
                         <span className="SVGInline SVG-component__content">
-                            <img src={IconClose} />
                         </span>
                     </span>
                     <h2 className="logout-modal-desktop__title">Cerrar sesión</h2>

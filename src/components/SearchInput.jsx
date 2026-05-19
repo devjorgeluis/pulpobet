@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import IconSearch from "/src/assets/svg/search.svg";
+// import IconSearch from "/src/assets/svg/search.svg";
 
 const SearchInput = ({
     txtSearch,
@@ -12,7 +12,7 @@ const SearchInput = ({
             <form className="search-filter-slots-desktop">
                 <div className="search-filter-slots-desktop__input-wrapper">
                     <span className="SVGInline search-filter-slots-desktop__search-icon">
-                        <img src={IconSearch} width={24} height={24} className="SVGInline-svg search-filter-slots-desktop__search-icon-svg" />
+                        {/* <img src={IconSearch} width={24} height={24} className="SVGInline-svg search-filter-slots-desktop__search-icon-svg" /> */}
                     </span>
                     <div className="search-filter-slots-desktop__input">
                         <div className="input-desktop">

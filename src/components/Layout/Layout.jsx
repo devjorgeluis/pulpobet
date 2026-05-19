@@ -6,7 +6,7 @@ import { LayoutContext } from "./LayoutContext";
 import { callApi } from "../../utils/Utils";
 import Header from "./Header";
 import Footer from "./Footer";
-import MobileHeader from "./MobileHeader";
+// import MobileHeader from "./MobileHeader";
 import MobileFooter from "./MobileFooter";
 import LoginModal from "../Modal/LoginModal";
 import SupportModal from "../Modal/SupportModal";
