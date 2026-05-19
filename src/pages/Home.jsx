@@ -109,7 +109,7 @@ const Home = () => {
 
   return (
     <>
-      <CustomAlert message={messageCustomAlert} onClose={handleAlertClose} />
+      {/* <CustomAlert message={messageCustomAlert} onClose={handleAlertClose} />
 
       {shouldShowGameModal && selectedGameId !== null ? (
         <GameModal
@@ -225,7 +225,7 @@ const Home = () => {
               )}
           </div>
         </>
-      )}
+      )} */}
     </>
   );
 };

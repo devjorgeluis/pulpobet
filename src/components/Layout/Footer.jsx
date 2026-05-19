@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import ImgLogo from "/src/assets/img/logo.webp";
+import ImgLogo from "/src/assets/img/logo.png";
 import ImgBet from "/src/assets/img/bet-responsibility.png";
 
 const Footer = () => {

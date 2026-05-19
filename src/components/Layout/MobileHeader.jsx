@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ImgLogo from "/src/assets/img/logo.webp";
+import ImgLogo from "/src/assets/img/logo.png";
 import ImgBet from "/src/assets/img/bet-responsibility.png";
 import IconHamburger from "/src/assets/svg/hamburger.svg";
 import IconProfile from "/src/assets/svg/profile.svg";

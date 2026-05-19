@@ -133,15 +133,15 @@ const Layout = () => {
 
         if (result && result.user === null) {
             localStorage.removeItem("session");
-        }        
+        }
     };
 
     const goLoginPage = () => {
         navigate("/login");
-    }    
+    }
 
     const handleLoginClick = () => {
-        setShowLoginModal(true);
+        navigate("/login");
     };
 
     const handleLoginConfirm = () => {
@@ -212,7 +212,7 @@ const Layout = () => {
         setShowFullDivLoading,
         openSupportModal,
         openProfileModal
-    };    
+    };
 
     return (
         <LayoutContext.Provider value={layoutContextValue}>
@@ -224,70 +224,62 @@ const Layout = () => {
                     onClose={() => setShowAgeModal(false)}
                     onConfirm={handleAgeVerifyConfirm}
                 />
-                <div className="body-container fade-in">
-                    <FullDivLoading show={showFullDivLoading} />
-                    {showLogoutModal && (
-                        <LogoutConfirmModal onConfirm={handleLogoutConfirm} onCancel={handleLogoutCancel} />
-                    )}
-                    {showLoginModal && (
-                        <LoginModal
-                            isOpen={showLoginModal}
-                            onClose={() => setShowLoginModal(false)}
-                            onConfirm={handleLoginConfirm}
-                        />
-                    )}
-                    <div className="body-scrollable">
-                        <div className="app__header-wrapper">
-                            <Header
-                                isLogin={isLogin}
-                                userBalance={userBalance}
-                                handleLoginClick={handleLoginClick}
-                                handleLogoutClick={handleLogoutClick}
-                                isSlotsOnly={isSlotsOnly}
-                                supportParent={supportParent}
-                                openSupportModal={openSupportModal}
-                                openProfileModal={openProfileModal}
-                            />
-                            <MobileHeader
-                                isLogin={isLogin}
-                                userBalance={userBalance}
-                                isOpen={isSidebarOpen}
-                                handleLoginClick={goLoginPage}
-                                onToggle={toggleSidebar}
-                                isSlotsOnly={isSlotsOnly}
-                                supportParent={supportParent}
-                                openSupportModal={openSupportModal}
-                                openProfileModal={openProfileModal}
-                            />
-                        </div>
-                        <main className="app__main">
-                            <Outlet context={{ isSlotsOnly, supportParent, openSupportModal, handleLoginClick, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
-                        </main>
-                    </div>
-
-                    <SupportModal
-                        isOpen={showSupportModal}
-                        onClose={closeSupportModal}
-                        supportWhatsApp={supportWhatsApp}
-                        supportTelegram={supportTelegram}
-                        supportEmail={supportEmail}
-                        supportParentOnly={supportParentOnly}
-                        supportParent={supportParent}
+                {/* <FullDivLoading show={showFullDivLoading} /> */}
+                {showLogoutModal && (
+                    <LogoutConfirmModal onConfirm={handleLogoutConfirm} onCancel={handleLogoutCancel} />
+                )}
+                {showLoginModal && (
+                    <LoginModal
+                        isOpen={showLoginModal}
+                        onClose={() => setShowLoginModal(false)}
+                        onConfirm={handleLoginConfirm}
                     />
-                    {showProfileModal && (
-                        <ProfileModal
-                            onClose={closeProfileModal}
-                            handleLogoutClick={handleLogoutClick}
-                            activeSection={profileModalSection}
-                            isMobile={isMobile}
-                        />
-                    )}
+                )}
+                <Header
+                    isLogin={isLogin}
+                    userBalance={userBalance}
+                    handleLoginClick={handleLoginClick}
+                    handleLogoutClick={handleLogoutClick}
+                    isSlotsOnly={isSlotsOnly}
+                    supportParent={supportParent}
+                    openSupportModal={openSupportModal}
+                    openProfileModal={openProfileModal}
+                />
+                {/* <MobileHeader
+                    isLogin={isLogin}
+                    userBalance={userBalance}
+                    isOpen={isSidebarOpen}
+                    handleLoginClick={goLoginPage}
+                    onToggle={toggleSidebar}
+                    isSlotsOnly={isSlotsOnly}
+                    supportParent={supportParent}
+                    openSupportModal={openSupportModal}
+                    openProfileModal={openProfileModal}
+                /> */}
+                <main>
+                    <Outlet context={{ isSlotsOnly, supportParent, openSupportModal, handleLoginClick, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
+                </main>
 
-                    {!isSportsPage && !isGameModalOpen && <Footer isSportsPage={isSportsPage} />}
-                    {!isSportsPage && !isGameModalOpen && <MobileFooter isSlotsOnly={isSlotsOnly} />}
+                <SupportModal
+                    isOpen={showSupportModal}
+                    onClose={closeSupportModal}
+                    supportWhatsApp={supportWhatsApp}
+                    supportTelegram={supportTelegram}
+                    supportEmail={supportEmail}
+                    supportParentOnly={supportParentOnly}
+                    supportParent={supportParent}
+                />
+                {showProfileModal && (
+                    <ProfileModal
+                        onClose={closeProfileModal}
+                        handleLogoutClick={handleLogoutClick}
+                        activeSection={profileModalSection}
+                        isMobile={isMobile}
+                    />
+                )}
 
-                    <div style={{ position: 'fixed', right: '10px', background: 'rgba(0, 0, 0, 0.6)', color: 'white', fontSize: '12px', padding: '2px 6px', borderRadius: '4px', zIndex: 1000 }}> v 1.7 </div>
-                </div>
+                {/* {!isSportsPage && !isGameModalOpen && <Footer isSportsPage={isSportsPage} />}
+                {!isSportsPage && !isGameModalOpen && <MobileFooter isSlotsOnly={isSlotsOnly} />} */}
             </NavigationContext.Provider>
         </LayoutContext.Provider>
     );
