@@ -89,6 +89,17 @@ const Layout = () => {
         };
     }, []);
 
+    useEffect(() => {
+        const bodyClassList = document.body.classList;
+        const isHomePath = location.pathname === "/" || location.pathname === "/home";
+
+        if (isHomePath) {
+            bodyClassList.add("is-home");
+        } else {
+            bodyClassList.remove("is-home");
+        }
+    }, [location.pathname]);
+
     const refreshBalance = () => {
         setUserBalance("");
         setShowFullDivLoading(true);
