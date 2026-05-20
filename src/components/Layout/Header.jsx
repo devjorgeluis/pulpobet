@@ -82,7 +82,11 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
 
     const getSubmenuHref = (item) => {
         if (isLiveCasinoSubmenu) {
-            return `/live-casino#${item.table_name || item.id || item.name}`;
+            return `/live-casino#${item.code || item.table_name || item.id || item.name}`;
+        }
+
+        if (activeSubmenuLink === "/providers" && location.pathname === "/live-casino") {
+            return `/live-casino#${item.code || item.table_name || item.id || item.name}`;
         }
 
         if (item.code) {
@@ -392,11 +396,13 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                     <a
                                         key={getSubmenuKey(item)}
                                         className={`headertop-submenu-item${isSubmenuItemActive(item) ? " active" : ""}`}
-                                        href={activeSubmenuLink === "/providers" ? getSubmenuHref(item) : `#`}
+                                        href={activeSubmenuLink === "/providers" || activeSubmenuLink === "/live-casino" ? getSubmenuHref(item) : `#`}
                                         onClick={(event) => {
                                             event.preventDefault();
                                             if (activeSubmenuLink === "/providers") {
                                                 navigate(getSubmenuHref(item), { state: { provider: item } });
+                                            } else if (activeSubmenuLink === "/live-casino") {
+                                                navigate(getSubmenuHref(item), { state: { liveCasinoCategory: item } });
                                             } else {
                                                 handleTagClick(item);
                                             }

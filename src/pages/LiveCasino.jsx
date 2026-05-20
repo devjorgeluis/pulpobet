@@ -4,10 +4,9 @@ import { AppContext } from "../AppContext";
 import { LayoutContext } from "../components/Layout/LayoutContext";
 import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
+import LiveCasinoSlideshow from "../components/LiveCasino/LiveCasinoSlideshow";
 import GameCard from "/src/components/GameCard";
-import CategoryButton from "../components/CategoryButton";
 import GameModal from "../components/Modal/GameModal";
-import DivLoading from "../components/Loading/DivLoading";
 import LoadApi from "../components/Loading/LoadApi";
 
 let selectedGameId = null;
@@ -78,16 +77,27 @@ const LiveCasino = () => {
   };
 
   useEffect(() => {
-    if (categories.length > 0) {
+    if (categories.length > 0 && !location.state?.provider && !location.state?.liveCasinoCategory) {
       let item = categories[0];
       fetchContent(item, item.id, item.table_name, 0, false);
       setActiveCategory(item);
     }
-  }, [categories]);
+  }, [categories, location.state?.provider, location.state?.liveCasinoCategory]);
+
+  useEffect(() => {
+    const selectedItem = location.state?.provider || location.state?.liveCasinoCategory;
+    if (!selectedItem || !selectedItem.id || !selectedItem.table_name) return;
+    if (!pageData.page_group_code) return;
+
+    setActiveCategory(selectedItem);
+    setSelectedCategoryIndex(0);
+    fetchContent(selectedItem, selectedItem.id, selectedItem.table_name, 0, true);
+    window.scrollTo(0, 0);
+  }, [location.state?.provider, location.state?.liveCasinoCategory, pageData.page_group_code]);
 
   const loadMoreContent = () => {
-    let item = categories[selectedCategoryIndex];
-    fetchContent(item, item.id, item.table_name, selectedCategoryIndex, false);
+    if (!activeCategory) return;
+    fetchContent(activeCategory, activeCategory.id, activeCategory.table_name, selectedCategoryIndex, false);
   };
 
   const fetchContent = (category, categoryId, tableName, categoryIndex, resetCurrentPage) => {
@@ -198,14 +208,14 @@ const LiveCasino = () => {
               const game = {
                 id: gameData.id,
                 name: selectedGameName,
-                image_local: selectedGameImg?.replace(contextData.cdnUrl, '')
+                image_local: selectedGameImg?.replace(contextData.cdnUrl, ''),
               };
               launchGame(game, selectedGameType, selectedGameLauncher);
             } else if (selectedGameId) {
               const game = {
                 id: selectedGameId,
                 name: selectedGameName,
-                image_local: selectedGameImg?.replace(contextData.cdnUrl, '')
+                image_local: selectedGameImg?.replace(contextData.cdnUrl, ''),
               };
               launchGame(game, selectedGameType, selectedGameLauncher);
             }
@@ -215,9 +225,9 @@ const LiveCasino = () => {
               const game = {
                 id: selectedGameId,
                 name: selectedGameName,
-                image_local: selectedGameImg?.replace(contextData.cdnUrl, '')
+                image_local: selectedGameImg?.replace(contextData.cdnUrl, ''),
               };
-              launchGame(game, selectedGameType, "tab");
+              launchGame(game, selectedGameType, 'tab');
             }
           }}
           ref={refGameModal}
@@ -228,78 +238,61 @@ const LiveCasino = () => {
           gameLauncher={selectedGameLauncher}
         />
       ) : (
-        <div className="slots-layout-content-desktop">
-          <div className="slots-main-desktop__filter-container">
-            <div className="slots-main-desktop__provider-filter-list">
-              {categories && categories.length > 0 && (
-                <div className="slots-provider-filter-list-desktop">
-                  {categories.map((item, index) => (
-                    <CategoryButton
-                      key={index}
-                      title={item.name}
-                      icon={item.image_local ? contextData.cdnUrl + item.image_local : null}
-                      active={selectedCategoryIndex == index}
-                      onClick={() => fetchContent(item, item.id, item.table_name, index, true)}
-                    />
-                  ))}
-                </div>
-              )}
-              {categories.length == 0 && <DivLoading />}
-            </div>
-          </div>
+        <div className="pagecontainer casino">
+          <div className="container-fluid">
 
-          <div className="slots-main-desktop__content-container">
-            <div className="slots-main-desktop__provider-section">
-              <div className="provider-section-desktop">
-                <div className="provider-section-desktop__header">
-                  <div className="provider-section-desktop__header-img-container">
-                    <div className="provider-section-desktop__header-img-top">
-                      {activeCategory.image_url && activeCategory.image_url !== "" && (
-                        <img
-                          className="provider-section-desktop__header-icon"
-                          src=""
-                          alt=""
-                          loading="lazy"
-                        />
-                      )}
-                      <span className="provider-section-desktop__header-provider-text">
-                        {activeCategory.name}
-                      </span>
+            <LiveCasinoSlideshow />
+            <main className="row mt-4">
+              <div className="col-12">
+                <div className="slots-template-container">
+                  <h2 className="section-title slots" dark-mode="true">
+                    {activeCategory?.name}
+                  </h2>
+
+                  <div className="pg-content-container">
+                    <div className="banner-section">
+                      <div className="slots-general-container mb-4">
+                        <ul>
+                          {games &&
+                            games.map((game) => (
+                              <li key={game.id}>
+                                <GameCard
+                                  id={game.id}
+                                  provider={activeCategory?.name || 'Live Casino'}
+                                  title={game.name}
+                                  imageSrc={
+                                    game.image_local !== null
+                                      ? contextData.cdnUrl + game.image_local
+                                      : game.image_url
+                                  }
+                                  game={game}
+                                  onClick={() => {
+                                    if (isLogin) {
+                                      launchGame(game, 'slot', 'modal');
+                                    } else {
+                                      handleLoginClick();
+                                    }
+                                  }}
+                                />
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
                     </div>
-                    <div className="provider-section-desktop__header-line"></div>
                   </div>
                 </div>
-                <div className="provider-section-desktop__games-container">
-                  {games &&
-                    games.map((game) => (
-                      <GameCard
-                        key={game.id}
-                        id={game.id}
-                        provider={activeCategory?.name || "Casino"}
-                        title={game.name}
-                        imageSrc={
-                          game.image_local !== null
-                            ? contextData.cdnUrl + game.image_local
-                            : game.image_url
-                        }
-                        game={game}
-                        onClick={() => {
-                          if (isLogin) {
-                            launchGame(game, "slot", "modal");
-                          } else {
-                            handleLoginClick();
-                          }
-                        }}
-                      />
-                    ))}
-                </div>
-                <div className="carousel-arrows">
-                  <a className="carousel-arrows__title" onClick={loadMoreContent}>
-                    <span className="carousel-arrows__title-text">VER MÁS {isLoadingGames && <LoadApi />}</span>
-                  </a>
-                </div>
+
+                {games.length > 0 && (
+                  <div className="text-center">
+                    <a className="btn orange btn-regular" onClick={loadMoreContent}>
+                      <span className="d-flex align-items-center">
+                        VER MÁS {isLoadingGames && <LoadApi />}
+                      </span>
+                    </a>
+                  </div>
+                )}
               </div>
-            </div>
+            </main>
           </div>
         </div>
       )}

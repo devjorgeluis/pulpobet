@@ -3,7 +3,7 @@ import { useLocation, useOutletContext } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
-import CasinoSlideshow from "../components/Casino/Slideshow";
+import CasinoSlideshow from "../components/Casino/CasinoSlideshow";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameCard from "/src/components/GameCard";
 import GameModal from "../components/Modal/GameModal";
