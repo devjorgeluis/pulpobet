@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { LayoutContext } from "./LayoutContext";
 import { callApi } from "../../utils/Utils";
+import SearchInput from "../SearchInput";
 
 import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
@@ -378,10 +379,12 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 </div>
 
                                 <div className="headertop-bottom-sidemenu">
-                                    <input
-                                        type="text"
-                                        placeholder="Buscar juego"
-                                        className="headertop-bottom-sidemenu-input"
+                                    <SearchInput
+                                        // txtSearch={txtSearch}
+                                        // setTxtSearch={setTxtSearch}
+                                        // searchRef={searchRef}
+                                        // search={search}
+                                        // isMobile={isMobile}
                                     />
                                 </div>
                             </div>
