@@ -8,6 +8,10 @@
         height: auto;
         min-width: 14rem;
     }
+
+    .top-casino-game .slots-game-card {
+        min-width: unset;
+    }
 }
 
 .slots-game-card.small {

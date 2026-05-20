@@ -26,7 +26,7 @@ const GameCard = (props) => {
     };
 
     return (
-        <div className="slots-game-card">
+        <div className={`slots-game-card ${props.size === "small" ? "small" : ""}`}>
             <div className="gc-container" onClick={handleGameClick} role="button" tabIndex={0}>
                 <div className="gc-card">
                     <button className="gc-favorite-btn" type="button">
@@ -38,14 +38,21 @@ const GameCard = (props) => {
                         />
                     </button>
 
-                    <div className="gc-badge-list"></div>
+                    <div className="gc-badge-list">
+                        <span className="gc-badge gc-badge-featured">
+                            {props.provider}
+                        </span>
+                    </div>
 
                     <div className="gc-card-image">
-                        <img
-                            className="image"
-                            src={props.imageSrc}
-                            alt={props.title}
-                        />
+                        {
+                            props.imageSrc &&
+                            <img
+                                className="image"
+                                src={props.imageSrc}
+                                alt={props.title}
+                            />
+                        }
                     </div>
 
                     <div className="gc-hover">

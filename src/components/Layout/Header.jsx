@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, useMemo, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { LayoutContext } from "./LayoutContext";
 import { callApi } from "../../utils/Utils";
+
 import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
 import ImgLiveCasino from "/src/assets/img/live-casino.png";
@@ -19,6 +20,7 @@ import ImgJoker from "/src/assets/img/joker.png";
 import ImgCrash from "/src/assets/img/crash.png";
 import ImgMegaway from "/src/assets/img/megaway.png";
 import ImgRuleta from "/src/assets/img/ruleta.png";
+import ImgProvider from "/src/assets/img/provider.png";
 
 export const getHeaderTags = (isSlotsOnly) => {
     const isSlotsOnlyFalse = isSlotsOnly === false || isSlotsOnly === "false";
@@ -41,9 +43,14 @@ export const getHeaderTags = (isSlotsOnly) => {
 
 const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isSlotsOnly, supportParent, openSupportModal }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [activeSubmenuLink, setActiveSubmenuLink] = useState(null);
     const [isLoadingLiveCasinoCategories, setIsLoadingLiveCasinoCategories] = useState(false);
+    const [isLoadingCasinoCategories, setIsLoadingCasinoCategories] = useState(false);
+    const [casinoMainCategories, setCasinoMainCategories] = useState([]);
+    const [providerSubmenuItems, setProviderSubmenuItems] = useState([]);
+    const [selectedProviderTag, setSelectedProviderTag] = useState(null);
     const userMenuRef = useRef(null);
     const { contextData } = useContext(AppContext);
     const { liveCasinoCategories, setLiveCasinoCategories } = useContext(LayoutContext);
@@ -52,12 +59,19 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
         setShowUserMenu(!showUserMenu);
     };
 
+    const isSlotsAllowed = isSlotsOnly === false || isSlotsOnly === "false";
     const tags = useMemo(() => getHeaderTags(isSlotsOnly), [isSlotsOnly]);
-    const submenuItems = activeSubmenuLink === "/live-casino" ? liveCasinoCategories : tags;
+    const isProvidersNavVisible = location.pathname === "/casino" && isSlotsAllowed;
+    const submenuItems = activeSubmenuLink === "/live-casino"
+        ? liveCasinoCategories
+        : activeSubmenuLink === "/providers"
+            ? (selectedProviderTag === "arcade" ? providerSubmenuItems : casinoMainCategories)
+            : tags;
     const isLiveCasinoSubmenu = activeSubmenuLink === "/live-casino";
+    const activeSubmenuCode = location.hash.replace("#", "") || selectedProviderTag || "";
 
     const handleNavHover = (link) => {
-        if (link === "/casino" || link === "/live-casino") {
+        if (link === "/casino" || link === "/live-casino" || link === "/providers") {
             setActiveSubmenuLink(link);
         } else {
             setActiveSubmenuLink(null);
@@ -67,12 +81,58 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
     const clearSubmenu = () => setActiveSubmenuLink(null);
 
     const getSubmenuHref = (item) => {
-        return isLiveCasinoSubmenu
-            ? `/live-casino#${item.table_name || item.id || item.name}`
-            : `/casino#${item.code}`;
+        if (isLiveCasinoSubmenu) {
+            return `/live-casino#${item.table_name || item.id || item.name}`;
+        }
+
+        if (item.code) {
+            return `/casino#${item.code}`;
+        }
+
+        return `/casino#${item.table_name || item.id || item.name}`;
+    };
+
+    const isSubmenuItemActive = (item) => {
+        if (!item || !item.code) return false;
+        return item.code === activeSubmenuCode;
+    };
+
+    const handleProviderTagClick = (tag) => {
+        setSelectedProviderTag(tag.code);
+        setProviderSubmenuItems([]);
+
+        callApi(
+            contextData,
+            "GET",
+            `/get-page?page=${tag.code}`,
+            (result) => {
+                if (result && result.data && result.data.categories) {
+                    setProviderSubmenuItems(result.data.categories);
+                }
+            },
+            null,
+        );
+
+        navigate(`/casino#${tag.code}`);
     };
 
     const getSubmenuKey = (item) => item.code || item.id || item.table_name || item.name;
+
+    const handleTagClick = (tag) => {
+        setSelectedProviderTag(tag.code);
+        callApi(
+            contextData,
+            "GET",
+            `/get-page?page=${tag.code}`,
+            (result) => {
+                if (result && result.data && result.data.categories) {
+                    setProviderSubmenuItems(result.data.categories);
+                }
+            },
+            null,
+        );
+        navigate(`/casino#${tag.code}`);
+    };
 
     useEffect(() => {
         if (liveCasinoCategories.length === 0 && !isLoadingLiveCasinoCategories) {
@@ -93,6 +153,27 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
     }, [liveCasinoCategories.length, contextData, setLiveCasinoCategories, isLoadingLiveCasinoCategories]);
 
     useEffect(() => {
+        if (location.pathname === "/casino" && casinoMainCategories.length === 0 && !isLoadingCasinoCategories) {
+            setIsLoadingCasinoCategories(true);
+            callApi(
+                contextData,
+                "GET",
+                "/get-page?page=casino",
+                (result) => {
+                    setIsLoadingCasinoCategories(false);
+                    if (result && result.data && result.data.categories) {
+                        setCasinoMainCategories(result.data.categories);
+                        if (!selectedProviderTag) {
+                            setProviderSubmenuItems(result.data.categories);
+                        }
+                    }
+                },
+                null,
+            );
+        }
+    }, [location.pathname, casinoMainCategories.length, contextData, isLoadingCasinoCategories, selectedProviderTag]);
+
+    useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
                 setShowUserMenu(false);
@@ -110,12 +191,13 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
         };
     }, [showUserMenu]);
 
-    const navItems = isSlotsOnly === "false" ? [
+    const navItems = isSlotsAllowed ? [
         { link: "/casino", label: "Casino", image: ImgCasino },
         { link: "/live-casino", label: "Casino En Vivo", image: ImgLiveCasino },
         { link: "/sports", label: "Deportes", image: ImgSports },
-        { link: "/live-sports", label: "Deportes En Vivo", image: ImgLiveSports }
-    ] : [
+        { link: "/live-sports", label: "Deportes En Vivo", image: ImgLiveSports },
+        isProvidersNavVisible && { link: "/providers", label: "Proveedores", image: ImgProvider },
+    ].filter(Boolean) : [
         { link: "/casino", label: "Casino", image: ImgCasino }
     ];
 
@@ -269,7 +351,13 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                             key={idx}
                                             className="headertop-menu-item"
                                             onMouseEnter={() => handleNavHover(item.link)}
-                                            onClick={() => navigate(item.link)}
+                                            onClick={() => {
+                                                if (item.link === "/providers") {
+                                                    setActiveSubmenuLink("/providers");
+                                                    return;
+                                                }
+                                                navigate(item.link);
+                                            }}
                                             style={{ "--hover-color": "rgba(5,26,69,0.58)" }}
                                         >
                                             <img
@@ -303,11 +391,15 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 {submenuItems.map((item) => (
                                     <a
                                         key={getSubmenuKey(item)}
-                                        className="headertop-submenu-item"
-                                        href={getSubmenuHref(item)}
+                                        className={`headertop-submenu-item${isSubmenuItemActive(item) ? " active" : ""}`}
+                                        href={activeSubmenuLink === "/providers" ? getSubmenuHref(item) : `#`}
                                         onClick={(event) => {
                                             event.preventDefault();
-                                            navigate(getSubmenuHref(item));
+                                            if (activeSubmenuLink === "/providers") {
+                                                navigate(getSubmenuHref(item), { state: { provider: item } });
+                                            } else {
+                                                handleTagClick(item);
+                                            }
                                         }}
                                     >
                                         {(item.image_local || item.image || item.image_url) && (
@@ -329,8 +421,8 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 ))}
                             </div>
                         </div>
-                    )}
-                </div>
+                        )}
+                    </div>
                 </div>
             </app-header-top>
         </header>

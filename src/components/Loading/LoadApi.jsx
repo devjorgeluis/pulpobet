@@ -1,6 +1,8 @@
+import ImgLoading from "/src/assets/img/loading-spinner.gif";
+
 const LoadApi = () => {
   return (
-    <i className="fa fa-spin fa-spinner ml-1"></i>
+    <img src={ImgLoading} alt="Loading..." className="ms-2" width={30} height={30} />
   );
 };
 

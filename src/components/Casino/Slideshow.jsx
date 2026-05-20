@@ -1,9 +1,11 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useContext } from 'react';
 import { useOutletContext } from "react-router-dom";
+import { AppContext } from '../../AppContext';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import GameCard from '../GameCard';
 
 import ImgBanner1 from "/src/assets/img/casino-banner1.jpeg";
 import ImgBanner2 from "/src/assets/img/casino-banner2.jpeg";
@@ -20,10 +22,11 @@ import ImgMobileBanner6 from "/src/assets/img/mobile-casino-banner6.jpeg";
 import ImgBannerPrev from "/src/assets/img/banner-prev.png";
 import ImgBannerNext from "/src/assets/img/banner-next.png";
 
-const CasinoSlideshow = ({ title }) => {
+const CasinoSlideshow = () => {
+  const { contextData } = useContext(AppContext);
   const swiperRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { isMobile } = useOutletContext();
+  const { isMobile, topCasino } = useOutletContext();
 
   const initSwiper = (swiper) => {
     swiperRef.current = swiper;
@@ -69,7 +72,6 @@ const CasinoSlideshow = ({ title }) => {
 
   return (
     <>
-      <h3 className="h3">{title}</h3>
       <div className="row">
         <div className="col-12 col-lg-8 col-xxxl-6">
           <div className="banners-wrapper">
@@ -149,193 +151,22 @@ const CasinoSlideshow = ({ title }) => {
         </div>
         <div className="d-none d-lg-block col-lg-4 col-xxxl-6">
           <div className="row">
-            <div className="col-6 col-xxxl-3 mb-4">
-              <app-game-card className="ng-star-inserted">
-                <a className="gc-container">
-                  <div className="gc-card">
-                    <button className="gc-favorite-btn">
-                      <img
-                        src="/assets/images/favorites/not-favorite.svg"
-                        width="32"
-                        height="32"
-                        alt="Favorite"
-                      />
-                    </button>
-
-                    <div className="gc-badge-list"></div>
-
-                    <app-game-image className="gc-card-image">
-                      <img
-                        className="image"
-                        src="https://cms.pulpobet.club/media/images/games/6454.jpg?v=1"
-                        alt="Master Joker"
-                      />
-                    </app-game-image>
-
-                    <div className="gc-hover">
-                      <div className="gc-hover-button-wrapper">
-                        <app-link-button
-                          label="Jugar"
-                          style={{ display: "block", width: "100%" }}
-                        >
-                          <a
-                            className="btn purple btn-block btn-regular"
-                            href="/es/game/master-joker-6454"
-                          >
-                            Jugar
-                          </a>
-                        </app-link-button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="gc-name" dark-mode="true">
-                    Master Joker
-                  </p>
-                </a>
-              </app-game-card>
-            </div>
-
-            <div className="col-6 col-xxxl-3 mb-4">
-              <app-game-card className="ng-star-inserted">
-                <a className="gc-container">
-                  <div className="gc-card">
-                    <button className="gc-favorite-btn">
-                      <img
-                        src="/assets/images/favorites/not-favorite.svg"
-                        width="32"
-                        height="32"
-                        alt="Favorite"
-                      />
-                    </button>
-
-                    <div className="gc-badge-list"></div>
-
-                    <app-game-image className="gc-card-image">
-                      <img
-                        className="image"
-                        src="https://cms.pulpobet.club/media/images/games/13129.svg?v=2"
-                        alt="Rush Fever 7s"
-                      />
-                    </app-game-image>
-
-                    <div className="gc-hover">
-                      <div className="gc-hover-button-wrapper">
-                        <app-link-button
-                          label="Jugar"
-                          style={{ display: "block", width: "100%" }}
-                        >
-                          <a
-                            className="btn purple btn-block btn-regular"
-                            href="/es/game/rush-fever-7s-13129"
-                          >
-                            Jugar
-                          </a>
-                        </app-link-button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="gc-name" dark-mode="true">
-                    Rush Fever 7s
-                  </p>
-                </a>
-              </app-game-card>
-            </div>
-
-            <div className="col-6 col-xxxl-3 mb-4">
-              <app-game-card className="ng-star-inserted">
-                <a className="gc-container">
-                  <div className="gc-card">
-                    <button className="gc-favorite-btn">
-                      <img
-                        src="/assets/images/favorites/not-favorite.svg"
-                        width="32"
-                        height="32"
-                        alt="Favorite"
-                      />
-                    </button>
-
-                    <div className="gc-badge-list"></div>
-
-                    <app-game-image className="gc-card-image">
-                      <img
-                        className="image"
-                        src="https://cms.pulpobet.club/media/images/games/10891.svg?v=3"
-                        alt="Starburst"
-                      />
-                    </app-game-image>
-
-                    <div className="gc-hover">
-                      <div className="gc-hover-button-wrapper">
-                        <app-link-button
-                          label="Jugar"
-                          style={{ display: "block", width: "100%" }}
-                        >
-                          <a
-                            className="btn purple btn-block btn-regular"
-                            href="/es/game/starburst-10891"
-                          >
-                            Jugar
-                          </a>
-                        </app-link-button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="gc-name" dark-mode="true">
-                    Starburst
-                  </p>
-                </a>
-              </app-game-card>
-            </div>
-
-            <div className="col-6 col-xxxl-3 mb-4">
-              <app-game-card className="ng-star-inserted">
-                <a className="gc-container">
-                  <div className="gc-card">
-                    <button className="gc-favorite-btn">
-                      <img
-                        src="/assets/images/favorites/not-favorite.svg"
-                        width="32"
-                        height="32"
-                        alt="Favorite"
-                      />
-                    </button>
-
-                    <div className="gc-badge-list"></div>
-
-                    <app-game-image className="gc-card-image">
-                      <img
-                        className="image"
-                        src="https://cms.pulpobet.club/media/images/games/7236.jpg?v=1"
-                        alt="Wolf Fang Winter Storm"
-                      />
-                    </app-game-image>
-
-                    <div className="gc-hover">
-                      <div className="gc-hover-button-wrapper">
-                        <app-link-button
-                          label="Jugar"
-                          style={{ display: "block", width: "100%" }}
-                        >
-                          <a
-                            className="btn purple btn-block btn-regular"
-                            href="/es/game/wolf-fang-winter-storm-7236"
-                          >
-                            Jugar
-                          </a>
-                        </app-link-button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="gc-name" dark-mode="true">
-                    Wolf Fang Winter Storm
-                  </p>
-                </a>
-              </app-game-card>
-            </div>
+            {
+              topCasino.slice(0, 4).map((game, index) => (
+                <div className="col-6 col-xxxl-3 mb-4 top-casino-game" key={`top-casino-${game.id ?? index}-${index}`}>
+                  <GameCard
+                    id={game.id}
+                    provider={'Hot'}
+                    title={game.name}
+                    type="slideshow"
+                    imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
+                    onGameClick={() => {
+                        handleGameClick(game);
+                    }}
+                  />
+                </div>
+              ))        
+            }
           </div>
         </div>
       </div>

@@ -1,22 +1,15 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import { useLocation, useOutletContext, useNavigate } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import { AppContext } from "../AppContext";
-import { LayoutContext } from "../components/Layout/LayoutContext";
 import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
 import CasinoSlideshow from "../components/Casino/Slideshow";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameCard from "/src/components/GameCard";
 import GameModal from "../components/Modal/GameModal";
-import CategoryContainer from "../components/CategoryContainer";
-import ProviderContainer from "../components/ProviderContainer";
-import SearchInput from "../components/SearchInput";
 import LoadApi from "../components/Loading/LoadApi";
 import { getHeaderTags } from "../components/Layout/Header";
 import "/src/css/casino.css";
-
-import ImgSlotsBanner from "/src/assets/img/logo.png";
-import ImgMobileSlotsBanner from "/src/assets/img/logo.png";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -30,7 +23,6 @@ const Casino = () => {
   const { contextData } = useContext(AppContext);
   const { setShowFullDivLoading, setIsGameModalOpen } = useContext(NavigationContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
-  const [txtSearch, setTxtSearch] = useState("");
   const [games, setGames] = useState([]);
   const [firstFiveCategoriesGames, setFirstFiveCategoriesGames] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -42,7 +34,6 @@ const Casino = () => {
   const [gameUrl, setGameUrl] = useState("");
   const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
   const [gameLaunchError, setGameLaunchError] = useState("");
-  const [searchDelayTimer, setSearchDelayTimer] = useState();
 
   useEffect(() => {
     if (!gameLaunchError) return;
@@ -64,8 +55,6 @@ const Casino = () => {
   const tags = getHeaderTags(isSlotsOnly);
   const lastLoadedTagRef = useRef("");
   const pendingCategoryFetchesRef = useRef(0);
-  const searchRef = useRef(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!location.hash || tags.length === 0) return;
@@ -81,6 +70,25 @@ const Casino = () => {
   }, [location.hash, tags]);
 
   useEffect(() => {
+    const provider = location.state?.provider;
+    if (provider && provider.id && provider.table_name) {
+      setIsSingleCategoryView(true);
+      setIsExplicitSingleCategoryView(true);
+      setActiveCategory(provider);
+      setSelectedProvider(provider);
+      fetchContent(
+        provider,
+        provider.id,
+        provider.table_name,
+        0,
+        true,
+        null
+      );
+      window.scrollTo(0, 0);
+    }
+  }, [location.state?.provider]);
+
+  useEffect(() => {
     selectedGameId = null;
     selectedGameType = null;
     selectedGameLauncher = null;
@@ -94,27 +102,6 @@ const Casino = () => {
     getPage("casino");
     window.scrollTo(0, 0);
   }, [location.pathname]);
-
-  useEffect(() => {
-    const isSlotsOnlyFalse = isSlotsOnly === false || isSlotsOnly === "false";
-    let tmpTags = isSlotsOnlyFalse
-      ? [
-        // { name: "Lobby", code: "home", image: ImgTodo },
-        // { name: "Hot", code: "hot", image: ImgHot },
-        // { name: "Jokers", code: "joker", image: ImgJoker },
-        // { name: "Ruletas", code: "roulette", image: ImgRuleta },
-        // { name: "Crash", code: "arcade", image: ImgCrash },
-        // { name: "Megaways", code: "megaways", image: ImgMegaway },
-      ]
-      : [
-        // { name: "Lobby", code: "home", image: ImgTodo },
-        // { name: "Hot", code: "hot", image: ImgHot },
-        // { name: "Jokers", code: "joker", image: ImgJoker },
-        // { name: "Megaways", code: "megaways", image: ImgMegaway },
-      ];
-
-    // setTags(tmpTags);
-  }, [isSlotsOnly]);
 
   const getPage = (page) => {
     setIsLoadingGames(true);
@@ -389,126 +376,6 @@ const Casino = () => {
     setIsGameModalOpen(false);
   };
 
-  const handleCategorySelect = (category) => {
-    setActiveCategory(category);
-    setSelectedProvider(null);
-    setTxtSearch("");
-  };
-
-  const handleProviderSelect = (provider, index = 0) => {
-    setSelectedProvider(provider);
-    setTxtSearch("");
-    setIsExplicitSingleCategoryView(true);
-    window.scrollTo(0, 0);
-
-    if (provider) {
-      setActiveCategory(null);
-      setSelectedCategoryIndex(-1);
-
-      fetchContent(provider, provider.id, provider.table_name, index, true);
-    } else {
-      const firstCategory = categories[0];
-      if (firstCategory) {
-        setActiveCategory(firstCategory);
-        setSelectedCategoryIndex(0);
-        fetchContent(
-          firstCategory,
-          firstCategory.id,
-          firstCategory.table_name,
-          0,
-          true,
-        );
-      }
-    }
-  };
-
-  const search = (e) => {
-    const keyword = txtSearch;
-
-    if (navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)) {
-      performSearchWithDelay(keyword);
-    } else {
-      if (
-        (e.keyCode >= 48 && e.keyCode <= 57) ||
-        (e.keyCode >= 65 && e.keyCode <= 90) ||
-        e.keyCode === 8 ||
-        e.keyCode === 46
-      ) {
-        performSearchWithDelay(keyword);
-      }
-    }
-
-    if (e.key === "Enter" || e.keyCode === 13) {
-      performSearch(keyword);
-      searchRef.current?.blur();
-    }
-
-    if (e.key === "Escape" || e.keyCode === 27) {
-      searchRef.current?.blur();
-    }
-  };
-
-  const performSearchWithDelay = (keyword) => {
-    clearTimeout(searchDelayTimer);
-
-    if (keyword.trim() === "") {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      performSearch(keyword);
-    }, 1000);
-
-    setSearchDelayTimer(timer);
-  };
-
-  const performSearch = (keyword) => {
-    if (keyword.trim() === "") {
-      setIsSingleCategoryView(false);
-      setIsExplicitSingleCategoryView(false);
-      setGames([]);
-      getPage("casino");
-      return;
-    }
-
-    setTxtSearch(keyword.trim());
-    setGames([]);
-    setIsSingleCategoryView(true);
-    setIsExplicitSingleCategoryView(true);
-    setActiveCategory({ name: `Búsqueda: "${keyword.trim()}"` });
-    setSelectedProvider(null);
-
-    let pageSize = 30;
-
-    callApi(
-      contextData,
-      "GET",
-      "/search-content?keyword=" +
-      encodeURIComponent(keyword.trim()) +
-      "&page_group_code=" +
-      pageData.page_group_code +
-      "&length=" +
-      pageSize,
-      callbackSearch,
-      null,
-    );
-  };
-
-  const callbackSearch = (result) => {
-    if (result.status === 500 || result.status === 422) {
-      setGames([]);
-    } else {
-      configureImageSrc(result);
-      setGames(result.content || []);
-      pageCurrent = 1;
-    }
-
-    setIsSingleCategoryView(true);
-    setIsExplicitSingleCategoryView(true);
-    setActiveCategory({ name: `Búsqueda: "${txtSearch}"` });
-    setSelectedProvider(null);
-  };
-
   const configureImageSrc = (result) => {
     (result.content || []).forEach((element) => {
       element.imageDataSrc =
@@ -561,125 +428,142 @@ const Casino = () => {
         />
       ) : (
         <div className="pagecontainer casino">
-          <CasinoSlideshow title={activeCategory?.name} />
+          <div className="container-fluid">
+            <CasinoSlideshow />
 
-          <main className="game-main-container">
-            <div className="inner">
-              {selectedProvider || isSingleCategoryView ? (
-                <>
-                  <div className="provider-section-desktop__header">
-                    <div className="provider-section-desktop__header-img-container">
-                      <div className="provider-section-desktop__header-img-top">
-                        <span className="provider-section-desktop__header-provider-text">{activeCategory?.name}</span>
+            <main className="row mt-4">
+              <div className="col-12">
+                {selectedProvider || isSingleCategoryView ? (
+                  <>
+                    <div className="slots-template-container">
+                      <h2 className="section-title slots" dark-mode="true">{activeCategory?.name}</h2>
+
+                      <div className="pg-content-container">
+                        <div className="banner-section">
+                          <div className="slots-general-container mb-4">
+                            <ul>
+                              {
+                                games.length > 0 &&
+                                games.map((game) => (
+                                  <li>
+                                    <GameCard
+                                      key={game.id}
+                                      id={game.id}
+                                      provider={activeCategory?.name || "Casino"}
+                                      title={game.name}
+                                      imageSrc={
+                                        game.image_local !== null
+                                          ? contextData.cdnUrl + game.image_local
+                                          : game.image_url
+                                      }
+                                      game={game}
+                                      onClick={() => {
+                                        if (isLogin) {
+                                          launchGame(game, "slot", "modal");
+                                        } else {
+                                          handleLoginClick();
+                                        }
+                                      }}
+                                    />
+                                  </li>
+                                )
+                                )
+                              }
+                            </ul>
+                          </div>
+                        </div>
                       </div>
-                      <div className="provider-section-desktop__header-line"></div>
                     </div>
-                  </div>
-                  <div className="provider-section-desktop__games-container">
-                    {
-                      games.length > 0 &&
-                      games.map((game) => (
-                        <GameCard
-                          key={game.id}
-                          id={game.id}
-                          provider={activeCategory?.name || "Casino"}
-                          title={game.name}
-                          imageSrc={
-                            game.image_local !== null
-                              ? contextData.cdnUrl + game.image_local
-                              : game.image_url
-                          }
-                          game={game}
-                          onClick={() => {
-                            if (isLogin) {
-                              launchGame(game, "slot", "modal");
-                            } else {
-                              handleLoginClick();
-                            }
-                          }}
-                        />
-                      )
-                      )
-                    }
-                  </div>
                     {games.length > 0 && (
                       <div className="text-center">
-                        <a className="carousel-arrows__title mx-auto w-fit" onClick={loadMoreGames}>
-                          <span className="carousel-arrows__title-text">VER MÁS {isLoadingGames && <LoadApi />}</span>
+                        <a className="btn orange btn-regular" onClick={loadMoreGames}>
+                          <span className="d-flex align-items-center">VER MÁS {isLoadingGames && <LoadApi />}</span>
                         </a>
                       </div>
                     )}
-                </>
-              ) : (
-                <>
-                  {isSingleCategoryView ? (
-                    <div className="provider-section-desktop__games-container">
-                      {
-                        games.length > 0 &&
-                        games.map((game) => (
-                          <GameCard
-                            key={game.id}
-                            id={game.id}
-                            provider={activeCategory?.name || "Casino"}
-                            title={game.name}
-                            imageSrc={
-                              game.image_local !== null
-                                ? contextData.cdnUrl + game.image_local
-                                : game.image_url
-                            }
-                            game={game}
-                            onClick={() => {
-                              if (isLogin) {
-                                launchGame(game, "slot", "modal");
-                              } else {
-                                handleLoginClick();
-                              }
-                            }}
-                          />
-                        )
-                        )
-                      }
+                  </>
+                ) : (
+                  <>
+                    {isSingleCategoryView ? (
+                      <div className="slots-template-container">
+                        <div className="pg-content-container">
+                          <div className="banner-section">
+                            <div className="slots-general-container mb-4">
+                              <ul>
+                                {
+                                  games.length > 0 &&
+                                  games.map((game) => (
+                                    <li>
+                                      <GameCard
+                                        key={game.id}
+                                        id={game.id}
+                                        provider={activeCategory?.name || "Casino"}
+                                        title={game.name}
+                                        imageSrc={
+                                          game.image_local !== null
+                                            ? contextData.cdnUrl + game.image_local
+                                            : game.image_url
+                                        }
+                                        game={game}
+                                        onClick={() => {
+                                          if (isLogin) {
+                                            launchGame(game, "slot", "modal");
+                                          } else {
+                                            handleLoginClick();
+                                          }
+                                        }}
+                                        size="small"
+                                      />
+                                    </li>
+                                  )
+                                  )
+                                }
 
-                      {games.length > 0 && (
-                        <div className="text-center">
-                          <a className="carousel-arrows__title mx-auto w-fit" onClick={loadMoreGames}>
-                            <span className="carousel-arrows__title-text">VER MÁS {isLoadingGames && <LoadApi />}</span>
-                          </a>
+                                {games.length > 0 && (
+                                  <div className="text-center">
+                                    <a className="btn orange btn-regular" onClick={loadMoreGames}>
+                                      <span className="d-flex align-items-center">VER MÁS {isLoadingGames && <LoadApi />}</span>
+                                    </a>
+                                  </div>
+                                )}
+                              </ul>
+                            </div>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  ) : (
-                    <>
-                      {firstFiveCategoriesGames.map((entry, catIndex) => {
-                        if (!entry || !entry.games) return null;
+                      </div>
+                    ) : (
+                      <>
+                        {firstFiveCategoriesGames.map((entry, catIndex) => {
+                          if (!entry || !entry.games) return null;
 
-                        return (
-                          <HotGameSlideshow
-                            key={entry?.category?.id || catIndex}
-                            games={entry.games}
-                            name={entry?.category?.name}
-                            title={entry?.category?.name}
-                            length={7}
-                            slideshowKey={entry?.category?.id}
-                            loadMoreContent={() =>
-                              loadMoreContent(entry.category, catIndex)
-                            }
-                            onGameClick={(g) => {
-                              if (isLogin) {
-                                launchGame(g, "slot", "modal");
-                              } else {
-                                handleLoginClick();
+                          return (
+                            <HotGameSlideshow
+                              key={entry?.category?.id || catIndex}
+                              games={entry.games}
+                              name={entry?.category?.name}
+                              title={entry?.category?.name}
+                              length={7}
+                              slideshowKey={entry?.category?.id}
+                              loadMoreContent={() =>
+                                loadMoreContent(entry.category, catIndex)
                               }
-                            }}
-                          />
-                        );
-                      })}
-                    </>
-                  )}
-                </>
-              )}
-            </div>
-          </main>
+                              onGameClick={(g) => {
+                                if (isLogin) {
+                                  launchGame(g, "slot", "modal");
+                                } else {
+                                  handleLoginClick();
+                                }
+                              }}
+                            />
+                          );
+                        })}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            </main>
+          </div>
         </div>
       )}
     </>

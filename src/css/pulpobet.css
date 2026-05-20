@@ -1728,7 +1728,7 @@ app-image {
     border: 1px solid transparent;
 }
 
-.headertop-submenu-item:hover {
+.headertop-submenu-item.active, .headertop-submenu-item:hover {
     color: white;
     background-color: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.1);
@@ -3774,12 +3774,18 @@ body.has-menu-open .header-mobilemenu {
     position: relative;
     border-radius: 10px;
     overflow: hidden;
-    max-height: 160px;
+    max-height: 140px;
 }
 
 .gc-card-image {
     display: flex;
     width: 100%;
+}
+
+@media (min-width: 768px) {
+    .pg-content-container .gc-card-image .image {
+        min-height: 140px;
+    }
 }
 
 .gc-hover {
