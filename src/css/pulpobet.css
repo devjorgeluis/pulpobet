@@ -797,9 +797,7 @@ a:hover {
     height: 32.5vw;
 }
 
-.casino .banners {
-    
-}
+.casino .banners {}
 
 .banners .banners-live {
     position: absolute;
@@ -1435,10 +1433,6 @@ a:hover {
     margin-right: 10px;
 }
 
-.dark {
-    background-color: rgba(29, 30, 39, 0.9);
-}
-
 .overlay-content {
     animation: _ngcontent-yon-c57_pulse 1.2s infinite;
 }
@@ -1715,7 +1709,8 @@ app-image {
     border: 1px solid transparent;
 }
 
-.headertop-submenu-item.active, .headertop-submenu-item:hover {
+.headertop-submenu-item.active,
+.headertop-submenu-item:hover {
     color: white;
     background-color: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.1);
@@ -2074,9 +2069,11 @@ body.has-menu-open .header-mobilemenu {
 
 .header-search-results {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    padding: 0 12px;
+    overflow-y: auto;
+    max-height: 50vh;
+    margin-bottom: 3rem;
 }
 
 @media (min-width: 768px) {
@@ -3762,6 +3759,10 @@ body.has-menu-open .header-mobilemenu {
     border-radius: 10px;
     overflow: hidden;
     max-height: 140px;
+}
+
+.header-search-content .gc-card {
+    max-height: 150px;
 }
 
 .gc-card-image {

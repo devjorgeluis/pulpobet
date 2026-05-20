@@ -38,11 +38,14 @@ const GameCard = (props) => {
                         />
                     </button>
 
-                    <div className="gc-badge-list">
-                        <span className="gc-badge gc-badge-featured">
-                            {props.provider}
-                        </span>
-                    </div>
+                    {
+                        props.provider &&
+                        <div className="gc-badge-list">
+                            <span className="gc-badge gc-badge-featured">
+                                {props.provider}
+                            </span>
+                        </div>
+                    }
 
                     <div className="gc-card-image">
                         {

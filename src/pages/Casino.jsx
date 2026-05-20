@@ -445,7 +445,7 @@ const Casino = () => {
                               {
                                 games.length > 0 &&
                                 games.map((game) => (
-                                  <li>
+                                  <li key={game.id}>
                                     <GameCard
                                       key={game.id}
                                       id={game.id}
