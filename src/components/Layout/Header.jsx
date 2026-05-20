@@ -291,7 +291,10 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                             <div className={`headertop-auth-usermenu ${showUserMenu ? 'is-open' : ''}`}>
                                                 <a
                                                     className="headertop-auth-usermenu-item"
-                                                    onClick={() => navigate("/profile")}
+                                                    onClick={() => {
+                                                        setShowUserMenu(false);
+                                                        navigate("/profile")
+                                                    }}
                                                 >
                                                     Mi cuenta
                                                 </a>

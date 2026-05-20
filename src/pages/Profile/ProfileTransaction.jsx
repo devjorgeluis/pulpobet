@@ -1,14 +1,22 @@
 import { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
+import LoadApi from "../../components/Loading/LoadApi";
+
+import ImgChevronLeft from "/src/assets/svg/chevron-left.svg";
+import ImgChevronRight from "/src/assets/svg/chevron-right.svg";
+import ImgChevronDoubleLeft from "/src/assets/svg/chevron-duo-left.svg";
+import ImgChevronDoubleRight from "/src/assets/svg/chevron-duo-right.svg";
 
 const ProfileTransaction = () => {
+    const navigate = useNavigate();
     const { contextData } = useContext(AppContext);
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({
         start: 0,
-        length: 10,
+        length: 5,
         totalRecords: 0,
         currentPage: 1,
     });
@@ -109,117 +117,209 @@ const ProfileTransaction = () => {
     const handleNextPage = () => handlePageChange(pagination.currentPage + 1);
     const handleLastPage = () => handlePageChange(totalPages);
 
+    const renderPagination = () => {
+        if (totalPages <= 1) return null;
+
+        const isFirstPage = pagination.currentPage === 1;
+        const isLastPage = pagination.currentPage === totalPages;
+
+        return (
+            <div className="pg-paginator-container">
+                <button
+                    className="pg-button"
+                    onClick={handleFirstPage}
+                    dark-mode="true"
+                    disabled={isFirstPage}
+                >
+                    <img
+                        alt="First page"
+                        className="pg-icon"
+                        dark-mode="true"
+                        src={ImgChevronDoubleLeft}
+                    />
+                </button>
+
+                <button
+                    className="pg-button"
+                    onClick={handlePrevPage}
+                    dark-mode="true"
+                    disabled={isFirstPage}
+                >
+                    <img
+                        alt="Previous page"
+                        className="pg-icon"
+                        dark-mode="true"
+                        src={ImgChevronLeft}
+                    />
+                </button>
+
+                {visiblePages.map((page) => (
+                    <button
+                        key={page}
+                        className={`pg-button ${pagination.currentPage === page ? "active" : ""}`}
+                        onClick={() => handlePageChange(page)}
+                        dark-mode="true"
+                    >
+                        {page}
+                    </button>
+                ))}
+
+                <button
+                    className="pg-button"
+                    onClick={handleNextPage}
+                    dark-mode="true"
+                    disabled={isLastPage}
+                >
+                    <img
+                        alt="Next page"
+                        className="pg-icon"
+                        dark-mode="true"
+                        src={ImgChevronRight}
+                    />
+                </button>
+
+                <button
+                    className="pg-button"
+                    onClick={handleLastPage}
+                    dark-mode="true"
+                    disabled={isLastPage}
+                >
+                    <img
+                        alt="Last page"
+                        className="pg-icon"
+                        dark-mode="true"
+                        src={ImgChevronDoubleRight}
+                    />
+                </button>
+            </div>
+        );
+    };
+
     return (
-        <div className="pay-history-desktop">
-            <section className="pay-history-desktop__main">
-                <div className="pay-history-desktop__content-container">
-                    <div className="pay-history-desktop__content">
-                        {loading ? (
-                            <div className="pay-history-desktop__empty">Cargando...</div>
-                        ) : transactions.length > 0 ? (
-                            <div className="pay-history-desktop__list">
-                                {transactions.map((txn) => (
-                                    <div key={txn.id} className="pay-history-item-desktop">
-                                        <div className="pay-history-item-desktop__item">
-                                            <div className="pay-history-item-desktop__title">Fecha</div>
-                                            <div className="pay-history-item-desktop__description pay-history-item-desktop__description_date">
-                                                {formatDateDisplay(txn.created_at || txn.created_at_formatted)}
-                                            </div>
-                                        </div>
-                                        <div className="pay-history-item-desktop__item">
-                                            <div className="pay-history-item-desktop__title">Id</div>
-                                            <div className="pay-history-item-desktop__description">
-                                                {txn.id}
-                                            </div>
-                                        </div>
-                                        <div className="pay-history-item-desktop__item">
-                                            <div className="pay-history-item-desktop__title">Monto</div>
-                                            <div className="pay-history-item-desktop__description">
-                                                {formatBalance(txn.value ?? txn.amount)}
-                                            </div>
-                                        </div>
-                                        <div className="pay-history-item-desktop__item">
-                                            <div className="pay-history-item-desktop__title">Balance Previo</div>
-                                            <div className={`pay-history-item-desktop__date-number`}>
-                                                {formatBalance(txn.to_current_balance)}
-                                            </div>
-                                        </div>
-                                        <div className="pay-history-item-desktop__item">
-                                            <div className="pay-history-item-desktop__title">Balance Posterior</div>
-                                            <div className={`pay-history-item-desktop__date-number`}>
-                                                {formatBalance(txn.to_new_balance)}
-                                            </div>
+        <div className="pagecontainer not-huge-container mt-2">
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-lg-3">
+                        <div className="lateral-menu is-responsive">
+                            <div className="menu-toggler">
+                                <a className="menu-toggler-btnicon">
+                                    <span className="menu-toggler-menubar"></span>
+                                    <span className="menu-toggler-menubar"></span>
+                                    <span className="menu-toggler-menubar"></span>
+                                </a>
+
+                                <span className="ms-3">Menú</span>
+
+                                <div className="menu-toggler-chevron ms-auto">
+                                    <picture>
+                                        <img
+                                            className="image image-light"
+                                            src="/assets/images/my-account/chevron-down.svg"
+                                            alt=""
+                                        />
+
+                                        <img
+                                            className="image image-dark"
+                                            src="/assets/images/my-account/chevron-down-dark-mode.svg"
+                                            alt=""
+                                        />
+                                    </picture>
+                                </div>
+                            </div>
+
+                            <div className="menu-wrapper my-2 my-lg-0">
+                                <nav className="menu">
+                                    <a
+                                        className="menu-item"
+                                        onClick={() => navigate("/profile")}
+                                    >
+                                        Mi cuenta
+                                    </a>
+
+                                    <a
+                                        className="menu-item is-active"
+                                    >
+                                        Transacciones
+                                    </a>
+
+                                    <a
+                                        className="menu-item"
+                                        onClick={() => navigate("/profile-history")}
+                                    >
+                                        Historial de cuenta
+                                    </a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-lg-9">
+                        <div className="extract-page">
+                            <form>
+                                <div className="row mb-4 show-dkp">
+                                    <div className="col-12 col-md-6">
+                                        <div className="h3">
+                                            Transacciones
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="pay-history-desktop__empty">El historial de operaciones está vacío</div>
-                        )}
-                    </div>
-                    {totalPages > 1 && (
-                        <div className="pay-history-desktop__paginator">
-                            <div className="paginator-desktop">
-                                <div className="paginator-desktop__main">
-                                    {pagination.currentPage > 1 && (
-                                        <>
-                                            <div
-                                                className="paginator-desktop__item"
-                                                onClick={handleFirstPage}
-                                            >
-                                                <span className="paginator-desktop__item-value paginator-desktop__item-value_first">
-                                                    «
-                                                </span>
-                                            </div>
-                                            <div
-                                                className="paginator-desktop__item"
-                                                onClick={handlePrevPage}
-                                            >
-                                                <span className="paginator-desktop__item-value">
-                                                    ‹
-                                                </span>
-                                            </div>
-                                        </>
-                                    )}
+                                </div>
+                            </form>
 
-                                    {visiblePages.map((page) => (
-                                        <div
-                                            key={page}
-                                            className={`paginator-desktop__item ${page === pagination.currentPage ? "paginator-desktop__item_current" : ""}`}
-                                            onClick={() => handlePageChange(page)}
+                            <div className="row">
+                                <div className="col-12">
+                                    <div className="bwtable">
+                                        <table
+                                            className="bwtable-table"
+                                            cellSpacing="0"
+                                            cellPadding="0"
                                         >
-                                            <span className={`paginator-desktop__item-value ${page === pagination.currentPage ? "paginator-desktop__item-value_current" : ""}`}>
-                                                {page}
-                                            </span>
-                                        </div>
-                                    ))}
+                                            <thead>
+                                                <tr>
+                                                    <th className="text-bold">Fecha</th>
+                                                    <th className="text-bold">ID</th>
+                                                    <th className="text-bold">Monto</th>
+                                                    <th className="text-bold">Balance Previo</th>
+                                                    <th className="text-bold">Balance Posterior</th>
+                                                </tr>
+                                            </thead>
 
-                                    {pagination.currentPage < totalPages && (
-                                        <>
-                                            <div
-                                                className="paginator-desktop__item"
-                                                onClick={handleNextPage}
-                                            >
-                                                <span className="paginator-desktop__item-value">
-                                                    ›
-                                                </span>
-                                            </div>
-                                            <div
-                                                className="paginator-desktop__item"
-                                                onClick={handleLastPage}
-                                            >
-                                                <span className="paginator-desktop__item-value paginator-desktop__item-value_last">
-                                                    »
-                                                </span>
-                                            </div>
-                                        </>
-                                    )}
+                                            <tbody>
+                                                {loading ? (
+                                                    <tr>
+                                                        <td colSpan={5}>
+                                                            <div className="flex items-center justify-center my-4">
+                                                                <LoadApi />
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ) : transactions.length > 0 ? (
+                                                    transactions.map((transaction) => (
+                                                        <tr key={transaction.id}>
+                                                            <td>{formatDateDisplay(transaction.created_at)}</td>
+                                                            <td>{transaction.id}</td>
+                                                            <td>{formatBalance(transaction.amount)}</td>
+                                                            <td>{formatBalance(transaction.to_current_balance)}</td>
+                                                            <td>{formatBalance(transaction.to_new_balance)}</td>
+                                                        </tr>
+                                                    ))
+                                                ) : (
+                                                    <tr>
+                                                        <td colSpan={5} className="text-center">
+                                                            Sin transacciones
+                                                        </td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    {totalPages > 1 && renderPagination()}
                                 </div>
                             </div>
                         </div>
-                    )}
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
     );
 };

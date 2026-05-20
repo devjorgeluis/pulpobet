@@ -12,7 +12,6 @@ import LoginModal from "../Modal/LoginModal";
 import SupportModal from "../Modal/SupportModal";
 import LogoutConfirmModal from "../Modal/LogoutConfirmModal";
 import FullDivLoading from "../Loading/FullDivLoading";
-import ProfileModal from "../Modal/ProfileModal";
 import { NavigationContext } from "../Layout/NavigationContext";
 import VerifyAgeModal from "../Modal/VerifyAgeModal";
 
@@ -39,8 +38,6 @@ const Layout = () => {
     const [supportParent, setSupportParent] = useState("");
     const [showSupportModal, setShowSupportModal] = useState(false);
     const [supportParentOnly, setSupportParentOnly] = useState(false);
-    const [showProfileModal, setShowProfileModal] = useState(false);
-    const [profileModalSection, setProfileModalSection] = useState("transaction");
     const [isGameModalOpen, setIsGameModalOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -198,15 +195,6 @@ const Layout = () => {
         setSupportParentOnly(false);
     };
 
-    const openProfileModal = (section = "history") => {
-        setProfileModalSection(section);
-        setShowProfileModal(true);
-    };
-
-    const closeProfileModal = () => {
-        setShowProfileModal(false);
-    };
-
     const layoutContextValue = {
         isLogin,
         userBalance,
@@ -218,8 +206,6 @@ const Layout = () => {
         handleLogoutClick,
         refreshBalance,
         setShowFullDivLoading,
-        openSupportModal,
-        openProfileModal,
         liveCasinoCategories,
         setLiveCasinoCategories,
     };
@@ -253,7 +239,6 @@ const Layout = () => {
                     isSlotsOnly={isSlotsOnly}
                     supportParent={supportParent}
                     openSupportModal={openSupportModal}
-                    openProfileModal={openProfileModal}
                 />
                 {/* <MobileHeader
                     isLogin={isLogin}
@@ -264,7 +249,6 @@ const Layout = () => {
                     isSlotsOnly={isSlotsOnly}
                     supportParent={supportParent}
                     openSupportModal={openSupportModal}
-                    openProfileModal={openProfileModal}
                 /> */}
                 <main>
                     <Outlet context={{ isSlotsOnly, supportParent, openSupportModal, handleLoginClick, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
@@ -279,14 +263,6 @@ const Layout = () => {
                     supportParentOnly={supportParentOnly}
                     supportParent={supportParent}
                 />
-                {showProfileModal && (
-                    <ProfileModal
-                        onClose={closeProfileModal}
-                        handleLogoutClick={handleLogoutClick}
-                        activeSection={profileModalSection}
-                        isMobile={isMobile}
-                    />
-                )}
 
                 {!isSportsPage && !isGameModalOpen && <Footer isSlotsOnly={isSlotsOnly} />}
                 {/* {!isSportsPage && !isGameModalOpen && <MobileFooter isSlotsOnly={isSlotsOnly} />} */}

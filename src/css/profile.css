@@ -1,0 +1,127 @@
+.table-caption {
+    padding: 16px 24px 16px;
+    border-bottom: solid 1px var(--border-color);
+}
+
+table {
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table caption {
+    font-size: 1.5em;
+    margin: 0.5em 0 0.75em;
+}
+
+table tr {
+    padding: 0.35em;
+}
+
+table th,
+table td {
+    padding: 0.625em;
+    text-align: center;
+}
+
+table th {
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+table .statusRELEASED {
+    color: #288443;
+}
+
+table .statusDENIED {
+    color: #FF0033;
+}
+
+table .statusPENDING {
+    color: #F6BA1D;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        border: 0;
+    }
+
+    table caption {
+        font-size: 1.3em;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        display: block;
+        margin-bottom: 0.625em;
+    }
+
+    table td {
+        display: block;
+        font-size: 0.8em;
+        text-align: right;
+    }
+
+    table td::before {
+
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    tbody tr:last-child td {
+        border-bottom: solid 1px var(--border-color);
+    }
+
+    .last-games {
+        margin-bottom: 5rem;
+    }
+}
+
+.block {
+    border: 1px solid red;
+    border-radius: 20px;
+    width: 200px;
+    height: 200px;
+}
+
+.tableShimmer {
+    height: 300px;
+}
+
+.orange-betmotion {
+    background-color: var(--background-site);
+    color: var(--color-betmotion-orange);
+    border: 1px solid var(--color-betmotion-orange);
+}
+
+.slots-game-card {
+    height: auto;
+    min-width: 10rem;
+}
+
+@media (min-width: 992px) {
+    .slots-game-card {
+        height: auto;
+        min-width: 14rem;
+    }
+}
+
+.slots-game-card.small {
+    width: 12rem;
+    min-width: 12rem;
+}

@@ -7,7 +7,7 @@ import ImgPhone from "/src/assets/svg/phone.svg";
 import IconHistory from "/src/assets/svg/history.svg";
 import IconTransaction from "/src/assets/svg/transaction.svg";
 
-const UserMenu = ({ handleLogoutClick, supportParent, openSupportModal, openProfileModal, onCloseMenu }) => {
+const UserMenu = ({ handleLogoutClick, supportParent, openSupportModal, onCloseMenu }) => {
     const { contextData } = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const UserMenu = ({ handleLogoutClick, supportParent, openSupportModal, openProf
                     <div className="user-block__menu-top-balance-amount">$ {parseFloat(contextData.session.user.balance).toFixed(2) || '0.00'}</div>
                 </div>
             </div>
-            <a className="user-block__menu-item" onClick={() => { openProfileModal?.(); onCloseMenu?.(); }}>
+            <a className="user-block__menu-item" onClick={() => { onCloseMenu?.(); }}>
                 <span className="user-block__menu-item-icon">
                     <span className="SVGInline SVG-component__content">
                         <img src={IconUserCircle} />
@@ -33,7 +33,7 @@ const UserMenu = ({ handleLogoutClick, supportParent, openSupportModal, openProf
                 </span>
                 <div className="user-block__menu-item-title">Mi cuenta</div>
             </a>
-            <a className="user-block__menu-item" onClick={() => { openProfileModal?.("history"); onCloseMenu?.(); }}>
+            <a className="user-block__menu-item" onClick={() => { onCloseMenu?.(); }}>
                 <span className="user-block__menu-item-icon">
                     <span className="SVGInline SVG-component__content">
                         <img src={IconHistory} />
@@ -41,7 +41,7 @@ const UserMenu = ({ handleLogoutClick, supportParent, openSupportModal, openProf
                 </span>
                 <div className="user-block__menu-item-title">Historial del Juego</div>
             </a>
-            <a className="user-block__menu-item" onClick={() => { openProfileModal?.("transaction"); onCloseMenu?.(); }}>
+            <a className="user-block__menu-item" onClick={() => { onCloseMenu?.(); }}>
                 <span className="user-block__menu-item-icon">
                     <span className="SVGInline SVG-component__content">
                         <img src={IconTransaction} />

@@ -6223,7 +6223,6 @@ body.dark .animate {
 .table td {
     padding: 16px;
     border-bottom: solid 1px var(--border-color);
-    text-align: left;
 }
 
 .table th:first-child,
