@@ -59,19 +59,22 @@ const GameModal = (props) => {
 
   const toggleFullScreen = () => {
     const element = modalRef.current || iframeRef.current;
-    const container = modalRef.current;
     if (!element) return;
 
     if (!isFullscreen) {
-      if (element.requestFullscreen) element.requestFullscreen();
-      else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
-      else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
-      else if (element.msRequestFullscreen) element.msRequestFullscreen();
-      if (container) container.classList.add("fullscreen");
-      setIsFullscreen(true);
+      const request =
+        element.requestFullscreen?.() ||
+        element.mozRequestFullScreen?.() ||
+        element.webkitRequestFullscreen?.() ||
+        element.msRequestFullscreen?.();
+
+      if (request && typeof request.then === "function") {
+        request.then(() => setIsFullscreen(true)).catch(() => setIsFullscreen(true));
+      } else {
+        setIsFullscreen(true);
+      }
     } else {
       exitBrowserFullscreen();
-      if (container) container.classList.remove("fullscreen");
       setIsFullscreen(false);
     }
   };
@@ -84,8 +87,6 @@ const GameModal = (props) => {
       !document.msFullscreenElement
     ) {
       setIsFullscreen(false);
-      const container = modalRef.current;
-      if (container) container.classList.remove("fullscreen");
     }
   };
 
@@ -117,8 +118,6 @@ const GameModal = (props) => {
   const internalClose = () => {
     exitBrowserFullscreen();
     setIsFullscreen(false);
-    const container = modalRef.current;
-    if (container) container.classList.remove("fullscreen");
     setUrl(null);
     setIframeLoaded(false);
     if (typeof props.onClose === "function") props.onClose();
@@ -126,43 +125,44 @@ const GameModal = (props) => {
 
   return (
     <>
-      <div className="holds-the-iframe" ref={modalRef}>
-        <div className="game-modal-controls d-flex justify-content-end gap-2 p-2">
-          <div
-            type="button"
-            className="expand-button text-center p-2 px-3"
-            onClick={toggleFullScreen}
+      <main className="game-main-container">
+        <div className="inner expand">
+          <section
+            ref={modalRef}
+            className={`the-game expand${isFullscreen ? " fullscreen" : ""}`}
+            dark-mode="true"
           >
-            {isFullscreen ? (
-              <span>
-                <i className="fas fa-compress-alt"></i>
-              </span>
-            ) : (
-              <span>
-                <i className="fas fa-expand-alt"></i>
-              </span>
-            )}
-          </div>
-          <div
-            type="button"
-            className="expand-button text-center p-2 px-3"
-            onClick={internalClose}
-          >
-            <span>
-              <i className="fas fa-times"></i>
-            </span>
-          </div>
+            <div className="gd-game-container">
+              <iframe
+                src={url}
+                id="game-iframe"
+                allowFullScreen
+                allow="camera;microphone;fullscreen *; autoplay; payment; clipboard-read; clipboard-write"
+                onLoad={handleIframeLoad}
+                onError={handleIframeError}
+                style={{ display: iframeLoaded ? "block" : "none", border: "none" }}
+              />
+            </div>
+
+            <div className="gd-game-config-panel">
+              <div className="gd-game-views">
+                {/* <span
+                  title="Minimizar pantalla"
+                  className="game-view shrink"
+                  dark-mode="true"
+                ></span> */}
+
+                <span
+                  title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+                  className="game-view full"
+                  dark-mode="true"
+                  onClick={toggleFullScreen}
+                ></span>
+              </div>
+            </div>
+          </section>
         </div>
-        <iframe
-          ref={iframeRef}
-          allow="camera;microphone;fullscreen *"
-          src={url}
-          onLoad={handleIframeLoad}
-          onError={handleIframeError}
-          id="game-iframe"
-          style={{ border: "none" }}
-        ></iframe>
-      </div>
+      </main>
     </>
   );
 };

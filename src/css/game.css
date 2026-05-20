@@ -534,7 +534,7 @@
 }
 
 .trending,
-.popular     {
+.popular {
     width: 32px;
     height: 32px;
     background-position: center;
@@ -672,4 +672,430 @@
 
 .p-items-hidden .p-carousel-item.p-carousel-item-active {
     visibility: visible
+}
+
+.slots-game-card {
+    height: auto;
+    min-width: 10rem;
+}
+
+@media (min-width: 992px) {
+    .slots-game-card {
+        height: auto;
+        min-width: 14rem;
+    }
+}
+
+.slots-game-card.small {
+    width: 12rem;
+    min-width: 12rem;
+}
+
+.gd-gamebox {
+    width: 100%;
+    height: 600px;
+}
+
+.gd-container {
+    display: flex;
+}
+
+.gd-main-content {
+    width: 75%;
+}
+
+.gd-container {
+    padding: 1rem;
+}
+
+.gd-promotions-card {
+    cursor: pointer;
+}
+
+.gd-promotions-card>img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.8rem;
+    border-radius: 10px;
+}
+
+.gd-sidebar {
+    position: relative;
+    width: 100%;
+    float: right;
+}
+
+@media (min-width: 992px) {
+    .gd-sidebar {
+        position: absolute;
+        width: 300px;
+        top: 32px;
+        right: 20px;
+    }
+}
+
+.gd-sidebar.expand {
+    top: 736px;
+}
+
+.gd-sidebar .promotions {
+    margin: 0;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+}
+
+.gd-sidebar .promotions li {
+    display: block;
+    padding: 0;
+    height: 125px;
+    border-radius: 10px;
+    overflow: hidden;
+    float: left;
+    width: 100%;
+    margin: 0 0 16px;
+    height: 136px;
+}
+
+@media (min-width: 992px) {
+    .gd-sidebar .promotions li {
+        margin: 0 0 16px;
+        width: auto;
+        float: unset;
+    }
+}
+
+.gd-sidebar .promotions li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-position: left center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.game-main-container .inner {
+    max-width: 1280px;
+    padding: 32px 20px;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+}
+
+.game-main-container .inner.fullscreen {
+    height: 0px;
+}
+
+.game-main-container .inner .the-game {
+    background-color: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    float: none;
+    width: 100%;
+    display: block;
+}
+
+.game-main-container .inner .the-game[dark-mode=true] {
+    background-color: #1d1e27;
+}
+
+@media (min-width: 992px) {
+    .game-main-container .inner .the-game {
+        float: left;
+        width: calc(100% - 336px);
+    }
+}
+
+.game-main-container .inner .the-game.expand {
+    float: none;
+    width: 100%;
+}
+
+.game-main-container .inner .the-game.fullscreen {
+    z-index: 9999999999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+
+.game-main-container .inner .the-game.fullscreen .gd-game-container {
+    height: calc(100% - 65px);
+}
+
+.game-main-container .inner .the-game.fullscreen .gd-game-container iframe {
+    height: 100%;
+}
+
+.game-main-container .inner .the-game .gd-game-container iframe {
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    height: 558px;
+    border-radius: 0 0 20px 20px;
+}
+
+@media (min-width: 992px) {
+    .game-main-container .inner .the-game .gd-game-container iframe {
+        height: 605px;
+    }
+}
+
+.game-main-container .inner .game-info {
+    float: left;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 30px 0 0;
+    min-height: auto;
+    width: 100%;
+}
+
+@media (min-width: 992px) {
+    .game-main-container .inner .game-info {
+        width: calc(100% - 336px);
+    }
+}
+
+.game-main-container .inner .gallery {
+    padding: 0 0 20px;
+}
+
+.game-main-container .inner .gallery ul {
+    width: 100%;
+    padding: 15px 0;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    clear: both;
+}
+
+@media (min-width: 992px) {
+    .game-main-container .inner .gallery ul {
+        margin: 0 -8px;
+    }
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+}
+
+.gd-description {
+    font-size: 16px;
+    font-weight: 400;
+    color: #5a5b5f;
+    line-height: 24px;
+    margin: 0 0 32px;
+}
+
+.gd-description[dark-mode=true] {
+    color: #f3f4f7 !important;
+}
+
+.gd-description.shimmer-skeleton {
+    height: 0.8rem;
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 0.6rem !important;
+}
+
+.gd-title {
+    margin: 0 0 16px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 26px;
+    color: #333333;
+}
+
+.gd-title[dark-mode=true] {
+    color: #f3f4f7;
+}
+
+.gd-title.shimmer-skeleton {
+    height: 1.8rem;
+    width: 25rem;
+    border-radius: 10px;
+}
+
+.gallery-image-container {
+    float: left;
+    width: calc(33.33333% - 16px);
+    position: relative;
+    padding: 0;
+    display: inline;
+    height: 160px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    min-width: 17.5rem;
+    margin-top: 0.9rem;
+    cursor: pointer;
+}
+
+.gallery-image-container.animate {
+    background-repeat: unset;
+    background-size: unset;
+    background-position: unset;
+}
+
+@media (max-width: 800px) {
+    .gallery-image-container {
+        margin: 0;
+        float: none;
+        display: none;
+        width: 100%;
+    }
+
+    .gallery-image-container:first-child {
+        display: block;
+    }
+}
+
+.gd-game-container {
+    position: relative;
+}
+
+.gd-auth-container {
+    background-color: rgba(0, 0, 0, 0.9);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 0 0 20px 20px;
+    display: flex;
+}
+
+.gd-auth-container .gd-auth-message-container .gd-auth-message {
+    font-size: 24px;
+    line-height: 42px;
+    color: #8b8c90;
+    margin: 0 1rem 1rem 1rem;
+}
+
+.gd-auth-container .gd-auth-message-container .gd-auth-signup {
+    display: inline-block;
+    border: 1px solid #31d55a;
+    background-color: #31d55a;
+    height: 46px;
+    padding: 0 15px;
+    min-width: 160px;
+    border-radius: 40px;
+    line-height: 44px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 25px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.gd-auth-container .gd-auth-message-container .gd-auth-signup:hover {
+    background-color: #fff;
+    color: #31d55a;
+    transition: 0.1s;
+}
+
+.gd-auth-container .gd-auth-message-container .gd-auth-signin {
+    display: inline-block;
+    height: 46px;
+    padding: 0 15px;
+    min-width: 160px;
+    border-radius: 40px;
+    line-height: 44px;
+    text-align: center;
+    text-transform: uppercase;
+    border: 1px solid #232323;
+    background-color: #fff;
+    color: #232323;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Roboto", sans-serif;
+    margin: 1rem 25px;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.gd-auth-container .gd-auth-message-container .gd-auth-signin:hover {
+    background-color: #232323;
+    color: #fff;
+    transition: 0.1s;
+}
+
+.gd-gameinfo-error {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.gd-share {
+    width: 130px;
+    height: 28px;
+    line-height: 28px;
+    padding-left: 33px;
+    margin-top: 2rem;
+    background-color: #0e65df;
+    display: block;
+    border-radius: 20px;
+    font-size: 10px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 500;
+    background-image: url(/assets/images/icons/share.svg);
+    background-position: left 12px center;
+    background-repeat: no-repeat;
+}
+
+.gd-slide-section {
+    padding: 20px 0;
+}
+
+.mb-auth-container {
+    position: fixed;
+    height: 100%;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 9;
+    overflow: none;
+    top: 0;
+}
+
+.is-iframe-mobile {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2147483640;
+}
+
+.is-iframe-mobile iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.is-iframe-mobile .reload-icon {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    z-index: 2147483641;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.is-iframe-mobile .reload-icon i {
+    padding: 14px;
+    color: black;
+    font-size: 41px;
 }
