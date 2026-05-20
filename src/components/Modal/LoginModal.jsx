@@ -19,6 +19,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [isSubmitAttempted, setIsSubmitAttempted] = useState(false);
     const [isApiError, setIsApiError] = useState(false);
     const usernameRef = useRef(null);
+    const loginFormRef = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -39,6 +40,19 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         }
         if (isOpen) document.addEventListener('keydown', onKey);
         return () => document.removeEventListener('keydown', onKey);
+    }, [isOpen, onClose]);
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleOutsideClick = (event) => {
+            if (loginFormRef.current && !loginFormRef.current.contains(event.target)) {
+                onClose();
+            }
+        };
+
+        document.addEventListener("mousedown", handleOutsideClick);
+        return () => document.removeEventListener("mousedown", handleOutsideClick);
     }, [isOpen, onClose]);
 
     const handleSubmit = (event) => {
@@ -99,7 +113,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
     return (
         <app-login-form className={`dark ${isOpen ? "is-open" : ""}`}>
-            <div className="loginform">
+            <div className="loginform" ref={loginFormRef}>
                 <div className="header-mobile-usermenu-top">
                     <div className="header-mobile-usermenu-top-closebtn"></div>
 
