@@ -7,7 +7,6 @@ const GameModal = (props) => {
   const [url, setUrl] = useState(null);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const { setShowFullDivLoading } = useContext(NavigationContext);
 
   useEffect(() => {
     if (props.gameUrl !== null && props.gameUrl !== "") {
@@ -108,7 +107,6 @@ const GameModal = (props) => {
     if (url != null) {
       if (iframeRef.current) iframeRef.current.classList.remove("d-none");
       setIframeLoaded(true);
-      setShowFullDivLoading(false);
     }
   };
 

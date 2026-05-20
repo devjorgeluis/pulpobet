@@ -21,11 +21,9 @@ let pageCurrent = 0;
 const Casino = () => {
   const pageTitle = "Casino";
   const { contextData } = useContext(AppContext);
-  const { setShowFullDivLoading, setIsGameModalOpen } = useContext(NavigationContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [games, setGames] = useState([]);
   const [firstFiveCategoriesGames, setFirstFiveCategoriesGames] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState({});
   const [categoryType, setCategoryType] = useState("");
@@ -121,7 +119,6 @@ const Casino = () => {
   const callbackGetPage = (result, page) => {
     if (result.status === 500 || result.status === 422) {
       setIsLoadingGames(false);
-      setShowFullDivLoading(false);
     } else {
       setCategoryType(result.data.page_group_type);
       setSelectedProvider(null);
@@ -137,7 +134,6 @@ const Casino = () => {
         result.data.categories &&
         result.data.categories.length > 0
       ) {
-        setCategories(result.data.categories);
         if (page === "casino") {
           setMainCategories(result.data.categories);
         }
@@ -162,14 +158,12 @@ const Casino = () => {
       } else if (result.data && result.data.page_group_type === "games") {
         setIsSingleCategoryView(true);
         setIsExplicitSingleCategoryView(false);
-        setCategories(mainCategories.length > 0 ? mainCategories : []);
         configureImageSrc(result);
         setGames(result.data.categories || []);
         setActiveCategory(tags[tagIndex] || { name: page });
         pageCurrent = 1;
       }
 
-      setShowFullDivLoading(false);
       setIsLoadingGames(false);
     }
   };
@@ -335,7 +329,6 @@ const Casino = () => {
   const launchGame = (game, type, launcher) => {
     setShouldShowGameModal(true);
     setIsGameModalOpen(true);
-    setShowFullDivLoading(true);
     selectedGameId = game.id !== null ? game.id : selectedGameId;
     selectedGameType = type !== null ? type : selectedGameType;
     selectedGameLauncher = launcher !== null ? launcher : selectedGameLauncher;
@@ -352,7 +345,6 @@ const Casino = () => {
   };
 
   const callbackLaunchGame = (result) => {
-    setShowFullDivLoading(false);
     if (result.status === "0") {
       switch (selectedGameLauncher) {
         case "modal":

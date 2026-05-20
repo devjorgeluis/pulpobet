@@ -10,7 +10,6 @@ export const LayoutContext = createContext({
     handleLoginClick: () => { },
     handleLogoutClick: () => { },
     refreshBalance: () => { },
-    setShowFullDivLoading: () => { },
     liveCasinoCategories: [],
     setLiveCasinoCategories: () => { },
 });

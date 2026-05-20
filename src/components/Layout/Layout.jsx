@@ -10,8 +10,6 @@ import Footer from "./Footer";
 import MobileFooter from "./MobileFooter";
 import LoginModal from "../Modal/LoginModal";
 import SupportModal from "../Modal/SupportModal";
-import LogoutConfirmModal from "../Modal/LogoutConfirmModal";
-import FullDivLoading from "../Loading/FullDivLoading";
 import { NavigationContext } from "../Layout/NavigationContext";
 import VerifyAgeModal from "../Modal/VerifyAgeModal";
 
@@ -22,9 +20,7 @@ const Layout = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [userBalance, setUserBalance] = useState("");
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [showFullDivLoading, setShowFullDivLoading] = useState(false);
     const [showAgeModal, setShowAgeModal] = useState(false);
     const [isSlotsOnly, setIsSlotsOnly] = useState("");
     const [topGames, setTopGames] = useState([]);
@@ -100,13 +96,11 @@ const Layout = () => {
 
     const refreshBalance = () => {
         setUserBalance("");
-        setShowFullDivLoading(true);
         callApi(contextData, "GET", "/get-user-balance", callbackRefreshBalance, null);
     };
 
     const callbackRefreshBalance = (result) => {
         setUserBalance(result && result.balance);
-        setShowFullDivLoading(false);
     };
 
     const getStatus = () => {
@@ -115,13 +109,11 @@ const Layout = () => {
 
     const getPage = (page) => {
         setSelectedPage(page);
-        setShowFullDivLoading(true);
         callApi(contextData, "GET", "/get-page?page=" + page, callbackGetPage, null);
         navigate("/" + (page === "home" ? "" : page));
     };
 
-    const callbackGetPage = (result) => {
-        setShowFullDivLoading(false);
+    const callbackGetPage = () => {
     };
 
     const callbackGetStatus = (result) => {
@@ -156,24 +148,14 @@ const Layout = () => {
     };
 
     const handleLogoutClick = () => {
-        setShowLogoutModal(true);
-    };
-
-    const handleLogoutConfirm = () => {
         callApi(contextData, "POST", "/logout", (result) => {
             if (result.status === "success") {
                 setTimeout(() => {
                     localStorage.removeItem("session");
                     window.location.href = "/";
                 }, 200);
-            } else {
-                setShowLogoutModal(false);
             }
         }, null);
-    };
-
-    const handleLogoutCancel = () => {
-        setShowLogoutModal(false);
     };
 
     const toggleSidebar = () => {
@@ -205,7 +187,6 @@ const Layout = () => {
         handleLoginClick,
         handleLogoutClick,
         refreshBalance,
-        setShowFullDivLoading,
         liveCasinoCategories,
         setLiveCasinoCategories,
     };
@@ -213,17 +194,13 @@ const Layout = () => {
     return (
         <LayoutContext.Provider value={layoutContextValue}>
             <NavigationContext.Provider
-                value={{ selectedPage, setSelectedPage, getPage, showFullDivLoading, setShowFullDivLoading, isGameModalOpen, setIsGameModalOpen }}
+                value={{ selectedPage, setSelectedPage, getPage, isGameModalOpen, setIsGameModalOpen }}
             >
                 <VerifyAgeModal
                     isOpen={showAgeModal}
                     onClose={() => setShowAgeModal(false)}
                     onConfirm={handleAgeVerifyConfirm}
                 />
-                {/* <FullDivLoading show={showFullDivLoading} /> */}
-                {showLogoutModal && (
-                    <LogoutConfirmModal onConfirm={handleLogoutConfirm} onCancel={handleLogoutCancel} />
-                )}
                 {showLoginModal && (
                     <LoginModal
                         isOpen={showLoginModal}

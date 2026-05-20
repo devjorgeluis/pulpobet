@@ -17,7 +17,7 @@ let selectedGameImg = null;
 const Home = () => {
   const pageTitle = "Home";
   const { contextData } = useContext(AppContext);
-  const { setShowFullDivLoading, setIsGameModalOpen } = useContext(NavigationContext);
+  const { setIsGameModalOpen } = useContext(NavigationContext);
   const { isSlotsOnly, isLogin, isMobile, handleLoginClick, topGames, topArcade, topCasino, topLiveCasino } = useOutletContext();
   const [gameUrl, setGameUrl] = useState("");
   const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
@@ -60,7 +60,6 @@ const Home = () => {
   const launchGame = (game, type, launcher) => {
     setShouldShowGameModal(true);
     setIsGameModalOpen(true);
-    setShowFullDivLoading(true);
     selectedGameId = game.id !== null ? game.id : selectedGameId;
     selectedGameType = type !== null ? type : selectedGameType;
     selectedGameLauncher = launcher !== null ? launcher : selectedGameLauncher;
@@ -77,7 +76,6 @@ const Home = () => {
   };
 
   const callbackLaunchGame = (result) => {
-    setShowFullDivLoading(false);
     if (result.status === "0") {
       switch (selectedGameLauncher) {
         case "modal":

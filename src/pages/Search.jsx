@@ -16,8 +16,7 @@ let selectedGameImg = null;
 
 const Search = () => {
   const { contextData } = useContext(AppContext);
-  const { setShowFullDivLoading, setIsGameModalOpen } =
-    useContext(NavigationContext);
+  const { setIsGameModalOpen } = useContext(NavigationContext);
   const { isLogin, isMobile, handleLoginClick } = useOutletContext();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -126,29 +125,9 @@ const Search = () => {
     };
   }, []);
 
-  const updateKeyword = (value) => {
-    setKeyword(value);
-    if (searchDelayTimerRef.current) clearTimeout(searchDelayTimerRef.current);
-
-    searchDelayTimerRef.current = setTimeout(() => {
-      const next = new URLSearchParams(searchParams);
-      const trimmed = value.trim();
-      if (trimmed) {
-        next.set("keyword", trimmed);
-      } else {
-        next.delete("keyword");
-      }
-      if (pageGroupCode) {
-        next.set("page_group_code", pageGroupCode);
-      }
-      setSearchParams(next, { replace: true });
-    }, 400);
-  };
-
   const launchGame = (game, type, launcher) => {
     setShouldShowGameModal(true);
     setIsGameModalOpen(true);
-    setShowFullDivLoading(true);
     selectedGameId = game.id !== null ? game.id : selectedGameId;
     selectedGameType = type !== null ? type : selectedGameType;
     selectedGameLauncher = launcher !== null ? launcher : selectedGameLauncher;
@@ -160,7 +139,6 @@ const Search = () => {
       "GET",
       "/get-game-url?game_id=" + selectedGameId,
       (result) => {
-        setShowFullDivLoading(false);
         if (result?.status === "0") {
           if (selectedGameLauncher === "modal" || selectedGameLauncher === "tab") {
             setGameUrl(result.url);

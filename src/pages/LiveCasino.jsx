@@ -20,7 +20,7 @@ const LiveCasino = () => {
   const pageTitle = "Live Casino";
   const { contextData } = useContext(AppContext);
   const { isLogin, isMobile, handleLoginClick } = useOutletContext();
-  const { setShowFullDivLoading, setIsGameModalOpen } = useContext(NavigationContext);
+  const { setIsGameModalOpen } = useContext(NavigationContext);
   const { setLiveCasinoCategories } = useContext(LayoutContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [categories, setCategories] = useState([]);
@@ -103,7 +103,6 @@ const LiveCasino = () => {
   const fetchContent = (category, categoryId, tableName, categoryIndex, resetCurrentPage) => {
     let pageSize = 30;
     setIsLoadingGames(true);
-    // setShowFullDivLoading(true);
 
     if (resetCurrentPage == true) {
       pageCurrent = 0;
@@ -142,13 +141,11 @@ const LiveCasino = () => {
       pageCurrent += 1;
     }
     setIsLoadingGames(false);
-    setShowFullDivLoading(false);
   };
 
   const launchGame = (game, type, launcher) => {
     setShouldShowGameModal(true);
     setIsGameModalOpen(true);
-    setShowFullDivLoading(true);
     selectedGameId = game.id !== null ? game.id : selectedGameId;
     selectedGameType = type !== null ? type : selectedGameType;
     selectedGameLauncher = launcher !== null ? launcher : selectedGameLauncher;
@@ -174,7 +171,6 @@ const LiveCasino = () => {
       }
     } else if (result.status == "500" || result.status == "422") {
     }
-    setShowFullDivLoading(false);
   };
 
   const closeGameModal = () => {
