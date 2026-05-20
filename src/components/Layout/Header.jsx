@@ -379,13 +379,7 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 </div>
 
                                 <div className="headertop-bottom-sidemenu">
-                                    <SearchInput
-                                        // txtSearch={txtSearch}
-                                        // setTxtSearch={setTxtSearch}
-                                        // searchRef={searchRef}
-                                        // search={search}
-                                        // isMobile={isMobile}
-                                    />
+                                    <SearchInput />
                                 </div>
                             </div>
                         </div>
@@ -394,42 +388,45 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 className="headertop-submenu-wrapper"
                                 style={{ backgroundColor: "rgba(5, 26, 69, 0.58)" }}
                             >
-                            <div className="headertop-submenu">
-                                {submenuItems.map((item) => (
-                                    <a
-                                        key={getSubmenuKey(item)}
-                                        className={`headertop-submenu-item${isSubmenuItemActive(item) ? " active" : ""}`}
-                                        href={activeSubmenuLink === "/providers" || activeSubmenuLink === "/live-casino" ? getSubmenuHref(item) : `#`}
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            if (activeSubmenuLink === "/providers") {
-                                                navigate(getSubmenuHref(item), { state: { provider: item } });
-                                            } else if (activeSubmenuLink === "/live-casino") {
-                                                navigate(getSubmenuHref(item), { state: { liveCasinoCategory: item } });
-                                            } else {
-                                                handleTagClick(item);
-                                            }
-                                        }}
-                                    >
-                                        {(item.image_local || item.image || item.image_url) && (
-                                            <img
-                                                aria-hidden="true"
-                                                className="headertop-submenu-item-img"
-                                                src={
-                                                    item.image_local
-                                                        ? contextData.cdnUrl + item.image_local
-                                                        : item.image || item.image_url
+                                <div className="headertop-submenu">
+                                    {submenuItems.map((item) => (
+                                        <a
+                                            key={getSubmenuKey(item)}
+                                            className={`headertop-submenu-item${isSubmenuItemActive(item) ? " active" : ""}`}
+                                            href={activeSubmenuLink === "/providers" || activeSubmenuLink === "/live-casino" ? getSubmenuHref(item) : `#`}
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                if (activeSubmenuLink === "/providers") {
+                                                    navigate(getSubmenuHref(item), { state: { provider: item } });
+                                                    setActiveSubmenuLink(null);
+                                                } else if (activeSubmenuLink === "/live-casino") {
+                                                    navigate(getSubmenuHref(item), { state: { liveCasinoCategory: item } });
+                                                    setActiveSubmenuLink(null);
+                                                } else {
+                                                    handleTagClick(item);
+                                                    setActiveSubmenuLink(null);
                                                 }
-                                                alt={item.name}
-                                            />
-                                        )}
-                                        <span className="headertop-submenu-item-label">
-                                            {item.name}
-                                        </span>
-                                    </a>
-                                ))}
+                                            }}
+                                        >
+                                            {(item.image_local || item.image || item.image_url) && (
+                                                <img
+                                                    aria-hidden="true"
+                                                    className="headertop-submenu-item-img"
+                                                    src={
+                                                        item.image_local
+                                                            ? contextData.cdnUrl + item.image_local
+                                                            : item.image || item.image_url
+                                                    }
+                                                    alt={item.name}
+                                                />
+                                            )}
+                                            <span className="headertop-submenu-item-label">
+                                                {item.name}
+                                            </span>
+                                        </a>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
                         )}
                     </div>
                 </div>
