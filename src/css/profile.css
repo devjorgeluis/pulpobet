@@ -109,18 +109,6 @@ table .statusPENDING {
     border: 1px solid var(--color-betmotion-orange);
 }
 
-.slots-game-card {
-    height: auto;
-    min-width: 10rem;
-}
-
-@media (min-width: 992px) {
-    .slots-game-card {
-        height: auto;
-        min-width: 14rem;
-    }
-}
-
 .slots-game-card.small {
     width: 12rem;
     min-width: 12rem;

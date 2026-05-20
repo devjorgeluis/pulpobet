@@ -1,12 +1,10 @@
 .slots-game-card {
     height: auto;
-    min-width: 10rem;
 }
 
 @media (min-width: 992px) {
     .slots-game-card {
         height: auto;
-        min-width: 14rem;
     }
 
     .top-casino-game .slots-game-card {
@@ -672,18 +670,6 @@
 
 .p-items-hidden .p-carousel-item.p-carousel-item-active {
     visibility: visible
-}
-
-.slots-game-card {
-    height: auto;
-    min-width: 10rem;
-}
-
-@media (min-width: 992px) {
-    .slots-game-card {
-        height: auto;
-        min-width: 14rem;
-    }
 }
 
 .slots-game-card.small {
