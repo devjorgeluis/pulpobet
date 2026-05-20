@@ -50,7 +50,7 @@ const HotGameSlideshow = ({ isMobile, games, title, link, onGameClick, loadMoreC
         if (swiper.navigation) {
             try {
                 swiper.navigation.destroy();
-            } catch (e) {}
+            } catch (e) { }
             swiper.navigation.init();
             swiper.navigation.update();
         }
@@ -58,7 +58,7 @@ const HotGameSlideshow = ({ isMobile, games, title, link, onGameClick, loadMoreC
 
     return (
         <div className="gd-slide-section">
-            <div className="d-none d-lg-block">
+            <div className="d-block">
                 <div className="row mb-4">
                     <div className="col-10">
                         <div className="h3">{title}</div>
