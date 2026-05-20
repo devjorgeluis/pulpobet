@@ -1,6 +1,10 @@
 import { useContext, useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
+import ImgLogo from "/src/assets/img/logo.png";
+import IconEye from "/src/assets/svg/eye.svg";
+import IconEyeSlash from "/src/assets/svg/eye-off.svg";
 
 const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const { contextData, updateSession } = useContext(AppContext);
@@ -10,11 +14,23 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [errorMsg, setErrorMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [isUsernameTouched, setIsUsernameTouched] = useState(false);
+    const [isPasswordTouched, setIsPasswordTouched] = useState(false);
+    const [isSubmitAttempted, setIsSubmitAttempted] = useState(false);
+    const [isApiError, setIsApiError] = useState(false);
     const usernameRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isOpen && usernameRef.current) usernameRef.current.focus();
-        if (isOpen) setErrorMsg("");
+        if (isOpen) {
+            setErrorMsg("");
+            setIsApiError(false);
+            setIsUsernameTouched(false);
+            setIsPasswordTouched(false);
+            setIsSubmitAttempted(false);
+            setIsLoading(false);
+        }
     }, [isOpen]);
 
     useEffect(() => {
@@ -27,12 +43,25 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        if (isLoading) return;
+        setIsSubmitAttempted(true);
+        setIsUsernameTouched(true);
+        setIsPasswordTouched(true);
+        setIsApiError(false);
+
+        const cleanUsername = username.trim();
+        const cleanPassword = password.trim();
+        if (!cleanUsername || !cleanPassword) {
+            if (errorMsg) setErrorMsg("");
+            return;
+        }
+
         setIsLoading(true);
 
         const body = {
-            username: username,
-            password: password,
-            site_label: "zeuspro",
+            username: cleanUsername,
+            password: cleanPassword,
+            site_label: "main",
         };
 
         callApi(
@@ -49,6 +78,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         if (result.status === "success") {
             localStorage.setItem("session", JSON.stringify(result));
             updateSession(result);
+            setIsApiError(false);
 
             if (onLoginSuccess) {
                 onLoginSuccess(result.user.balance);
@@ -58,101 +88,144 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
             }, 1000);
         } else if (result.status === "country") {
             setErrorMsg(result.message);
+            setIsApiError(true);
         } else {
             setErrorMsg("Usuario o contraseña incorrectos");
+            setIsApiError(true);
         }
     };
-
 
     if (!isOpen) return null;
 
     return (
-        <div
-            id="login"
-            tabIndex="-1"
-            aria-labelledby="loginLabel"
-            data-bs-backdrop="false"
-            className="modal fade show"
-            style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'block' }}
-            aria-modal="true"
-            role="dialog"
-        >
-            <div className="modal-dialog modal-sm modal-dialog-centered">
-                <div className="modal-content" style={{ backgroundColor: 'rgba(60, 60, 60, 0.95)' }}>
-                    <div className="modal-header2 p-0">
-                        <h6 id="exampleModalLabel" className="modal-title">
-                            ENTRAR
-                            <button
-                                id="closeLogin"
-                                type="button"
-                                aria-label="Close"
-                                className="btn-close"
-                                style={{ background: 'transparent', float: 'right', color: 'rgb(204, 204, 204)' }}
-                                onClick={onClose}
-                            >
-                                <i className="fas fa-times"></i>
-                            </button>
-                        </h6>
-                    </div>
-                    <div className="modal-body p-4" style={{ height: '30%' }}>
-                        <div className="text-center">
-                            <form onSubmit={handleSubmit}>
-                                <div className="pb-2 font-size-custom mb-3 my-3" style={{ color: 'white' }}>
-                                    <i className="fas fa-user prefix lightgrey-text mx-2"></i>
-                                    <input
-                                        id="username"
-                                        type="text"
-                                        placeholder="Usuario"
-                                        autoComplete="off"
-                                        className="login-user-control"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        ref={usernameRef}
-                                    />
-                                </div>
-                                <div className="pb-2 font-size-custom mb-3 my-3" style={{ color: 'white' }}>
-                                    <i className="fas fa-lock prefix lightgrey-text mx-2"></i>
-                                    <input
-                                        id="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        placeholder="Contraseña"
-                                        maxLength="16"
-                                        autoComplete="off"
-                                        className="login-user-control"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                    />
-                                </div>
-                                <br />
-                                <div className="d-flex mb-3">
-                                    <button
-                                        type="button"
-                                        className="btn p-2 mx-2"
-                                        style={{ textTransform: 'uppercase', backgroundColor: 'rgb(41, 45, 61) !important', color: 'white', width: '50%' }}
-                                        onClick={onClose}
-                                    >
-                                        Cerrar
-                                    </button>
-                                    <button
-                                        id="submit_btn"
-                                        type="submit"
-                                        className="btn p-2 mx-2"
-                                        style={{ backgroundColor: 'rgb(41, 45, 61) !important', color: 'white', width: '50%' }}
-                                    >
-                                        {isLoading ? 'Cargando...' : 'ENTRAR'}
-                                    </button>
-                                </div>
-                                {errorMsg && (
-                                    <div role="alert" className="alert alert-danger">
-                                        {errorMsg}
-                                    </div>
-                                )}
-                            </form>
-                        </div>
+        <app-login-form className={`dark ${isOpen ? "is-open" : ""}`}>
+            <div className="loginform">
+                <div className="header-mobile-usermenu-top">
+                    <div className="header-mobile-usermenu-top-closebtn"></div>
+
+                    <div className="logo-wrapper">
+                        <a
+                            rel="noopener"
+                            onClick={() => navigate("/")}
+                            title="Pulpo Mundialito"
+                        >
+                            <picture>
+                                <img
+                                    className="image image-dark"
+                                    src={ImgLogo}
+                                    alt="Pulpo Mundialito"
+                                    style={{ height: "53px", width: "179px" }}
+                                />
+                            </picture>
+                        </a>
                     </div>
                 </div>
+
+                <form className="loginform-form" onSubmit={handleSubmit}>
+                    <span
+                        className="loginform-enter"
+                        style={{ margin: "20px" }}
+                    >
+                        Ingresar
+                    </span>
+
+                    {errorMsg && <div className="text-error text-center">{errorMsg}</div>}
+
+                    <div className="mb-2" style={{ width: "100%" }}>
+                        <div className="cti-label dark">
+                            <div className="mt-1">
+                                <input
+                                    id="username"
+                                    type="text"
+                                    ref={usernameRef}
+                                    value={username}
+                                    onChange={(e) => {
+                                        setUsername(e.target.value);
+                                        if (!isUsernameTouched) setIsUsernameTouched(true);
+                                        if (errorMsg) setErrorMsg("");
+                                        if (isApiError) setIsApiError(false);
+                                    }}
+                                    onBlur={() => setIsUsernameTouched(true)}
+                                    placeholder="Usuario"
+                                    maxLength={200}
+                                    autoComplete="off"
+                                    className={`form-control rounblack${((isSubmitAttempted || isUsernameTouched) && username.trim() === "") || isApiError ? " error" : ""}`}
+                                />
+
+                                <div className="icon-container"></div>
+                            </div>
+
+                            {(isSubmitAttempted || isUsernameTouched) && username.trim() === "" &&
+                                <div className="input-labels-spacing message-container rounblack">
+                                    <span className="field-message">
+                                        <span>Campo obligatorio</span>
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <div className="mb-2" style={{ width: "100%" }}>
+                        <div className="cti-label dark">
+                            <div className="mt-1">
+                                <input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        if (!isPasswordTouched) setIsPasswordTouched(true);
+                                        if (errorMsg) setErrorMsg("");
+                                        if (isApiError) setIsApiError(false);
+                                    }}
+                                    onBlur={() => setIsPasswordTouched(true)}
+                                    placeholder="Contraseña"
+                                    maxLength={200}
+                                    autoComplete="off"
+                                    className={`form-control rounblack${((isSubmitAttempted || isPasswordTouched) && password.trim() === "") || isApiError ? " error" : ""}`}
+                                />
+
+                                <div className="icon-container">
+                                    <div className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
+                                        <picture>
+                                            <img
+                                                className="image image-dark"
+                                                src={showPassword ? IconEyeSlash : IconEye}
+                                                alt="Mostrar contraseña"
+                                            />
+                                        </picture>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {(isSubmitAttempted || isPasswordTouched) && password.trim() === "" &&
+                                <div className="input-labels-spacing message-container rounblack">
+                                    <span className="field-message">
+                                        <span>Campo obligatorio</span>
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <button
+                        className="btn purple btn-block btn-regular w-100 mt-3"
+                        type="submit"
+                        title="Ingresar"
+                        disabled={isLoading}
+                    >
+                        {
+                            isLoading ? <div className="lds-ring">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div> : "Ingresar"
+                        }
+                    </button>
+                </form>
             </div>
-        </div>
+        </app-login-form>
     );
 };
 

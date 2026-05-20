@@ -148,12 +148,8 @@ const Layout = () => {
         }
     };
 
-    const goLoginPage = () => {
-        navigate("/login");
-    }
-
     const handleLoginClick = () => {
-        navigate("/login");
+        setShowLoginModal(true);
     };
 
     const handleLoginConfirm = () => {
