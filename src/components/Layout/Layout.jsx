@@ -92,9 +92,9 @@ const Layout = () => {
 
     useEffect(() => {
         const bodyClassList = document.body.classList;
-        const isHomePath = location.pathname === "/" || location.pathname === "/home";
+        const isHomePage = location.pathname === "/" || location.pathname === "/home";
 
-        if (isHomePath) {
+        if (isHomePage || isSportsPage) {
             bodyClassList.add("is-home");
         } else {
             bodyClassList.remove("is-home");

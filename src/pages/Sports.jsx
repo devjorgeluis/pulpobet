@@ -1,15 +1,13 @@
 import { useContext, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { AppContext } from "../AppContext";
-import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
-import DivLoading from "../components/Loading/DivLoading";
+import LoadApi from "../components/Loading/LoadApi";
 
 const Sports = () => {
     const pageTitle = "Sports";
     const { contextData } = useContext(AppContext);
     const [sportsEmbedUrl, setSportsEmbedUrl] = useState("");
-    const { setShowFullDivLoading } = useContext(NavigationContext);
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation();
 
@@ -19,56 +17,51 @@ const Sports = () => {
 
     const loadSportsPage = () => {
         setIsLoading(true);
-        setShowFullDivLoading(true);
         callApi(contextData, "GET", "/get-page?page=sports", callbackGetPage, null);
     };
 
-    const callbackGetPage = (result) => {        
+    const callbackGetPage = (result) => {
         if (result.status === 500 || result.status === 422) {
-            setShowFullDivLoading(false);
-            setIsLoading(false);
         } else {
             setSportsEmbedUrl(result.data.url_embed);
             setIsLoading(false);
-            setShowFullDivLoading(false);
         }
     };
 
     return (
         <>
-            <>
-                {isLoading ? (
-                    <></>
-                ) : sportsEmbedUrl ? (
-                    <div className="app__main-content">
-                        <div className="digitain-sport-desktop">
-                            <div id="sport_div_iframe">
-                                <iframe
-                                    src={sportsEmbedUrl}
-                                    title="Sportsbook"
-                                    className="sports-iframe"
-                                    allowFullScreen
-                                    loading="lazy"
-                                />
-                            </div>
+            {isLoading ? (
+                <div className="text-center mt-5">
+                    <LoadApi />
+                </div>
+            ) : sportsEmbedUrl ? (
+                <>
+                    <div className="game-iframe-view_gameIframeWrapper game-iframe-view_sportbook">
+                        <iframe
+                            src={sportsEmbedUrl}
+                            title="Sportsbook"
+                            className="game-iframe-view_gameIframe game-iframe-view_sportbook"
+                            allowFullScreen
+                            loading="lazy"
+                            style={{ border: 'none' }}
+                        />
+                    </div>
+                </>
+            ) : (
+                <div className="game-iframe-view_gameIframeWrapper game-iframe-view_sportbook">
+                    <div className="no-game">
+                        <div className="leftWrapper">
+                            <p className="forbiddenNumber">
+                                403
+                            </p>
+                            <p className="forbiddenText">
+                                Forbidden: Access is denied.
+                                Sorry, your location is not covered by our service.
+                            </p>
                         </div>
                     </div>
-                ) : (
-                    <div className="sports-layout-desktop__content">
-                        <div className="sports-error-container">
-                            <div className="sports-error-message">
-                                <p>No se pudo cargar la página de deportes.</p>
-                                <button
-                                    className="button-desktop button-desktop_color_default"
-                                    onClick={loadSportsPage}
-                                >
-                                    Intentar de nuevo
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </>
+                </div>
+            )}
         </>
     );
 };
