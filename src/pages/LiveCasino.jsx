@@ -22,6 +22,7 @@ const LiveCasino = () => {
   const { contextData } = useContext(AppContext);
   const { isLogin, isMobile, handleLoginClick } = useOutletContext();
   const { setShowFullDivLoading, setIsGameModalOpen } = useContext(NavigationContext);
+  const { setLiveCasinoCategories } = useContext(LayoutContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState({});
@@ -55,7 +56,9 @@ const LiveCasino = () => {
   const callbackGetPage = (result) => {
     if (result.status === 500 || result.status === 422) {
     } else {
-      setCategories(result && result.data.categories);
+      const categories = result && result.data.categories ? result.data.categories : [];
+      setCategories(categories);
+      setLiveCasinoCategories(categories);
       setPageData(result && result.data);
 
       if (pageData.url && pageData.url != null) {

@@ -106,6 +106,10 @@
     position: relative;
 }
 
+.casino .game-main-container .inner {
+    padding: 32px 0;
+}
+
 .game-main-container .inner.fullscreen {
     height: 0px;
 }

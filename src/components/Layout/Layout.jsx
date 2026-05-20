@@ -32,6 +32,7 @@ const Layout = () => {
     const [topArcade, setTopArcade] = useState([]);
     const [topCasino, setTopCasino] = useState([]);
     const [topLiveCasino, setTopLiveCasino] = useState([]);
+    const [liveCasinoCategories, setLiveCasinoCategories] = useState([]);
     const [supportWhatsApp, setSupportWhatsApp] = useState("");
     const [supportTelegram, setSupportTelegram] = useState("");
     const [supportEmail, setSupportEmail] = useState("");
@@ -222,7 +223,9 @@ const Layout = () => {
         refreshBalance,
         setShowFullDivLoading,
         openSupportModal,
-        openProfileModal
+        openProfileModal,
+        liveCasinoCategories,
+        setLiveCasinoCategories,
     };
 
     return (
