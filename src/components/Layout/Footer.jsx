@@ -1,54 +1,77 @@
 import { useNavigate } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({ isSlotsOnly }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="app__footer-container">
-            <footer className="footer">
-                <nav className="footer__nav-links">
-                    <div className="footer__menu-container">
-                        <a className="footer__menu-item" onClick={() => navigate("/")}>
-                            <span className="footer__menu-description">Inicio</span>
-                        </a>
-                        <a className="footer__menu-item" onClick={() => navigate("/sports")}>
-                            <span className="footer__menu-description">Deportes</span>
-                        </a>
-                        <a className="footer__menu-item" onClick={() => navigate("/live-sports")}>
-                            <span className="footer__menu-description">En Vivo</span>
-                        </a>
-                    </div>
-                    <div className="footer__menu-container">
-                        <a className="footer__menu-item" onClick={() => navigate("/casino")}>
-                            <span className="footer__menu-description">Casino</span>
-                        </a>
-                        <a className="footer__menu-item" onClick={() => navigate("/live-casino")}>
-                            <span className="footer__menu-description">Casino En Vivo</span>
-                        </a>
-                    </div>
-                </nav>
-                <div className="footer__center">
-                    <div className="footer__logo" onClick={() => navigate("/")}>
+        <div className="footer">
+            <div className="footer-inner">
+                <div className="footer-base">
+                    <div className="footer-navs">
+                        <nav className="footer-nav">
+                            <p className="footer-nav-title">Productos</p>
 
+                            <ul className="footer-nav-list">
+                                <li className="footer-nav-list-item">
+                                    <a className="footer-nav-link" onClick={() => navigate("/")}>
+                                        Inicio
+                                    </a>
+                                </li>
+
+                                <li className="footer-nav-list-item">
+                                    <a
+                                        className="footer-nav-link"
+                                        onClick={() => navigate("/casino")}
+                                    >
+                                        Casino
+                                    </a>
+                                </li>
+
+                                {
+                                    isSlotsOnly === "false" && <>
+                                        <li className="footer-nav-list-item">
+                                            <a
+                                                className="footer-nav-link"
+                                                onClick={() => navigate("/live-casino")}
+                                            >
+                                                Casino En Vivo
+                                            </a>
+                                        </li>
+
+                                        <li className="footer-nav-list-item">
+                                            <a
+                                                className="footer-nav-link"
+                                                onClick={() => navigate("/sports")}
+                                            >
+                                                Deportes
+                                            </a>
+                                        </li>
+
+                                        <li className="footer-nav-list-item">
+                                            <a
+                                                className="footer-nav-link"
+                                                onClick={() => navigate("/live-sports")}
+                                            >
+                                                En Vivo
+                                            </a>
+                                        </li>
+                                    </>
+                                }
+                            </ul>
+                        </nav>
                     </div>
-                    <p className="footer__center-desc"></p>
                 </div>
-                <div className="footer__right">
-                    <div className="footer__button">
-                        <div className="scroll-top-button-desktop">
-                            <button
-                                type="button"
-                                className="button-desktop button-desktop_color_transparent"
-                                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                            >
-                                <span className="scroll-top-button-desktop__text">Volver arriba</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div className="footer__right-container">
+
+                <hr className="footer-line" />
+
+                <div className="footer-bottom">
+                    <div className="footer-bottom-text seotext">
+                        <p className="copyright-year">
+                            Copyright © 2023 Pulpobet.club. Todos los derechos reservados.
+                        </p>
                     </div>
                 </div>
-            </footer>
+            </div>
         </div>
     );
 };

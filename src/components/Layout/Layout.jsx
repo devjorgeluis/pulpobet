@@ -292,8 +292,8 @@ const Layout = () => {
                     />
                 )}
 
-                {/* {!isSportsPage && !isGameModalOpen && <Footer isSportsPage={isSportsPage} />}
-                {!isSportsPage && !isGameModalOpen && <MobileFooter isSlotsOnly={isSlotsOnly} />} */}
+                {!isSportsPage && !isGameModalOpen && <Footer isSlotsOnly={isSlotsOnly} />}
+                {/* {!isSportsPage && !isGameModalOpen && <MobileFooter isSlotsOnly={isSlotsOnly} />} */}
             </NavigationContext.Provider>
         </LayoutContext.Provider>
     );
