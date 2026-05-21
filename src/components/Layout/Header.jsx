@@ -54,6 +54,7 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
     const [providerSubmenuItems, setProviderSubmenuItems] = useState([]);
     const [selectedProviderTag, setSelectedProviderTag] = useState(null);
     const userMenuRef = useRef(null);
+    const liveCasinoCategoriesRequestedRef = useRef(false);
     const { contextData } = useContext(AppContext);
     const { setIsGameModalOpen } = useContext(NavigationContext);
     const { liveCasinoCategories, setLiveCasinoCategories } = useContext(LayoutContext);
@@ -124,7 +125,8 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
     };
 
     useEffect(() => {
-        if (liveCasinoCategories.length === 0 && !isLoadingLiveCasinoCategories) {
+        if (liveCasinoCategories.length === 0 && !isLoadingLiveCasinoCategories && !liveCasinoCategoriesRequestedRef.current) {
+            liveCasinoCategoriesRequestedRef.current = true;
             setIsLoadingLiveCasinoCategories(true);
             callApi(
                 contextData,

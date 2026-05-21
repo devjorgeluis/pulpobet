@@ -1962,6 +1962,7 @@ body.has-menu-open .header-mobilemenu {
 
 .has-search-open .header-search {
     display: initial;
+    height: 100%;
 }
 
 .dark .header-search {

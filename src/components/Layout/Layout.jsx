@@ -315,6 +315,7 @@ const Layout = () => {
                         isSlotsOnly={isSlotsOnly}
                         handleLoginClick={handleLoginClick}
                         handleLogoutClick={handleLogoutClick}
+                        supportParent={supportParent}
                         openSupportModal={openSupportModal}
                     />}
             </NavigationContext.Provider>

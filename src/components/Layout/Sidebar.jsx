@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
@@ -12,13 +12,15 @@ import ImgSports from "/src/assets/img/sports.png";
 import ImgProvider from "/src/assets/img/provider.png";
 import ImgPhone from "/src/assets/svg/phone.svg";
 
-const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupportModal }) => {
+const Sidebar = ({ isSlotsOnly, isLogin, isOpen, onClose, requestedMenuName, supportParent, openSupportModal }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [openMenuName, setOpenMenuName] = useState(null);
     const [isLoadingLiveCasinoCategories, setIsLoadingLiveCasinoCategories] = useState(false);
     const [isLoadingCasinoCategories, setIsLoadingCasinoCategories] = useState(false);
     const [casinoMainCategories, setCasinoMainCategories] = useState([]);
+    const liveCasinoCategoriesRequestedRef = useRef(false);
+    const casinoCategoriesRequestedRef = useRef(false);
     const { contextData } = useContext(AppContext);
     const { liveCasinoCategories, setLiveCasinoCategories } = useContext(LayoutContext);
 
@@ -36,10 +38,13 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
     }, [requestedMenuName]);
 
     useEffect(() => {
+        if (!isOpen) return;
         if (!isProvidersNavVisible) return;
         if (casinoMainCategories.length > 0) return;
         if (isLoadingCasinoCategories) return;
+        if (casinoCategoriesRequestedRef.current) return;
 
+        casinoCategoriesRequestedRef.current = true;
         setIsLoadingCasinoCategories(true);
         callApi(
             contextData,
@@ -58,9 +63,12 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
     }, [contextData, isProvidersNavVisible, casinoMainCategories.length, isLoadingCasinoCategories]);
 
     useEffect(() => {
+        if (!isOpen) return;
         if (liveCasinoCategories.length > 0) return;
         if (isLoadingLiveCasinoCategories) return;
+        if (liveCasinoCategoriesRequestedRef.current) return;
 
+        liveCasinoCategoriesRequestedRef.current = true;
         setIsLoadingLiveCasinoCategories(true);
         callApi(
             contextData,
@@ -83,6 +91,8 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
 
     const getCasinoHash = (item) => item?.code || item?.table_name || item?.id || item?.name;
     const activeHash = (location.hash || "").replace("#", "");
+
+    if (!isOpen) return null;
 
     return (
         <>
@@ -259,116 +269,121 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
                             </div>
                         )}
 
-                        <div
-                            className={`header-mobilemenu-menu-item${openMenuName === "Live Casino" ? " is-open" : ""}`}
-                            data-submenu-name="Live Casino"
-                            style={{ backgroundColor: "rgba(20, 88, 130, 0.55)" }}
-                        >
-                            <span
-                                className="header-mobilemenu-menu-item-title"
-                                onClick={() => toggleMenu("Live Casino")}
-                            >
-                                <span className="header-mobilemenu-menu-item-icon-wrapper">
-                                    <img
-                                        className="header-mobilemenu-menu-item-icon"
-                                        src={ImgLiveCasino}
-                                        alt="Casino en vivo"
-                                    />
-                                </span>
-                                <span className="header-mobilemenu-menu-item-text">
-                                    Casino En Vivo
-                                </span>
-                            </span>
-
-                            <ul
-                                className="header-mobilemenu-menu-list"
-                                style={{ backgroundColor: "rgba(20, 88, 130, 0.55)" }}
-                            >
-                                {liveCasinoCategories.map((item) => (
-                                    <li
-                                        key={item.code || item.table_name || item.id || item.name}
-                                        className={`header-mobilemenu-menu-list-item${location.pathname === "/live-casino" && activeHash === getCasinoHash(item) ? " active" : ""}`}
-                                    >
-                                        <a
-                                            className="header-mobilemenu-menu-list-link"
-                                            href="#"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                navigate(getLiveCasinoHref(item), { state: { liveCasinoCategory: item } });
-                                                onClose?.();
-                                            }}
-                                        >
-                                            {
-                                                item.image_local &&
-                                                <span className="header-mobilemenu-sub-icon-wrapper">
-                                                    <img
-                                                        className="header-mobilemenu-sub-icon"
-                                                        src={item.image_local !== null ? contextData.cdnUrl + item.image_local : item.image_url}
-                                                        alt={item.name}
-                                                    />
-                                                </span>
-                                            }
-                                            <span className="header-mobilemenu-sub-text">
-                                                {item.name}
-                                            </span>
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div
-                            className={`header-mobilemenu-menu-item${openMenuName === "Sports" ? " is-open" : ""}`}
-                            data-submenu-name="Sports"
-                            style={{ backgroundColor: "rgba(14, 54, 3, 0.47)" }}
-                        >
-                            <span
-                                className="header-mobilemenu-menu-item-title"
-                                onClick={() => toggleMenu("Sports")}
-                            >
-                                <span className="header-mobilemenu-menu-item-icon-wrapper">
-                                    <img
-                                        className="header-mobilemenu-menu-item-icon"
-                                        src={ImgSports}
-                                        alt="Sports"
-                                    />
-                                </span>
-
-                                <span className="header-mobilemenu-menu-item-text">
-                                    Deportes
-                                </span>
-                            </span>
-
-                            <ul
-                                className="header-mobilemenu-menu-list"
-                                style={{ backgroundColor: "rgba(14, 54, 3, 0.47)" }}
-                            >
-                                <li className="header-mobilemenu-menu-list-item">
-                                    <a
-                                        className="header-mobilemenu-menu-list-link"
-                                        onClick={() => navigate("/sports")}
-                                    >
-                                        <span className="header-mobilemenu-sub-text">
-                                            Lobby
-                                        </span>
-                                    </a>
-                                </li>
-
-                                <li className="header-mobilemenu-menu-list-item">
-                                    <a
-                                        className="header-mobilemenu-menu-list-link"
-                                        onClick={() => navigate("/live-sports")}
-                                    >
-                                        <span className="header-mobilemenu-sub-text">
-                                            En Vivo
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
                         {
-                            isLogin && <div
+                            isSlotsOnly === "false" &&
+                            <>
+
+                                <div
+                                    className={`header-mobilemenu-menu-item${openMenuName === "Live Casino" ? " is-open" : ""}`}
+                                    data-submenu-name="Live Casino"
+                                    style={{ backgroundColor: "rgba(20, 88, 130, 0.55)" }}
+                                >
+                                    <span
+                                        className="header-mobilemenu-menu-item-title"
+                                        onClick={() => toggleMenu("Live Casino")}
+                                    >
+                                        <span className="header-mobilemenu-menu-item-icon-wrapper">
+                                            <img
+                                                className="header-mobilemenu-menu-item-icon"
+                                                src={ImgLiveCasino}
+                                                alt="Casino en vivo"
+                                            />
+                                        </span>
+                                        <span className="header-mobilemenu-menu-item-text">
+                                            Casino En Vivo
+                                        </span>
+                                    </span>
+
+                                    <ul
+                                        className="header-mobilemenu-menu-list"
+                                        style={{ backgroundColor: "rgba(20, 88, 130, 0.55)" }}
+                                    >
+                                        {liveCasinoCategories.map((item) => (
+                                            <li
+                                                key={item.code || item.table_name || item.id || item.name}
+                                                className={`header-mobilemenu-menu-list-item${location.pathname === "/live-casino" && activeHash === getCasinoHash(item) ? " active" : ""}`}
+                                            >
+                                                <a
+                                                    className="header-mobilemenu-menu-list-link"
+                                                    href="#"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        navigate(getLiveCasinoHref(item), { state: { liveCasinoCategory: item } });
+                                                        onClose?.();
+                                                    }}
+                                                >
+                                                    {
+                                                        item.image_local &&
+                                                        <span className="header-mobilemenu-sub-icon-wrapper">
+                                                            <img
+                                                                className="header-mobilemenu-sub-icon"
+                                                                src={item.image_local !== null ? contextData.cdnUrl + item.image_local : item.image_url}
+                                                                alt={item.name}
+                                                            />
+                                                        </span>
+                                                    }
+                                                    <span className="header-mobilemenu-sub-text">
+                                                        {item.name}
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                <div
+                                    className={`header-mobilemenu-menu-item${openMenuName === "Sports" ? " is-open" : ""}`}
+                                    data-submenu-name="Sports"
+                                    style={{ backgroundColor: "rgba(14, 54, 3, 0.47)" }}
+                                >
+                                    <span
+                                        className="header-mobilemenu-menu-item-title"
+                                        onClick={() => toggleMenu("Sports")}
+                                    >
+                                        <span className="header-mobilemenu-menu-item-icon-wrapper">
+                                            <img
+                                                className="header-mobilemenu-menu-item-icon"
+                                                src={ImgSports}
+                                                alt="Sports"
+                                            />
+                                        </span>
+
+                                        <span className="header-mobilemenu-menu-item-text">
+                                            Deportes
+                                        </span>
+                                    </span>
+
+                                    <ul
+                                        className="header-mobilemenu-menu-list"
+                                        style={{ backgroundColor: "rgba(14, 54, 3, 0.47)" }}
+                                    >
+                                        <li className="header-mobilemenu-menu-list-item">
+                                            <a
+                                                className="header-mobilemenu-menu-list-link"
+                                                onClick={() => navigate("/sports")}
+                                            >
+                                                <span className="header-mobilemenu-sub-text">
+                                                    Lobby
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li className="header-mobilemenu-menu-list-item">
+                                            <a
+                                                className="header-mobilemenu-menu-list-link"
+                                                onClick={() => navigate("/live-sports")}
+                                            >
+                                                <span className="header-mobilemenu-sub-text">
+                                                    En Vivo
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </>
+                        }
+                        {
+                            isLogin && supportParent && <div
                                 className="header-mobilemenu-menu-item"
                                 data-submenu-name="Contact"
                                 style={{ backgroundColor: "rgba(89, 4, 97, 0.51)" }}

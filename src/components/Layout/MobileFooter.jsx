@@ -8,7 +8,7 @@ import ImgCasino from "/src/assets/img/mobile-casino.png";
 import ImgUser from "/src/assets/svg/user-icon-dark-mode.svg";
 import ImgContact from "/src/assets/svg/contact.svg";
 
-const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handleLogoutClick, openSupportModal }) => {
+const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handleLogoutClick, supportParent, openSupportModal }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sidebarRequestedMenu, setSidebarRequestedMenu] = useState(null);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -37,7 +37,7 @@ const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handle
     return (
         <>
             {
-                isMobile && <SearchInput isLogin={isLogin} />
+                isMobile && <SearchInput isLogin={isLogin} handleLoginClick={handleLoginClick} />
             }
 
             <app-header-bottom>
@@ -156,7 +156,9 @@ const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handle
             <Sidebar
                 isSlotsOnly={isSlotsOnly}
                 isLogin={isLogin}
+                isOpen={isSidebarOpen}
                 requestedMenuName={sidebarRequestedMenu}
+                supportParent={supportParent}
                 openSupportModal={openSupportModal}
                 onClose={() => setIsSidebarOpen(false)}
             />
