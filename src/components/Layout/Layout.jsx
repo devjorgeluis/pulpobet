@@ -232,7 +232,15 @@ const Layout = () => {
                 />
 
                 {!isSportsPage && !isGameModalOpen && <Footer isSlotsOnly={isSlotsOnly} />}
-                {!isSportsPage && !isGameModalOpen && <MobileFooter isLogin={isLogin} isMobile={isMobile} isSlotsOnly={isSlotsOnly} handleLoginClick={handleLoginClick} handleLogoutClick={handleLogoutClick} />}
+                {!isSportsPage && !isGameModalOpen &&
+                    <MobileFooter
+                        isLogin={isLogin}
+                        isMobile={isMobile}
+                        isSlotsOnly={isSlotsOnly}
+                        handleLoginClick={handleLoginClick}
+                        handleLogoutClick={handleLogoutClick}
+                        openSupportModal={openSupportModal}
+                    />}
             </NavigationContext.Provider>
         </LayoutContext.Provider>
     );

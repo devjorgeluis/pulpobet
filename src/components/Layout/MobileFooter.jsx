@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import Sidebar from "./Sidebar";
 import UserMenu from "./UserMenu";
 import SearchInput from "../SearchInput";
@@ -7,12 +6,13 @@ import SearchInput from "../SearchInput";
 import ImgSearch from "/src/assets/svg/search-icon-mobile-dark-mode.svg";
 import ImgCasino from "/src/assets/img/mobile-casino.png";
 import ImgUser from "/src/assets/svg/user-icon-dark-mode.svg";
+import ImgContact from "/src/assets/svg/contact.svg";
 
-const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handleLogoutClick, supportParent, openSupportModal }) => {
-    const navigate = useNavigate();
+const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handleLogoutClick, openSupportModal }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sidebarRequestedMenu, setSidebarRequestedMenu] = useState(null);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const userMenuToggleRef = useRef(null);
 
     useEffect(() => {
         if (isSidebarOpen) {
@@ -36,7 +36,9 @@ const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handle
 
     return (
         <>
-            <SearchInput isMobile={isMobile} />
+            {
+                isMobile && <SearchInput />
+            }
 
             <app-header-bottom>
                 <div className="headerbottom logged-in">
@@ -92,10 +94,24 @@ const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handle
 
                             <a
                                 className="headerbottom-btnicon"
+                                onClick={() => openSupportModal(false)}
+                            >
+                                <picture>
+                                    <img
+                                        className="image image-dark"
+                                        src={ImgContact}
+                                        alt="Buscar"
+                                    />
+                                </picture>
+                            </a>
+
+                            <a
+                                className="headerbottom-btnicon"
                                 onClick={() => {
                                     setIsSidebarOpen(false);
-                                    setIsUserMenuOpen(true);
+                                    setIsUserMenuOpen((prev) => !prev);
                                 }}
+                                ref={userMenuToggleRef}
                             >
                                 <picture>
                                     <img
@@ -106,6 +122,18 @@ const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handle
                                 </picture>
                             </a>
                         </> : <div className="headerbottom-actions d-flex flex-row">
+                            <a
+                                className="headerbottom-btnicon"
+                                onClick={() => openSupportModal(false)}
+                            >
+                                <picture>
+                                    <img
+                                        className="image image-dark"
+                                        src={ImgContact}
+                                        alt="Buscar"
+                                    />
+                                </picture>
+                            </a>
                             <app-button
                                 label="INGRESAR"
                                 className="me-2 login-button"
@@ -127,15 +155,16 @@ const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handle
 
             <Sidebar
                 isSlotsOnly={isSlotsOnly}
+                isLogin={isLogin}
                 requestedMenuName={sidebarRequestedMenu}
+                openSupportModal={openSupportModal}
                 onClose={() => setIsSidebarOpen(false)}
             />
 
             <UserMenu
                 isOpen={isUserMenuOpen}
+                toggleRef={userMenuToggleRef}
                 handleLogoutClick={handleLogoutClick}
-                supportParent={supportParent}
-                openSupportModal={openSupportModal}
                 onCloseMenu={() => setIsUserMenuOpen(false)}
             />
         </>

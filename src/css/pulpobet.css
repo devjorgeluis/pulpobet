@@ -1094,10 +1094,6 @@ a:hover {
     .lastwinners-total {
         padding-top: 26px;
     }
-
-    .h4 {
-        padding-bottom: 20px;
-    }
 }
 
 .seotext-title {
@@ -2096,6 +2092,12 @@ body.has-menu-open .header-mobilemenu {
     }
 }
 
+@media (max-width: 768px) {
+    .header-search-results {
+        margin-bottom: 0;
+    }
+}
+
 .header-search-results app-game-card:nth-child(7),
 .header-search-results app-game-card:nth-child(8),
 .header-search-results app-game-card:nth-child(9),
@@ -2696,6 +2698,10 @@ body.has-menu-open .header-mobilemenu {
     height: 100%;
     display: inline-block;
     border-radius: 10px;
+}
+
+.headerbottom-btnicon .image {
+    border-radius: 0;
 }
 
 /** Header */

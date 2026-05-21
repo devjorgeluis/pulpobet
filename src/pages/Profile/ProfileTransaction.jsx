@@ -8,12 +8,14 @@ import ImgChevronLeft from "/src/assets/svg/chevron-left.svg";
 import ImgChevronRight from "/src/assets/svg/chevron-right.svg";
 import ImgChevronDoubleLeft from "/src/assets/svg/chevron-duo-left.svg";
 import ImgChevronDoubleRight from "/src/assets/svg/chevron-duo-right.svg";
+import ImgDarkChevronDown from "/src/assets/svg/chevron-down-dark-mode.svg";
 
 const ProfileTransaction = () => {
     const navigate = useNavigate();
     const { contextData } = useContext(AppContext);
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [pagination, setPagination] = useState({
         start: 0,
         length: 5,
@@ -201,7 +203,10 @@ const ProfileTransaction = () => {
                 <div className="row">
                     <div className="col-lg-3">
                         <div className="lateral-menu is-responsive">
-                            <div className="menu-toggler">
+                            <div
+                                className={`menu-toggler${isMenuOpen ? " is-open" : ""}`}
+                                onClick={() => setIsMenuOpen((prev) => !prev)}
+                            >
                                 <a className="menu-toggler-btnicon">
                                     <span className="menu-toggler-menubar"></span>
                                     <span className="menu-toggler-menubar"></span>
@@ -213,25 +218,22 @@ const ProfileTransaction = () => {
                                 <div className="menu-toggler-chevron ms-auto">
                                     <picture>
                                         <img
-                                            className="image image-light"
-                                            src="/assets/images/my-account/chevron-down.svg"
-                                            alt=""
-                                        />
-
-                                        <img
                                             className="image image-dark"
-                                            src="/assets/images/my-account/chevron-down-dark-mode.svg"
+                                            src={ImgDarkChevronDown}
                                             alt=""
                                         />
                                     </picture>
                                 </div>
                             </div>
 
-                            <div className="menu-wrapper my-2 my-lg-0">
+                            <div className={`menu-wrapper my-2 my-lg-0${isMenuOpen ? " is-open" : ""}`}>
                                 <nav className="menu">
                                     <a
                                         className="menu-item"
-                                        onClick={() => navigate("/profile")}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            navigate("/profile");
+                                        }}
                                     >
                                         Mi cuenta
                                     </a>
@@ -244,7 +246,10 @@ const ProfileTransaction = () => {
 
                                     <a
                                         className="menu-item"
-                                        onClick={() => navigate("/profile-history")}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            navigate("/profile-history");
+                                        }}
                                     >
                                         Historial de cuenta
                                     </a>
@@ -286,7 +291,7 @@ const ProfileTransaction = () => {
                                             <tbody>
                                                 {loading ? (
                                                     <tr>
-                                                        <td colSpan={5}>
+                                                        <td className="text-center" colSpan={5}>
                                                             <div className="flex items-center justify-center my-4">
                                                                 <LoadApi />
                                                             </div>

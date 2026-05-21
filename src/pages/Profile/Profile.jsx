@@ -4,7 +4,6 @@ import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
 import LoadApi from "../../components/Loading/LoadApi";
 
-import ImgChevronDown from "/src/assets/svg/chevron-down.svg";
 import ImgDarkChevronDown from "/src/assets/svg/chevron-down-dark-mode.svg";
 
 const Profile = () => {
@@ -13,6 +12,7 @@ const Profile = () => {
     const { contextData } = useContext(AppContext);
     const [loading, setLoading] = useState(false);
     const [transactions, setTransactions] = useState([]);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [pagination, setPagination] = useState({
         start: 0,
         length: 5,
@@ -86,7 +86,10 @@ const Profile = () => {
                 <div className="row">
                     <div className="col-lg-3">
                         <div className="lateral-menu is-responsive">
-                            <div className="menu-toggler">
+                            <div
+                                className={`menu-toggler${isMenuOpen ? " is-open" : ""}`}
+                                onClick={() => setIsMenuOpen((prev) => !prev)}
+                            >
                                 <a className="menu-toggler-btnicon">
                                     <span className="menu-toggler-menubar"></span>
                                     <span className="menu-toggler-menubar"></span>
@@ -98,12 +101,6 @@ const Profile = () => {
                                 <div className="menu-toggler-chevron ms-auto">
                                     <picture>
                                         <img
-                                            className="image image-light"
-                                            src={ImgChevronDown}
-                                            alt=""
-                                        />
-
-                                        <img
                                             className="image image-dark"
                                             src={ImgDarkChevronDown}
                                             alt=""
@@ -112,7 +109,7 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            <div className="menu-wrapper my-2 my-lg-0">
+                            <div className={`menu-wrapper my-2 my-lg-0${isMenuOpen ? " is-open" : ""}`}>
                                 <nav className="menu">
                                     <a
                                         className="menu-item is-active"
@@ -122,14 +119,20 @@ const Profile = () => {
 
                                     <a
                                         className="menu-item"
-                                        onClick={() => navigate("/profile-transaction")}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            navigate("/profile-transaction");
+                                        }}
                                     >
                                         Transacciones
                                     </a>
 
                                     <a
                                         className="menu-item"
-                                        onClick={() => navigate("/profile-history")}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            navigate("/profile-history");
+                                        }}
                                     >
                                         Historial de cuenta
                                     </a>
@@ -144,7 +147,7 @@ const Profile = () => {
                                 <div className="box mb-5">
                                     <div className="mb-5">
                                         <div className="h4 mb-1">
-                                            Saldo actual
+                                            Saldo Actual
                                         </div>
 
                                         <div className="h3">
@@ -185,7 +188,7 @@ const Profile = () => {
                                         <tbody>
                                             {loading ? (
                                                 <tr>
-                                                    <td colSpan={5}>
+                                                    <td className="text-center" colSpan={5}>
                                                         <div className="flex items-center justify-center my-4">
                                                             <LoadApi />
                                                         </div>

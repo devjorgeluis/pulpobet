@@ -6390,6 +6390,20 @@ body.dark .animate {
     border-bottom-right-radius: 10px;
 }
 
+@media (max-width: 768px) {
+    .bwtable-table {
+        display: table;
+    }
+
+    .bwtable-table tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 0;
+    }
+
+    .bwtable-table tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 0;
+    }
+}
+
 @media (min-width: 992px) {
     .bwtable-cards {
         display: none;

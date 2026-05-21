@@ -6,7 +6,7 @@ import ImgLogo from "/src/assets/img/logo.png";
 import IconEye from "/src/assets/svg/eye.svg";
 import IconEyeSlash from "/src/assets/svg/eye-off.svg";
 
-const UserMenu = ({ isOpen, handleLogoutClick, supportParent, openSupportModal, onCloseMenu }) => {
+const UserMenu = ({ isOpen, toggleRef, handleLogoutClick, onCloseMenu }) => {
     const { contextData } = useContext(AppContext);
     const menuRef = useRef(null);
     const navigate = useNavigate();
@@ -36,6 +36,7 @@ const UserMenu = ({ isOpen, handleLogoutClick, supportParent, openSupportModal, 
         if (!isOpen) return;
 
         const handleOutsideClick = (event) => {
+            if (toggleRef?.current && toggleRef.current.contains(event.target)) return;
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 onCloseMenu?.();
             }
@@ -44,8 +45,6 @@ const UserMenu = ({ isOpen, handleLogoutClick, supportParent, openSupportModal, 
         document.addEventListener("mousedown", handleOutsideClick);
         return () => document.removeEventListener("mousedown", handleOutsideClick);
     }, [isOpen, onCloseMenu]);
-
-    if (!isOpen) return null;
 
     return (
         <div className="header-mobile-usermenu" ref={menuRef}>

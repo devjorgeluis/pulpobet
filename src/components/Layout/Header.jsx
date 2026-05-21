@@ -4,7 +4,6 @@ import { AppContext } from "../../AppContext";
 import { LayoutContext } from "./LayoutContext";
 import { callApi } from "../../utils/Utils";
 import SearchInput from "../SearchInput";
-import Sidebar from "./Sidebar";
 
 import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";

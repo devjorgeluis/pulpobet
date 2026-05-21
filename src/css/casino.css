@@ -164,7 +164,7 @@ app-tv-banner-timer {
     font-size: 15px;
     font-weight: 700;
     text-align: center;
-    margin: 0 7px;
+    margin: 7px;
 }
 
 .pg-button:not(:disabled):not(.active) {

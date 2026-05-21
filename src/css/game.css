@@ -291,6 +291,12 @@
     overflow: hidden;
 }
 
+@media (max-width: 500px) {
+    .gd-game-config-panel {
+        display: none;
+    }
+}
+
 .gd-game-config-panel .gd-free-play {
     overflow: hidden;
     float: left;

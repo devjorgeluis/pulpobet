@@ -9,8 +9,9 @@ import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
 import ImgLiveCasino from "/src/assets/img/live-casino.png";
 import ImgSports from "/src/assets/img/sports.png";
+import ImgPhone from "/src/assets/svg/phone.svg";
 
-const Sidebar = ({ isSlotsOnly, isLogin, userBalance, onClose, requestedMenuName }) => {
+const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupportModal }) => {
     const navigate = useNavigate();
     const [openMenuName, setOpenMenuName] = useState(null);
     const [isLoadingLiveCasinoCategories, setIsLoadingLiveCasinoCategories] = useState(false);
@@ -247,6 +248,30 @@ const Sidebar = ({ isSlotsOnly, isLogin, userBalance, onClose, requestedMenuName
                                 </li>
                             </ul>
                         </div>
+
+                        {
+                            isLogin && <div
+                                className="header-mobilemenu-menu-item ng-star-inserted"
+                                data-submenu-name="Contact"
+                                style={{ backgroundColor: "rgba(89, 4, 97, 0.51)" }}
+                                onClick={() => openSupportModal(true)}
+                            >
+                                <span className="header-mobilemenu-menu-item-title">
+                                    <span className="header-mobilemenu-menu-item-icon-wrapper">
+                                        <img
+                                            aria-hidden="true"
+                                            className="header-mobilemenu-menu-item-icon ng-star-inserted"
+                                            src={ImgPhone}
+                                            alt="contact"
+                                        />
+                                    </span>
+
+                                    <span className="header-mobilemenu-menu-item-text ng-star-inserted">
+                                        Contactá a Tu Cajero
+                                    </span>
+                                </span>
+                            </div>
+                        }
                     </nav>
                 </div>
             </app-header-mobile-menu>
