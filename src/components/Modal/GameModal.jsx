@@ -124,6 +124,10 @@ const GameModal = (props) => {
     if (typeof props.onClose === "function") props.onClose();
   };
 
+  const handleClose = () => {
+    internalClose();
+  };
+
   return (
     <>
       <main className="game-main-container">
@@ -134,7 +138,7 @@ const GameModal = (props) => {
             dark-mode="true"
           >
             <div className="gd-game-container">
-              {!iframeLoaded && 
+              {!iframeLoaded &&
                 <div className="my-5 text-center">
                   <LoadApi />
                 </div>

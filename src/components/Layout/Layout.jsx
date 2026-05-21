@@ -11,6 +11,7 @@ import LoginModal from "../Modal/LoginModal";
 import SupportModal from "../Modal/SupportModal";
 import { NavigationContext } from "../Layout/NavigationContext";
 import VerifyAgeModal from "../Modal/VerifyAgeModal";
+import GameModal from "../Modal/GameModal";
 
 const Layout = () => {
     const { contextData } = useContext(AppContext);
@@ -34,10 +35,16 @@ const Layout = () => {
     const [showSupportModal, setShowSupportModal] = useState(false);
     const [supportParentOnly, setSupportParentOnly] = useState(false);
     const [isGameModalOpen, setIsGameModalOpen] = useState(false);
+    const [isHeaderGameModalOpen, setIsHeaderGameModalOpen] = useState(false);
+    const [headerGameUrl, setHeaderGameUrl] = useState("");
     const navigate = useNavigate();
 
     const location = useLocation();
     const isSportsPage = location.pathname === "/sports" || location.pathname === "/live-sports";
+    const allowFooterWithGame = location.pathname === "/" ||
+        location.pathname === "/home" ||
+        location.pathname === "/casino" ||
+        location.pathname === "/live-casino";
 
     useEffect(() => {
         if (contextData.session != null) {
@@ -176,6 +183,59 @@ const Layout = () => {
         setSupportParentOnly(false);
     };
 
+    const openHeaderGameModal = (game) => {
+        const gameId = game?.id;
+        if (!gameId) return;
+        const isMobileDevice =
+            isMobile ||
+            Boolean(contextData?.isMobile) ||
+            /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
+
+        if (isMobileDevice) {
+            callApi(
+                contextData,
+                "GET",
+                "/get-game-url?game_id=" + gameId,
+                (result) => {
+                    if (result?.status === "0" && result?.url) {
+                        window.location.href = result.url;
+                        return;
+                    }
+                },
+                null,
+            );
+            return;
+        }
+
+        setIsHeaderGameModalOpen(true);
+        setHeaderGameUrl("");
+        callApi(
+            contextData,
+            "GET",
+            "/get-game-url?game_id=" + gameId,
+            (result) => {
+                if (result?.status === "0") {
+                    setHeaderGameUrl(result.url || "");
+                } else {
+                    setIsHeaderGameModalOpen(false);
+                    setHeaderGameUrl("");
+                }
+            },
+            null,
+        );
+    };
+
+    const closeHeaderGameModal = () => {
+        setIsHeaderGameModalOpen(false);
+        setHeaderGameUrl("");
+    };
+
+    useEffect(() => {
+        if (isHeaderGameModalOpen) {
+            closeHeaderGameModal();
+        }
+    }, [location.pathname]);
+
     const layoutContextValue = {
         isLogin,
         userBalance,
@@ -193,7 +253,16 @@ const Layout = () => {
     return (
         <LayoutContext.Provider value={layoutContextValue}>
             <NavigationContext.Provider
-                value={{ selectedPage, setSelectedPage, getPage, isGameModalOpen, setIsGameModalOpen }}
+                value={{
+                    selectedPage,
+                    setSelectedPage,
+                    getPage,
+                    isGameModalOpen,
+                    setIsGameModalOpen,
+                    isHeaderGameModalOpen,
+                    openHeaderGameModal,
+                    closeHeaderGameModal,
+                }}
             >
                 <VerifyAgeModal
                     isOpen={showAgeModal}
@@ -217,7 +286,14 @@ const Layout = () => {
                     supportParent={supportParent}
                     openSupportModal={openSupportModal}
                 />
-                <main>
+                {isHeaderGameModalOpen && (
+                    <GameModal
+                        gameUrl={headerGameUrl}
+                        onClose={closeHeaderGameModal}
+                        isMobile={isMobile}
+                    />
+                )}
+                <main style={{ display: isHeaderGameModalOpen ? "none" : undefined }}>
                     <Outlet context={{ isSlotsOnly, supportParent, openSupportModal, handleLoginClick, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
                 </main>
 
@@ -231,8 +307,8 @@ const Layout = () => {
                     supportParent={supportParent}
                 />
 
-                {!isSportsPage && !isGameModalOpen && <Footer isSlotsOnly={isSlotsOnly} />}
-                {!isSportsPage && !isGameModalOpen &&
+                {!isSportsPage && (allowFooterWithGame || (!isGameModalOpen && !isHeaderGameModalOpen)) && <Footer isSlotsOnly={isSlotsOnly} />}
+                {!isSportsPage && (allowFooterWithGame || (!isGameModalOpen && !isHeaderGameModalOpen)) &&
                     <MobileFooter
                         isLogin={isLogin}
                         isMobile={isMobile}

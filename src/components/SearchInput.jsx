@@ -3,14 +3,13 @@ import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { callApi } from "../utils/Utils";
 import GameCard from "./GameCard";
-import GameModal from "./Modal/GameModal";
-import LoadApi from "./Loading/LoadApi";
 import { NavigationContext } from "./Layout/NavigationContext";
 
 const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
     const [txtSearch, setTxtSearch] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [isSearchPageLoading, setIsSearchPageLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [overlayTop, setOverlayTop] = useState("72px");
     const [resolvedPageGroupCode, setResolvedPageGroupCode] = useState(null);
@@ -45,7 +44,7 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
     const searchDelayTimerRef = useRef(null);
     const searchNavigationDelayTimerRef = useRef(null);
     const { contextData } = useContext(AppContext);
-    const { setIsGameModalOpen, isGameModalOpen } = useContext(NavigationContext);
+    const { openHeaderGameModal } = useContext(NavigationContext);
     const location = useLocation();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +52,17 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
     const searchApiLength = 1000;
     const defaultVisibleResults = 10;
     const isSearchPage = location.pathname === "/search";
+    const isInputLoading = isSearchPage ? isSearchPageLoading : isSearching;
+
+    useEffect(() => {
+        const onSearchLoading = (event) => {
+            if (!isSearchPage) return;
+            setIsSearchPageLoading(Boolean(event?.detail));
+        };
+
+        window.addEventListener("search:loading", onSearchLoading);
+        return () => window.removeEventListener("search:loading", onSearchLoading);
+    }, [isSearchPage]);
 
     const resetSearchInput = () => {
         setTxtSearch("");
@@ -180,63 +190,11 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
         }
     };
 
-    const handleResultClick = (game) => {
-        setSearchResults([]);
-        setTxtSearch("");
-        setIsOpen(false);
-    };
+    const launchGame = (game) => {
+        console.log(game);
 
-    const selectedGameIdRef = useRef(null);
-    const selectedGameTypeRef = useRef(null);
-    const selectedGameLauncherRef = useRef(null);
-    const selectedGameNameRef = useRef(null);
-    const selectedGameImgRef = useRef(null);
-    const refGameModal = useRef();
-    const [gameUrl, setGameUrl] = useState("");
-    const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
-
-    useEffect(() => {
-        if (!isGameModalOpen) {
-            if (shouldShowGameModal) closeGameModal();
-        }
-    }, [isGameModalOpen]);
-
-    const launchGame = (game, type, launcher) => {
-        setShouldShowGameModal(true);
-        setIsGameModalOpen(true);
-        selectedGameIdRef.current = game.id !== null ? game.id : selectedGameIdRef.current;
-        selectedGameTypeRef.current = type !== null ? type : selectedGameTypeRef.current;
-        selectedGameLauncherRef.current = launcher !== null ? launcher : selectedGameLauncherRef.current;
-        selectedGameNameRef.current = game?.name;
-        selectedGameImgRef.current =
-            game?.image_local != null ? contextData.cdnUrl + game?.image_local : null;
-
-        callApi(
-            contextData,
-            "GET",
-            "/get-game-url?game_id=" + selectedGameIdRef.current,
-            (result) => {
-                if (result?.status === "0") {
-                    if (selectedGameLauncherRef.current === "modal" || selectedGameLauncherRef.current === "tab") {
-                        setGameUrl(result.url);
-                    }
-                } else {
-                    closeGameModal();
-                }
-            },
-            null,
-        );
-    };
-
-    const closeGameModal = () => {
-        selectedGameIdRef.current = null;
-        selectedGameTypeRef.current = null;
-        selectedGameLauncherRef.current = null;
-        selectedGameNameRef.current = null;
-        selectedGameImgRef.current = null;
-        setGameUrl("");
-        setShouldShowGameModal(false);
-        setIsGameModalOpen(false);
+        closeSearch();
+        openHeaderGameModal?.(game);
     };
 
     const closeSearch = () => {
@@ -263,6 +221,7 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
         const keyword = searchParams.get("keyword") || "";
         setTxtSearch(keyword);
         closeSearch();
+        setIsSearchPageLoading(false);
     }, [isSearchPage, searchParams]);
 
     const handleInputChange = (value) => {
@@ -270,6 +229,7 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
 
         if (isSearchPage) {
             closeSearch();
+            setIsSearchPageLoading(value.trim() !== "");
             if (searchNavigationDelayTimerRef.current) clearTimeout(searchNavigationDelayTimerRef.current);
             searchNavigationDelayTimerRef.current = setTimeout(() => {
                 const next = new URLSearchParams(searchParams);
@@ -328,44 +288,16 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
     };
 
     return (
-        <div className="header-search-wrapper" ref={wrapperRef}>
-            {(
-                <div className="desktop-search-container">
-                    <input
-                        ref={searchRef}
-                        className="headertop-bottom-sidemenu-input"
-                        type="text"
-                        name="slots-search"
-                        placeholder="Buscar juego"
-                        onChange={(event) => {
-                            handleInputChange(event.target.value);
-                        }}
-                        onKeyUp={handleKeyUp}
-                        onFocus={() => {
-                            if (txtSearch.trim() !== "") {
-                                if (!isSearchPage) {
-                                    setIsOpen(true);
-                                    updateOverlayTop();
-                                }
-                            }
-                        }}
-                        value={txtSearch}
-                    />
-                </div>
-            )}
-
-            <div
-                id="header-search"
-                className="header-search"
-                style={{ top: overlayTop }}
-            >
-                <div className="header-search-content">
-                    <div className="header-search-input-wrapper">
+        <>
+            <div className="header-search-wrapper" ref={wrapperRef}>
+                {(
+                    <div className="desktop-search-container">
                         <input
+                            ref={searchRef}
+                            className={`headertop-bottom-sidemenu-input${isInputLoading ? " is-loading" : ""}`}
                             type="text"
+                            name="slots-search"
                             placeholder="Buscar juego"
-                            className={`header-search-input${isSearching ? " is-loading" : ""}`}
-                            value={txtSearch}
                             onChange={(event) => {
                                 handleInputChange(event.target.value);
                             }}
@@ -378,103 +310,93 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
                                     }
                                 }
                             }}
+                            value={txtSearch}
                         />
                     </div>
+                )}
 
-                    {showSearchResults && (
-                        <div className="header-search-result-block">
-                            <div className="header-search-result-text">
-                                <strong>{searchResults.length} resultados</strong> encontrados para "{txtSearch}"
-                            </div>
-
-                            <div className="header-search-results">
-                                {searchResults.slice(0, defaultVisibleResults).map((game) => (
-                                    <div key={game.id} className="gc-container">
-                                        <GameCard
-                                            id={game.id}
-                                            title={game.name}
-                                            imageSrc={game.imageDataSrc}
-                                            game={game}
-                                            onGameClick={() => {
-                                                if (isLogin) {
-                                                    launchGame(game, "slot", "modal");
-                                                } else {
-                                                    handleLoginClick && handleLoginClick();
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-
-                            {searchResults.length > defaultVisibleResults && (
-                                <a
-                                    className="header-search-seeallresults"
-                                    href="#"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        const trimmed = txtSearch.trim();
-                                        if (trimmed === "") return;
-
-                                        const params = new URLSearchParams();
-                                        params.set("keyword", trimmed);
-                                        if (resolvedPageGroupCode) {
-                                            params.set("page_group_code", resolvedPageGroupCode);
+                <div
+                    id="header-search"
+                    className="header-search"
+                    style={{ top: overlayTop }}
+                >
+                    <div className="header-search-content">
+                        <div className="header-search-input-wrapper">
+                            <input
+                                type="text"
+                                placeholder="Buscar juego"
+                                className={`header-search-input${isInputLoading ? " is-loading" : ""}`}
+                                value={txtSearch}
+                                onChange={(event) => {
+                                    handleInputChange(event.target.value);
+                                }}
+                                onKeyUp={handleKeyUp}
+                                onFocus={() => {
+                                    if (txtSearch.trim() !== "") {
+                                        if (!isSearchPage) {
+                                            setIsOpen(true);
+                                            updateOverlayTop();
                                         }
-                                        closeSearch();
-                                        searchRef.current?.blur();
-                                        navigate(`/search?${params.toString()}`);
-                                    }}
-                                >
-                                    Ver todos los resultados ({searchResults.length})
-                                </a>
-                            )}
+                                    }
+                                }}
+                            />
                         </div>
-                    )}
+
+                        {showSearchResults && (
+                            <div className="header-search-result-block">
+                                <div className="header-search-result-text">
+                                    <strong>{searchResults.length} resultados</strong> encontrados para "{txtSearch}"
+                                </div>
+
+                                <div className="header-search-results">
+                                    {searchResults.slice(0, defaultVisibleResults).map((game) => (
+                                        <div key={game.id} className="gc-container">
+                                            <GameCard
+                                                id={game.id}
+                                                title={game.name}
+                                                imageSrc={game.imageDataSrc}
+                                                game={game}
+                                                onGameClick={() => {
+                                                    if (isLogin) {
+                                                        launchGame(game);
+                                                    } else {
+                                                        handleLoginClick && handleLoginClick();
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {searchResults.length > defaultVisibleResults && (
+                                    <a
+                                        className="header-search-seeallresults"
+                                        href="#"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            const trimmed = txtSearch.trim();
+                                            if (trimmed === "") return;
+
+                                            const params = new URLSearchParams();
+                                            params.set("keyword", trimmed);
+                                            if (resolvedPageGroupCode) {
+                                                params.set("page_group_code", resolvedPageGroupCode);
+                                            }
+                                            closeSearch();
+                                            searchRef.current?.blur();
+                                            navigate(`/search?${params.toString()}`);
+                                        }}
+                                    >
+                                        Ver todos los resultados ({searchResults.length})
+                                    </a>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            {shouldShowGameModal && selectedGameIdRef.current !== null && (
-                <GameModal
-                    gameUrl={gameUrl}
-                    gameName={selectedGameNameRef.current}
-                    gameImg={selectedGameImgRef.current}
-                    reload={(gameData) => {
-                        if (gameData && gameData.id) {
-                            const g = {
-                                id: gameData.id,
-                                name: selectedGameNameRef.current,
-                                image_local: selectedGameImgRef.current?.replace(contextData.cdnUrl, ""),
-                            };
-                            launchGame(g, selectedGameTypeRef.current, selectedGameLauncherRef.current);
-                        } else if (selectedGameIdRef.current) {
-                            const g = {
-                                id: selectedGameIdRef.current,
-                                name: selectedGameNameRef.current,
-                                image_local: selectedGameImgRef.current?.replace(contextData.cdnUrl, ""),
-                            };
-                            launchGame(g, selectedGameTypeRef.current, selectedGameLauncherRef.current);
-                        }
-                    }}
-                    launchInNewTab={() => {
-                        if (selectedGameIdRef.current) {
-                            const g = {
-                                id: selectedGameIdRef.current,
-                                name: selectedGameNameRef.current,
-                                image_local: selectedGameImgRef.current?.replace(contextData.cdnUrl, ""),
-                            };
-                            launchGame(g, selectedGameTypeRef.current, "tab");
-                        }
-                    }}
-                    ref={refGameModal}
-                    onClose={closeGameModal}
-                    isMobile={contextData.isMobile}
-                    gameId={selectedGameIdRef.current}
-                    gameType={selectedGameTypeRef.current}
-                    gameLauncher={selectedGameLauncherRef.current}
-                />
-            )}
-        </div>
+        </>
     );
 };
 

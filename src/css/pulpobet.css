@@ -1646,7 +1646,7 @@ app-image {
     background-image: url("../assets/svg/search-icon.svg"), url("../assets/img/loading-spinner.gif");
     background-position: left 15px center, right 15px center;
     background-repeat: no-repeat, no-repeat;
-    background-size: 16px, 28px;
+    background-size: 12px, 20px;
 }
 
 .headertop-submenu-wrapper {

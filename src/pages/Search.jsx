@@ -65,11 +65,13 @@ const Search = () => {
       setGames([]);
       setIsSearching(false);
       setHasResponse(false);
+      window.dispatchEvent(new CustomEvent("search:loading", { detail: false }));
       return;
     }
 
     setIsSearching(true);
     setHasResponse(false);
+    window.dispatchEvent(new CustomEvent("search:loading", { detail: true }));
     const apiUrl =
       "/search-content?keyword=" +
       encodeURIComponent(cleanKeyword) +
@@ -85,6 +87,7 @@ const Search = () => {
       (result) => {
         setIsSearching(false);
         setHasResponse(true);
+        window.dispatchEvent(new CustomEvent("search:loading", { detail: false }));
         if (result?.status === 500 || result?.status === 422) {
           setGames([]);
           return;
