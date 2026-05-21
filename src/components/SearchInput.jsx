@@ -191,8 +191,6 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
     };
 
     const launchGame = (game) => {
-        console.log(game);
-
         closeSearch();
         openHeaderGameModal?.(game);
     };
@@ -257,7 +255,7 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
         performSearchWithDelay(value);
     };
 
-    const showSearchResults = !isSearchPage && isOpen && (searchResults.length > 0 || (!isSearching && txtSearch.trim() !== ""));
+    const showSearchResults = !isSearchPage && isOpen && (isSearching || searchResults.length > 0);
 
     const handleKeyUp = (e) => {
         if (isSearchPage) {
@@ -307,6 +305,7 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
                                     if (!isSearchPage) {
                                         setIsOpen(true);
                                         updateOverlayTop();
+                                        performSearchWithDelay(txtSearch);
                                     }
                                 }
                             }}
@@ -336,6 +335,7 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
                                         if (!isSearchPage) {
                                             setIsOpen(true);
                                             updateOverlayTop();
+                                            performSearchWithDelay(txtSearch);
                                         }
                                     }
                                 }}

@@ -37,7 +37,7 @@ const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handle
     return (
         <>
             {
-                isMobile && <SearchInput />
+                isMobile && <SearchInput isLogin={isLogin} />
             }
 
             <app-header-bottom>
