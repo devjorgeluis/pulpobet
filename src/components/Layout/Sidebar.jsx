@@ -9,9 +9,8 @@ import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
 import ImgLiveCasino from "/src/assets/img/live-casino.png";
 import ImgSports from "/src/assets/img/sports.png";
-import ImgLiveSports from "/src/assets/img/live-sports.png";
 
-const Sidebar = ({ isSlotsOnly, isLogin, userBalance, isOpen, onClose, requestedMenuName }) => {
+const Sidebar = ({ isSlotsOnly, isLogin, userBalance, onClose, requestedMenuName }) => {
     const navigate = useNavigate();
     const [openMenuName, setOpenMenuName] = useState(null);
     const [isLoadingLiveCasinoCategories, setIsLoadingLiveCasinoCategories] = useState(false);
@@ -25,13 +24,11 @@ const Sidebar = ({ isSlotsOnly, isLogin, userBalance, isOpen, onClose, requested
     const slotsTags = useMemo(() => getHeaderTags(isSlotsOnly), [isSlotsOnly]);
 
     useEffect(() => {
-        if (!isOpen) return;
         if (!requestedMenuName) return;
         setOpenMenuName(requestedMenuName);
-    }, [isOpen, requestedMenuName]);
+    }, [requestedMenuName]);
 
     useEffect(() => {
-        if (!isOpen) return;
         if (liveCasinoCategories.length > 0) return;
         if (isLoadingLiveCasinoCategories) return;
 
@@ -48,14 +45,12 @@ const Sidebar = ({ isSlotsOnly, isLogin, userBalance, isOpen, onClose, requested
             },
             null,
         );
-    }, [contextData, isOpen, liveCasinoCategories.length, isLoadingLiveCasinoCategories, setLiveCasinoCategories]);
+    }, [contextData, liveCasinoCategories.length, isLoadingLiveCasinoCategories, setLiveCasinoCategories]);
 
     const getLiveCasinoHref = (item) => {
         const code = item?.code || item?.table_name || item?.id || item?.name;
         return `/live-casino#${code}`;
     };
-
-    if (!isOpen) return null;
 
     return (
         <>

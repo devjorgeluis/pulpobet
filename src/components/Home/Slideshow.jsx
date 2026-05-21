@@ -47,7 +47,7 @@ const Slideshow = () => {
     { id: 6, image: ImgMobileBanner6 },
     { id: 7, image: ImgMobileBanner7 },
     { id: 8, image: ImgMobileBanner8 },
-    { id: 9, image: ImgMobileBanner9 },
+    // { id: 9, image: ImgMobileBanner9 },
   ] : [
     { id: 0, image: ImgBanner0 },
     { id: 1, image: ImgBanner1 },

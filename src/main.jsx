@@ -6,12 +6,14 @@ import './css/placeholder-loading.min.css'
 import './css/home.css'
 import './css/pulpobet.css'
 import './css/game.css'
+import "./css/profile.css";
+
 import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   // <StrictMode>
-    <AppContextProvider>
-      <App className="normal-mode app-mode"/>
-    </AppContextProvider>
+  <AppContextProvider>
+    <App className="normal-mode app-mode" />
+  </AppContextProvider>
   // </StrictMode>
 )

@@ -3701,7 +3701,7 @@ body.has-menu-open .header-mobilemenu {
 
 @media(max-width: 992px) {
     .game-iframe-view_gameIframeWrapper.game-iframe-view_sportbook {
-        top: 58px;
+        top: 72px;
         z-index: 999;
         height: 100% !important
     }
@@ -4118,6 +4118,10 @@ body.has-menu-open .header-mobilemenu {
     .btn.cookie-white-mb:hover {
         background-color: var(--color-white);
         color: var(--color-black);
+    }
+
+    .desktop-search-container {
+        display: none;
     }
 }
 

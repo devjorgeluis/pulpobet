@@ -43,7 +43,7 @@ export const getHeaderTags = (isSlotsOnly) => {
         ];
 };
 
-const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isSlotsOnly, supportParent, openSupportModal }) => {
+const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogoutClick, isSlotsOnly, supportParent, openSupportModal }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [showUserMenu, setShowUserMenu] = useState(false);
@@ -363,7 +363,7 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 </div>
 
                                 <div className="headertop-bottom-sidemenu">
-                                    <SearchInput />
+                                    <SearchInput isMobile={isMobile} />
                                 </div>
                             </div>
                         </div>
@@ -415,8 +415,6 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                     </div>
                 </div>
             </app-header-top>
-
-            <Sidebar />
         </header>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState, useContext } from "react";
+import { useEffect, useMemo, useRef, useState, useContext } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { callApi } from "../utils/Utils";
@@ -250,27 +250,29 @@ const SearchInput = ({ pageData }) => {
 
     return (
         <div className="header-search-wrapper" ref={wrapperRef}>
-            {!(isSearchPage && contextData?.isMobile) && (
-                <input
-                    ref={searchRef}
-                    className="headertop-bottom-sidemenu-input"
-                    type="text"
-                    name="slots-search"
-                    placeholder="Buscar juego"
-                    onChange={(event) => {
-                        handleInputChange(event.target.value);
-                    }}
-                    onKeyUp={handleKeyUp}
-                    onFocus={() => {
-                        if (txtSearch.trim() !== "") {
-                            if (!isSearchPage) {
-                                setIsOpen(true);
-                                updateOverlayTop();
+            {!isSearchPage && (
+                <div className="desktop-search-container">
+                    <input
+                        ref={searchRef}
+                        className="headertop-bottom-sidemenu-input"
+                        type="text"
+                        name="slots-search"
+                        placeholder="Buscar juego"
+                        onChange={(event) => {
+                            handleInputChange(event.target.value);
+                        }}
+                        onKeyUp={handleKeyUp}
+                        onFocus={() => {
+                            if (txtSearch.trim() !== "") {
+                                if (!isSearchPage) {
+                                    setIsOpen(true);
+                                    updateOverlayTop();
+                                }
                             }
-                        }
-                    }}
-                    value={txtSearch}
-                />
+                        }}
+                        value={txtSearch}
+                    />
+                </div>
             )}
 
             <div

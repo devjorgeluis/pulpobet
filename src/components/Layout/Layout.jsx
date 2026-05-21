@@ -6,7 +6,6 @@ import { LayoutContext } from "./LayoutContext";
 import { callApi } from "../../utils/Utils";
 import Header from "./Header";
 import Footer from "./Footer";
-// import MobileHeader from "./MobileHeader";
 import MobileFooter from "./MobileFooter";
 import LoginModal from "../Modal/LoginModal";
 import SupportModal from "../Modal/SupportModal";
@@ -210,6 +209,7 @@ const Layout = () => {
                 )}
                 <Header
                     isLogin={isLogin}
+                    isMobile={isMobile}
                     userBalance={userBalance}
                     handleLoginClick={handleLoginClick}
                     handleLogoutClick={handleLogoutClick}
@@ -217,16 +217,6 @@ const Layout = () => {
                     supportParent={supportParent}
                     openSupportModal={openSupportModal}
                 />
-                {/* <MobileHeader
-                    isLogin={isLogin}
-                    userBalance={userBalance}
-                    isOpen={isSidebarOpen}
-                    handleLoginClick={goLoginPage}
-                    onToggle={toggleSidebar}
-                    isSlotsOnly={isSlotsOnly}
-                    supportParent={supportParent}
-                    openSupportModal={openSupportModal}
-                /> */}
                 <main>
                     <Outlet context={{ isSlotsOnly, supportParent, openSupportModal, handleLoginClick, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
                 </main>
@@ -242,7 +232,7 @@ const Layout = () => {
                 />
 
                 {!isSportsPage && !isGameModalOpen && <Footer isSlotsOnly={isSlotsOnly} />}
-                {!isSportsPage && !isGameModalOpen && <MobileFooter isLogin={isLogin} isSlotsOnly={isSlotsOnly} handleLoginClick={handleLoginClick} />}
+                {!isSportsPage && !isGameModalOpen && <MobileFooter isLogin={isLogin} isMobile={isMobile} isSlotsOnly={isSlotsOnly} handleLoginClick={handleLoginClick} handleLogoutClick={handleLogoutClick} />}
             </NavigationContext.Provider>
         </LayoutContext.Provider>
     );

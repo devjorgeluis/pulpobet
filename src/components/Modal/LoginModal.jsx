@@ -115,8 +115,6 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         <app-login-form className={`dark ${isOpen ? "is-open" : ""}`}>
             <div className="loginform" ref={loginFormRef}>
                 <div className="header-mobile-usermenu-top">
-                    <div className="header-mobile-usermenu-top-closebtn"></div>
-
                     <div className="logo-wrapper">
                         <a
                             rel="noopener"

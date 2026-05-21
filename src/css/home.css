@@ -6325,6 +6325,14 @@ body.dark .animate {
     }
 }
 
+@media screen and (max-width: 600px) {
+
+    .table th,
+    .table td {
+        padding: 0.625rem;
+    }
+}
+
 /**
  * Black anc White table ( bwtable )
  */

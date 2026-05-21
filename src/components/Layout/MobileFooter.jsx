@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import UserMenu from "./UserMenu";
 import SearchInput from "../SearchInput";
 
 import ImgSearch from "/src/assets/svg/search-icon-mobile-dark-mode.svg";
 import ImgCasino from "/src/assets/img/mobile-casino.png";
 import ImgUser from "/src/assets/svg/user-icon-dark-mode.svg";
 
-const MobileFooter = ({ isLogin, isSlotsOnly, handleLoginClick }) => {
+const MobileFooter = ({ isLogin, isMobile, isSlotsOnly, handleLoginClick, handleLogoutClick, supportParent, openSupportModal }) => {
     const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sidebarRequestedMenu, setSidebarRequestedMenu] = useState(null);
+    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
     useEffect(() => {
         if (isSidebarOpen) {
@@ -22,9 +24,19 @@ const MobileFooter = ({ isLogin, isSlotsOnly, handleLoginClick }) => {
         return () => document.body.classList.remove("has-menu-open");
     }, [isSidebarOpen]);
 
+    useEffect(() => {
+        if (isUserMenuOpen) {
+            document.body.classList.add("has-user-menu-open");
+        } else {
+            document.body.classList.remove("has-user-menu-open");
+        }
+
+        return () => document.body.classList.remove("has-user-menu-open");
+    }, [isUserMenuOpen]);
+
     return (
         <>
-            <SearchInput />
+            <SearchInput isMobile={isMobile} />
 
             <app-header-bottom>
                 <div className="headerbottom logged-in">
@@ -32,6 +44,7 @@ const MobileFooter = ({ isLogin, isSlotsOnly, handleLoginClick }) => {
                         className="headerbottom-btnicon"
                         onClick={() => {
                             setSidebarRequestedMenu(null);
+                            setIsUserMenuOpen(false);
                             setIsSidebarOpen((prev) => !prev);
                         }}
                     >
@@ -44,6 +57,7 @@ const MobileFooter = ({ isLogin, isSlotsOnly, handleLoginClick }) => {
                         className="headerbottom-btnicon"
                         onClick={() => {
                             setIsSidebarOpen(false);
+                            setIsUserMenuOpen(false);
                             document.body.classList.toggle("has-search-open");
                         }}
                     >
@@ -62,6 +76,7 @@ const MobileFooter = ({ isLogin, isSlotsOnly, handleLoginClick }) => {
                                 className="headerbottom-btnicon"
                                 onClick={() => {
                                     setSidebarRequestedMenu("Slots");
+                                    setIsUserMenuOpen(false);
                                     setIsSidebarOpen(true);
                                 }}
                             >
@@ -79,7 +94,7 @@ const MobileFooter = ({ isLogin, isSlotsOnly, handleLoginClick }) => {
                                 className="headerbottom-btnicon"
                                 onClick={() => {
                                     setIsSidebarOpen(false);
-                                    navigate("/login");
+                                    setIsUserMenuOpen(true);
                                 }}
                             >
                                 <picture>
@@ -112,9 +127,16 @@ const MobileFooter = ({ isLogin, isSlotsOnly, handleLoginClick }) => {
 
             <Sidebar
                 isSlotsOnly={isSlotsOnly}
-                isOpen={isSidebarOpen}
                 requestedMenuName={sidebarRequestedMenu}
                 onClose={() => setIsSidebarOpen(false)}
+            />
+
+            <UserMenu
+                isOpen={isUserMenuOpen}
+                handleLogoutClick={handleLogoutClick}
+                supportParent={supportParent}
+                openSupportModal={openSupportModal}
+                onCloseMenu={() => setIsUserMenuOpen(false)}
             />
         </>
     )

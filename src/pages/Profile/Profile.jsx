@@ -7,8 +7,6 @@ import LoadApi from "../../components/Loading/LoadApi";
 import ImgChevronDown from "/src/assets/svg/chevron-down.svg";
 import ImgDarkChevronDown from "/src/assets/svg/chevron-down-dark-mode.svg";
 
-import "/src/css/profile.css";
-
 const Profile = () => {
     const navigate = useNavigate();
     const location = useLocation();
