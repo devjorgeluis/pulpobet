@@ -12,6 +12,32 @@ const SearchInput = ({ pageData }) => {
     const [resolvedPageGroupCode, setResolvedPageGroupCode] = useState(null);
     const searchRef = useRef(null);
     const wrapperRef = useRef(null);
+
+    const getHeaderHeight = (callback) => {
+        const header = document.querySelector(".headertop-wrapper");
+        if (!header) {
+            callback(null);
+            return;
+        }
+
+        requestAnimationFrame(() => {
+            const height = Math.round(header.getBoundingClientRect().height);
+            callback(height);
+        });
+    };
+
+    const updateOverlayTop = () => {
+        getHeaderHeight((headerHeight) => {
+            if (headerHeight !== null && headerHeight > 0) {
+                setOverlayTop(`${headerHeight}px`);
+                return;
+            }
+
+            const rect = searchRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            setOverlayTop(`${Math.round(rect.bottom)}px`);
+        });
+    };
     const searchDelayTimerRef = useRef(null);
     const searchNavigationDelayTimerRef = useRef(null);
     const { contextData } = useContext(AppContext);
@@ -19,7 +45,7 @@ const SearchInput = ({ pageData }) => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const searchApiLength = 500;
+    const searchApiLength = 1000;
     const defaultVisibleResults = 10;
     const isSearchPage = location.pathname === "/search";
 
@@ -73,20 +99,12 @@ const SearchInput = ({ pageData }) => {
         );
     }, [contextData, pageCode, pageData?.page_group_code]);
 
-    const updateOverlayTop = () => {
-        const rect = searchRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        setOverlayTop(`${Math.round(rect.bottom)}px`);
-    };
-
     useEffect(() => {
-        if (!isOpen) return;
-
         updateOverlayTop();
         const handleResize = () => updateOverlayTop();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
-    }, [isOpen]);
+    }, []);
 
     useEffect(() => {
         if (isOpen) {
@@ -114,6 +132,7 @@ const SearchInput = ({ pageData }) => {
             return;
         }
 
+        setSearchResults([]);
         setIsSearching(true);
         searchDelayTimerRef.current = setTimeout(() => {
             performSearch(keyword);
@@ -220,6 +239,8 @@ const SearchInput = ({ pageData }) => {
         performSearchWithDelay(value);
     };
 
+    const showSearchResults = !isSearchPage && isOpen && (searchResults.length > 0 || (!isSearching && txtSearch.trim() !== ""));
+
     const handleKeyUp = (e) => {
         if (isSearchPage) {
             if (e.key === "Escape" || e.keyCode === 27) {
@@ -250,7 +271,7 @@ const SearchInput = ({ pageData }) => {
 
     return (
         <div className="header-search-wrapper" ref={wrapperRef}>
-            {!isSearchPage && (
+            {(
                 <div className="desktop-search-container">
                     <input
                         ref={searchRef}
@@ -302,7 +323,7 @@ const SearchInput = ({ pageData }) => {
                         />
                     </div>
 
-                    {!isSearchPage && isOpen && (isSearching || searchResults.length > 0) && (
+                    {showSearchResults && (
                         <div className="header-search-result-block">
                             <div className="header-search-result-text">
                                 <strong>{searchResults.length} resultados</strong> encontrados para "{txtSearch}"

@@ -95,7 +95,10 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
                             <a
                                 rel="noopener"
                                 title="World Cup Octopus"
-                                onClick={() => navigate("/")}
+                                onClick={() => {
+                                    navigate("/");
+                                    onClose();
+                                }}
                             >
                                 <app-image>
                                     <picture>
@@ -117,6 +120,21 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
                             if (e.target.closest("a")) onClose?.();
                         }}
                     >
+                        <div
+                            className="header-mobilemenu-menu-item"
+                            data-submenu-name="Contact"
+                            onClick={() => {
+                                navigate("/");
+                                onClose();
+                            }}
+                        >
+                            <span className="header-mobilemenu-menu-item-title">
+                                <span className="header-mobilemenu-menu-item-text">
+                                    Home
+                                </span>
+                            </span>
+                        </div>
+
                         <div
                             className={`header-mobilemenu-menu-item${openMenuName === "Slots" ? " is-open" : ""}`}
                             data-submenu-name="Slots"
@@ -351,7 +369,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
 
                         {
                             isLogin && <div
-                                className="header-mobilemenu-menu-item ng-star-inserted"
+                                className="header-mobilemenu-menu-item"
                                 data-submenu-name="Contact"
                                 style={{ backgroundColor: "rgba(89, 4, 97, 0.51)" }}
                                 onClick={() => openSupportModal(true)}
@@ -360,13 +378,13 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
                                     <span className="header-mobilemenu-menu-item-icon-wrapper">
                                         <img
                                             aria-hidden="true"
-                                            className="header-mobilemenu-menu-item-icon ng-star-inserted"
+                                            className="header-mobilemenu-menu-item-icon"
                                             src={ImgPhone}
                                             alt="contact"
                                         />
                                     </span>
 
-                                    <span className="header-mobilemenu-menu-item-text ng-star-inserted">
+                                    <span className="header-mobilemenu-menu-item-text">
                                         Contactá a Tu Cajero
                                     </span>
                                 </span>
