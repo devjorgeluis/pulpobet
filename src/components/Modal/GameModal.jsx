@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { NavigationContext } from "../Layout/NavigationContext";
+import LoadApi from "../Loading/LoadApi";
 
 const GameModal = (props) => {
   const modalRef = useRef(null);
@@ -133,6 +134,11 @@ const GameModal = (props) => {
             dark-mode="true"
           >
             <div className="gd-game-container">
+              {!iframeLoaded && 
+                <div className="my-5 text-center">
+                  <LoadApi />
+                </div>
+              }
               <iframe
                 src={url}
                 id="game-iframe"
@@ -146,11 +152,12 @@ const GameModal = (props) => {
 
             <div className="gd-game-config-panel">
               <div className="gd-game-views">
-                {/* <span
+                <span
                   title="Minimizar pantalla"
                   className="game-view shrink"
                   dark-mode="true"
-                ></span> */}
+                  onClick={handleClose}
+                ></span>
 
                 <span
                   title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}

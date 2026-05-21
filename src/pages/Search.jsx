@@ -16,7 +16,7 @@ let selectedGameImg = null;
 
 const Search = () => {
   const { contextData } = useContext(AppContext);
-  const { setIsGameModalOpen } = useContext(NavigationContext);
+  const { setIsGameModalOpen, isGameModalOpen } = useContext(NavigationContext);
   const { isLogin, isMobile, handleLoginClick } = useOutletContext();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -124,6 +124,12 @@ const Search = () => {
       if (searchDelayTimerRef.current) clearTimeout(searchDelayTimerRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isGameModalOpen) {
+      if (shouldShowGameModal) closeGameModal();
+    }
+  }, [isGameModalOpen]);
 
   const launchGame = (game, type, launcher) => {
     setShouldShowGameModal(true);
@@ -235,7 +241,7 @@ const Search = () => {
                         title={game.name}
                         imageSrc={game.imageDataSrc}
                         game={game}
-                        onClick={() => {
+                        onGameClick={() => {
                           if (isLogin) {
                             launchGame(game, "slot", "modal");
                           } else {

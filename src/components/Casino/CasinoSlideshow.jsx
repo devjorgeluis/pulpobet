@@ -1,11 +1,11 @@
-import { useRef, useState, useContext } from 'react';
+import { useRef, useState, useContext } from "react";
 import { useOutletContext } from "react-router-dom";
-import { AppContext } from '../../AppContext';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import GameCard from '../GameCard';
+import { AppContext } from "../../AppContext";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import GameCard from "../GameCard";
 
 import ImgBanner1 from "/src/assets/img/casino-banner1.jpeg";
 import ImgBanner2 from "/src/assets/img/casino-banner2.jpeg";
@@ -22,31 +22,36 @@ import ImgMobileBanner6 from "/src/assets/img/mobile-casino-banner6.jpeg";
 import ImgBannerPrev from "/src/assets/img/banner-prev.png";
 import ImgBannerNext from "/src/assets/img/banner-next.png";
 
-const CasinoSlideshow = () => {
+const CasinoSlideshow = ({ launchGame, activeCategory, isLogin, handleLoginClick }) => {
   const { contextData } = useContext(AppContext);
   const swiperRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { isMobile, topCasino } = useOutletContext();
+  const { isMobile, topCasino, isLogin: outletIsLogin, handleLoginClick: outletHandleLoginClick } = useOutletContext();
+
+  const finalIsLogin = typeof isLogin !== "undefined" ? isLogin : outletIsLogin;
+  const finalHandleLoginClick = handleLoginClick || outletHandleLoginClick;
 
   const initSwiper = (swiper) => {
     swiperRef.current = swiper;
   };
 
-  const slides = isMobile ? [
-    { id: 1, image: ImgMobileBanner1 },
-    { id: 2, image: ImgMobileBanner2 },
-    { id: 3, image: ImgMobileBanner3 },
-    { id: 4, image: ImgMobileBanner4 },
-    { id: 5, image: ImgMobileBanner5 },
-    { id: 6, image: ImgMobileBanner6 },
-  ] : [
-    { id: 1, image: ImgBanner1 },
-    { id: 2, image: ImgBanner2 },
-    { id: 3, image: ImgBanner3 },
-    { id: 4, image: ImgBanner4 },
-    { id: 5, image: ImgBanner5 },
-    { id: 6, image: ImgBanner6 },
-  ];
+  const slides = isMobile
+    ? [
+        { id: 1, image: ImgMobileBanner1 },
+        { id: 2, image: ImgMobileBanner2 },
+        { id: 3, image: ImgMobileBanner3 },
+        { id: 4, image: ImgMobileBanner4 },
+        { id: 5, image: ImgMobileBanner5 },
+        { id: 6, image: ImgMobileBanner6 },
+      ]
+    : [
+        { id: 1, image: ImgBanner1 },
+        { id: 2, image: ImgBanner2 },
+        { id: 3, image: ImgBanner3 },
+        { id: 4, image: ImgBanner4 },
+        { id: 5, image: ImgBanner5 },
+        { id: 6, image: ImgBanner6 },
+      ];
 
   const handleNext = () => {
     if (swiperRef.current) {
@@ -67,6 +72,14 @@ const CasinoSlideshow = () => {
   const handleIndicatorClick = (index) => {
     if (swiperRef.current) {
       swiperRef.current.slideToLoop(index);
+    }
+  };
+
+  const handleGameClickLocal = (game, isDemo = false) => {
+    if (finalIsLogin) {
+      if (typeof launchGame === "function") launchGame(game, isDemo ? "demo" : "slot", "modal");
+    } else {
+      finalHandleLoginClick && finalHandleLoginClick();
     }
   };
 
@@ -123,7 +136,7 @@ const CasinoSlideshow = () => {
                   <a
                     key={slide.id}
                     href="#"
-                    className={`banners-paging-dot ${currentSlide === index ? 'is-active' : ''}`}
+                    className={`banners-paging-dot ${currentSlide === index ? "is-active" : ""}`}
                     onClick={(event) => {
                       event.preventDefault();
                       handleIndicatorClick(index);
@@ -151,22 +164,25 @@ const CasinoSlideshow = () => {
         </div>
         <div className="d-none d-lg-block col-lg-4 col-xxxl-6">
           <div className="row">
-            {
-              topCasino.slice(0, 4).map((game, index) => (
-                <div className="col-6 col-xxxl-3 mb-4 top-casino-game" key={`top-casino-${game.id ?? index}-${index}`}>
-                  <GameCard
-                    id={game.id}
-                    provider={'Hot'}
-                    title={game.name}
-                    type="slideshow"
-                    imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
-                    onGameClick={() => {
-                        handleGameClick(game);
-                    }}
-                  />
-                </div>
-              ))        
-            }
+            {topCasino.slice(0, 4).map((game, index) => (
+              <div
+                className="col-6 col-xxxl-3 mb-4 top-casino-game"
+                key={`top-casino-${game.id ?? index}-${index}`}
+              >
+                <GameCard
+                  id={game.id}
+                  provider={activeCategory?.name || "Casino"}
+                  title={game.name}
+                  imageSrc={
+                    game.image_local !== null
+                      ? contextData.cdnUrl + game.image_local
+                      : game.image_url
+                  }
+                  game={game}
+                  onGameClick={() => handleGameClickLocal(game)}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>

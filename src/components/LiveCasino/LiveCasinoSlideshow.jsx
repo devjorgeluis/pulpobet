@@ -18,11 +18,14 @@ import ImgMobileBanner4 from "/src/assets/img/mobile-live-casino-banner4.jpeg";
 import ImgBannerPrev from "/src/assets/img/banner-prev.png";
 import ImgBannerNext from "/src/assets/img/banner-next.png";
 
-const LiveCasinoSlideshow = () => {
+const LiveCasinoSlideshow = ({ launchGame, activeCategory, isLogin, handleLoginClick }) => {
   const { contextData } = useContext(AppContext);
   const swiperRef = useRef(null);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { isMobile, topLiveCasino } = useOutletContext();
+  const { isMobile, topLiveCasino, isLogin: outletIsLogin, handleLoginClick: outletHandleLoginClick } = useOutletContext();
+
+  const finalIsLogin = typeof isLogin !== "undefined" ? isLogin : outletIsLogin;
+  const finalHandleLoginClick = handleLoginClick || outletHandleLoginClick;
 
   const initSwiper = (swiper) => {
     swiperRef.current = swiper;
@@ -59,6 +62,14 @@ const LiveCasinoSlideshow = () => {
   const handleIndicatorClick = (index) => {
     if (swiperRef.current) {
       swiperRef.current.slideToLoop(index);
+    }
+  };
+
+  const handleGameClickLocal = (game, isDemo = false) => {
+    if (finalIsLogin) {
+      if (typeof launchGame === "function") launchGame(game, isDemo ? "demo" : "slot", "modal");
+    } else {
+      finalHandleLoginClick && finalHandleLoginClick();
     }
   };
 
@@ -152,12 +163,10 @@ const LiveCasinoSlideshow = () => {
                     title={game.name}
                     type="slideshow"
                     imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
-                    onGameClick={() => {
-                        handleGameClick(game);
-                    }}
+                    onGameClick={() => handleGameClickLocal(game)}
                   />
                 </div>
-              ))        
+              ))
             }
           </div>
         </div>

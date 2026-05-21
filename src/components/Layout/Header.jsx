@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo, useContext } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../../AppContext";
+import { NavigationContext } from "../Layout/NavigationContext";
 import { LayoutContext } from "./LayoutContext";
 import { callApi } from "../../utils/Utils";
 import SearchInput from "../SearchInput";
@@ -54,6 +55,7 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
     const [selectedProviderTag, setSelectedProviderTag] = useState(null);
     const userMenuRef = useRef(null);
     const { contextData } = useContext(AppContext);
+    const { setIsGameModalOpen } = useContext(NavigationContext);
     const { liveCasinoCategories, setLiveCasinoCategories } = useContext(LayoutContext);
 
     const openMenu = () => {
@@ -117,6 +119,7 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
             },
             null,
         );
+        setIsGameModalOpen(false);
         navigate(`/casino#${tag.code}`);
     };
 
@@ -200,12 +203,12 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
             <app-header-top>
                 <div className="headertop-wrapper">
                     <div className="headertop">
-                        <app-logo-image>
-                            <a
-                                rel="noopener"
-                                onClick={() => navigate("/")}
-                                title="Pulpo Mundialito"
-                            >
+                                        <app-logo-image>
+                                            <a
+                                                rel="noopener"
+                                                onClick={() => { setIsGameModalOpen(false); navigate("/"); }}
+                                                title="Pulpo Mundialito"
+                                            >
                                 <app-image>
                                     <picture>
                                         <img
@@ -273,6 +276,7 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
                                                     className="headertop-auth-usermenu-item"
                                                     onClick={() => {
                                                         setShowUserMenu(false);
+                                                        setIsGameModalOpen(false);
                                                         navigate("/profile")
                                                     }}
                                                 >
@@ -291,7 +295,7 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
                                         <div className="headertop-pipe"></div>
                                         <a
                                             className="headertop-auth-balance"
-                                            onClick={() => navigate("/profile")}
+                                            onClick={() => { setIsGameModalOpen(false); navigate("/profile"); }}
                                         >
                                             <span className="headertop-auth-balance-label">
                                                 Saldo:
@@ -344,6 +348,7 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
                                                     setActiveSubmenuLink("/providers");
                                                     return;
                                                 }
+                                                setIsGameModalOpen(false);
                                                 navigate(item.link);
                                             }}
                                             style={{ "--hover-color": "rgba(5,26,69,0.58)" }}
@@ -362,7 +367,7 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
                                 </div>
 
                                 <div className="headertop-bottom-sidemenu">
-                                    <SearchInput isMobile={isMobile} />
+                                    <SearchInput isMobile={isMobile} isLogin={isLogin} handleLoginClick={handleLoginClick} />
                                 </div>
                             </div>
                         </div>
@@ -380,12 +385,15 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
                                             onClick={(event) => {
                                                 event.preventDefault();
                                                 if (activeSubmenuLink === "/providers") {
+                                                    setIsGameModalOpen(false);
                                                     navigate(getSubmenuHref(item), { state: { provider: item } });
                                                     setActiveSubmenuLink(null);
                                                 } else if (activeSubmenuLink === "/live-casino") {
+                                                    setIsGameModalOpen(false);
                                                     navigate(getSubmenuHref(item), { state: { liveCasinoCategory: item } });
                                                     setActiveSubmenuLink(null);
                                                 } else {
+                                                    setIsGameModalOpen(false);
                                                     handleTagClick(item);
                                                     setActiveSubmenuLink(null);
                                                 }

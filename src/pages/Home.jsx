@@ -17,7 +17,7 @@ let selectedGameImg = null;
 const Home = () => {
   const pageTitle = "Home";
   const { contextData } = useContext(AppContext);
-  const { setIsGameModalOpen } = useContext(NavigationContext);
+  const { setIsGameModalOpen, isGameModalOpen } = useContext(NavigationContext);
   const { isSlotsOnly, isLogin, isMobile, handleLoginClick, topGames, topArcade, topCasino, topLiveCasino } = useOutletContext();
   const [gameUrl, setGameUrl] = useState("");
   const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
@@ -56,6 +56,12 @@ const Home = () => {
 
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isGameModalOpen) {
+      if (shouldShowGameModal) closeGameModal();
+    }
+  }, [isGameModalOpen]);
 
   const launchGame = (game, type, launcher) => {
     setShouldShowGameModal(true);

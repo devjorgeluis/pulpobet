@@ -2,8 +2,12 @@ import { useEffect, useMemo, useRef, useState, useContext } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { callApi } from "../utils/Utils";
+import GameCard from "./GameCard";
+import GameModal from "./Modal/GameModal";
+import LoadApi from "./Loading/LoadApi";
+import { NavigationContext } from "./Layout/NavigationContext";
 
-const SearchInput = ({ pageData }) => {
+const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
     const [txtSearch, setTxtSearch] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
@@ -41,6 +45,7 @@ const SearchInput = ({ pageData }) => {
     const searchDelayTimerRef = useRef(null);
     const searchNavigationDelayTimerRef = useRef(null);
     const { contextData } = useContext(AppContext);
+    const { setIsGameModalOpen, isGameModalOpen } = useContext(NavigationContext);
     const location = useLocation();
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -179,6 +184,59 @@ const SearchInput = ({ pageData }) => {
         setSearchResults([]);
         setTxtSearch("");
         setIsOpen(false);
+    };
+
+    const selectedGameIdRef = useRef(null);
+    const selectedGameTypeRef = useRef(null);
+    const selectedGameLauncherRef = useRef(null);
+    const selectedGameNameRef = useRef(null);
+    const selectedGameImgRef = useRef(null);
+    const refGameModal = useRef();
+    const [gameUrl, setGameUrl] = useState("");
+    const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
+
+    useEffect(() => {
+        if (!isGameModalOpen) {
+            if (shouldShowGameModal) closeGameModal();
+        }
+    }, [isGameModalOpen]);
+
+    const launchGame = (game, type, launcher) => {
+        setShouldShowGameModal(true);
+        setIsGameModalOpen(true);
+        selectedGameIdRef.current = game.id !== null ? game.id : selectedGameIdRef.current;
+        selectedGameTypeRef.current = type !== null ? type : selectedGameTypeRef.current;
+        selectedGameLauncherRef.current = launcher !== null ? launcher : selectedGameLauncherRef.current;
+        selectedGameNameRef.current = game?.name;
+        selectedGameImgRef.current =
+            game?.image_local != null ? contextData.cdnUrl + game?.image_local : null;
+
+        callApi(
+            contextData,
+            "GET",
+            "/get-game-url?game_id=" + selectedGameIdRef.current,
+            (result) => {
+                if (result?.status === "0") {
+                    if (selectedGameLauncherRef.current === "modal" || selectedGameLauncherRef.current === "tab") {
+                        setGameUrl(result.url);
+                    }
+                } else {
+                    closeGameModal();
+                }
+            },
+            null,
+        );
+    };
+
+    const closeGameModal = () => {
+        selectedGameIdRef.current = null;
+        selectedGameTypeRef.current = null;
+        selectedGameLauncherRef.current = null;
+        selectedGameNameRef.current = null;
+        selectedGameImgRef.current = null;
+        setGameUrl("");
+        setShouldShowGameModal(false);
+        setIsGameModalOpen(false);
     };
 
     const closeSearch = () => {
@@ -331,36 +389,21 @@ const SearchInput = ({ pageData }) => {
 
                             <div className="header-search-results">
                                 {searchResults.slice(0, defaultVisibleResults).map((game) => (
-                                    <a
-                                        className="gc-container"
-                                        href="#"
-                                        key={game.id}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            handleResultClick(game);
-                                        }}
-                                    >
-                                        <div className="gc-card">
-                                            <div className="gc-card-image">
-                                                <img
-                                                    className="image"
-                                                    src={game.imageDataSrc}
-                                                    alt={game.name}
-                                                    loading="lazy"
-                                                />
-                                            </div>
-
-                                            <div className="gc-hover">
-                                                <div className="gc-hover-button-wrapper">
-                                                    <button className="btn purple btn-block btn-regular">
-                                                        Jugar
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <p className="gc-name" dark-mode="true">{game.name}</p>
-                                    </a>
+                                    <div key={game.id} className="gc-container">
+                                        <GameCard
+                                            id={game.id}
+                                            title={game.name}
+                                            imageSrc={game.imageDataSrc}
+                                            game={game}
+                                            onGameClick={() => {
+                                                if (isLogin) {
+                                                    launchGame(game, "slot", "modal");
+                                                } else {
+                                                    handleLoginClick && handleLoginClick();
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 ))}
                             </div>
 
@@ -390,6 +433,47 @@ const SearchInput = ({ pageData }) => {
                     )}
                 </div>
             </div>
+
+            {shouldShowGameModal && selectedGameIdRef.current !== null && (
+                <GameModal
+                    gameUrl={gameUrl}
+                    gameName={selectedGameNameRef.current}
+                    gameImg={selectedGameImgRef.current}
+                    reload={(gameData) => {
+                        if (gameData && gameData.id) {
+                            const g = {
+                                id: gameData.id,
+                                name: selectedGameNameRef.current,
+                                image_local: selectedGameImgRef.current?.replace(contextData.cdnUrl, ""),
+                            };
+                            launchGame(g, selectedGameTypeRef.current, selectedGameLauncherRef.current);
+                        } else if (selectedGameIdRef.current) {
+                            const g = {
+                                id: selectedGameIdRef.current,
+                                name: selectedGameNameRef.current,
+                                image_local: selectedGameImgRef.current?.replace(contextData.cdnUrl, ""),
+                            };
+                            launchGame(g, selectedGameTypeRef.current, selectedGameLauncherRef.current);
+                        }
+                    }}
+                    launchInNewTab={() => {
+                        if (selectedGameIdRef.current) {
+                            const g = {
+                                id: selectedGameIdRef.current,
+                                name: selectedGameNameRef.current,
+                                image_local: selectedGameImgRef.current?.replace(contextData.cdnUrl, ""),
+                            };
+                            launchGame(g, selectedGameTypeRef.current, "tab");
+                        }
+                    }}
+                    ref={refGameModal}
+                    onClose={closeGameModal}
+                    isMobile={contextData.isMobile}
+                    gameId={selectedGameIdRef.current}
+                    gameType={selectedGameTypeRef.current}
+                    gameLauncher={selectedGameLauncherRef.current}
+                />
+            )}
         </div>
     );
 };

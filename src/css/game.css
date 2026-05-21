@@ -366,7 +366,7 @@
 }
 
 .gd-game-config-panel .gd-game-views .game-view.shrink[dark-mode=true] {
-    background-image: url("../assets/svg/shrink-view-dark-mode.svg");
+    background-image: url("../assets/svg/close.svg");
 }
 
 .gd-game-config-panel .gd-game-views .game-view.expand {

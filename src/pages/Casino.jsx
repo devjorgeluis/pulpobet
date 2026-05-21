@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { useLocation, useOutletContext } from "react-router-dom";
 import { AppContext } from "../AppContext";
+import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
 import CasinoSlideshow from "../components/Casino/CasinoSlideshow";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
@@ -22,6 +23,7 @@ const Casino = () => {
   const { contextData } = useContext(AppContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [games, setGames] = useState([]);
+  const { setIsGameModalOpen, isGameModalOpen } = useContext(NavigationContext);
   const [firstFiveCategoriesGames, setFirstFiveCategoriesGames] = useState([]);
   const [mainCategories, setMainCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState({});
@@ -99,6 +101,13 @@ const Casino = () => {
     getPage("casino");
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isGameModalOpen) {
+      // ensure local modal state is closed when global flag is false
+      if (shouldShowGameModal) closeGameModal();
+    }
+  }, [isGameModalOpen]);
 
   const getPage = (page) => {
     setIsLoadingGames(true);
@@ -420,7 +429,12 @@ const Casino = () => {
       ) : (
         <div className="pagecontainer casino">
           <div className="container-fluid">
-            <CasinoSlideshow />
+            <CasinoSlideshow
+              launchGame={launchGame}
+              activeCategory={activeCategory}
+              isLogin={isLogin}
+              handleLoginClick={handleLoginClick}
+            />
 
             <main className="row mt-4">
               <div className="col-12">
@@ -448,7 +462,7 @@ const Casino = () => {
                                           : game.image_url
                                       }
                                       game={game}
-                                      onClick={() => {
+                                      onGameClick={() => {
                                         if (isLogin) {
                                           launchGame(game, "slot", "modal");
                                         } else {
@@ -496,14 +510,13 @@ const Casino = () => {
                                             : game.image_url
                                         }
                                         game={game}
-                                        onClick={() => {
+                                        onGameClick={() => {
                                           if (isLogin) {
                                             launchGame(game, "slot", "modal");
                                           } else {
                                             handleLoginClick();
                                           }
                                         }}
-                                        size="small"
                                       />
                                     </li>
                                   )

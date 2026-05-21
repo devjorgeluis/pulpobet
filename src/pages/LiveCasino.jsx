@@ -20,7 +20,7 @@ const LiveCasino = () => {
   const pageTitle = "Live Casino";
   const { contextData } = useContext(AppContext);
   const { isLogin, isMobile, handleLoginClick } = useOutletContext();
-  const { setIsGameModalOpen } = useContext(NavigationContext);
+  const { setIsGameModalOpen, isGameModalOpen } = useContext(NavigationContext);
   const { setLiveCasinoCategories } = useContext(LayoutContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [categories, setCategories] = useState([]);
@@ -45,6 +45,12 @@ const LiveCasino = () => {
 
     getPage("livecasino");
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (!isGameModalOpen) {
+      if (shouldShowGameModal) closeGameModal();
+    }
+  }, [isGameModalOpen]);
 
   const getPage = (page) => {
     setCategories([]);
@@ -236,8 +242,13 @@ const LiveCasino = () => {
       ) : (
         <div className="pagecontainer casino">
           <div className="container-fluid">
+            <LiveCasinoSlideshow
+              launchGame={launchGame}
+              activeCategory={activeCategory}
+              isLogin={isLogin}
+              handleLoginClick={handleLoginClick}
+            />
 
-            <LiveCasinoSlideshow />
             <main className="row mt-4">
               <div className="col-12">
                 <div className="slots-template-container">
@@ -262,7 +273,7 @@ const LiveCasino = () => {
                                       : game.image_url
                                   }
                                   game={game}
-                                  onClick={() => {
+                                  onGameClick={() => {
                                     if (isLogin) {
                                       launchGame(game, 'slot', 'modal');
                                     } else {
