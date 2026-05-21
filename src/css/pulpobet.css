@@ -1898,6 +1898,10 @@ body.has-menu-open .header-mobilemenu {
     list-style: none;
 }
 
+.header-mobilemenu-menu-list-item.active {
+    background-color: rgb(100 115 255 / 48%);
+}
+
 .header-mobilemenu-menu-list-link {
     color: #000;
     font-size: 14px;

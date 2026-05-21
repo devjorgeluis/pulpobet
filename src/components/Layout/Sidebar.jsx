@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
 import { LayoutContext } from "./LayoutContext";
@@ -9,12 +9,16 @@ import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
 import ImgLiveCasino from "/src/assets/img/live-casino.png";
 import ImgSports from "/src/assets/img/sports.png";
+import ImgProvider from "/src/assets/img/provider.png";
 import ImgPhone from "/src/assets/svg/phone.svg";
 
 const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupportModal }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [openMenuName, setOpenMenuName] = useState(null);
     const [isLoadingLiveCasinoCategories, setIsLoadingLiveCasinoCategories] = useState(false);
+    const [isLoadingCasinoCategories, setIsLoadingCasinoCategories] = useState(false);
+    const [casinoMainCategories, setCasinoMainCategories] = useState([]);
     const { contextData } = useContext(AppContext);
     const { liveCasinoCategories, setLiveCasinoCategories } = useContext(LayoutContext);
 
@@ -23,11 +27,35 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
     };
 
     const slotsTags = useMemo(() => getHeaderTags(isSlotsOnly), [isSlotsOnly]);
+    const isSlotsAllowed = isSlotsOnly === false || isSlotsOnly === "false";
+    const isProvidersNavVisible = location.pathname === "/casino" && isSlotsAllowed;
 
     useEffect(() => {
         if (!requestedMenuName) return;
         setOpenMenuName(requestedMenuName);
     }, [requestedMenuName]);
+
+    useEffect(() => {
+        if (!isProvidersNavVisible) return;
+        if (casinoMainCategories.length > 0) return;
+        if (isLoadingCasinoCategories) return;
+
+        setIsLoadingCasinoCategories(true);
+        callApi(
+            contextData,
+            "GET",
+            "/get-page?page=casino",
+            (result) => {
+                setIsLoadingCasinoCategories(false);
+                if (result && result.data && result.data.categories) {
+                    setCasinoMainCategories(result.data.categories);
+                } else {
+                    setCasinoMainCategories([]);
+                }
+            },
+            null,
+        );
+    }, [contextData, isProvidersNavVisible, casinoMainCategories.length, isLoadingCasinoCategories]);
 
     useEffect(() => {
         if (liveCasinoCategories.length > 0) return;
@@ -52,6 +80,9 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
         const code = item?.code || item?.table_name || item?.id || item?.name;
         return `/live-casino#${code}`;
     };
+
+    const getCasinoHash = (item) => item?.code || item?.table_name || item?.id || item?.name;
+    const activeHash = (location.hash || "").replace("#", "");
 
     return (
         <>
@@ -112,7 +143,10 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
                                 style={{ backgroundColor: "rgba(5, 26, 69, 0.58)" }}
                             >
                                 {slotsTags.map((tag) => (
-                                    <li key={tag.code} className="header-mobilemenu-menu-list-item">
+                                    <li
+                                        key={tag.code}
+                                        className={`header-mobilemenu-menu-list-item${location.pathname === "/casino" && activeHash === tag.code ? " active" : ""}`}
+                                    >
                                         <a
                                             className="header-mobilemenu-menu-list-link"
                                             href="#"
@@ -140,6 +174,72 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
                                 ))}
                             </ul>
                         </div>
+
+                        {isProvidersNavVisible && (
+                            <div
+                                className={`header-mobilemenu-menu-item${openMenuName === "Providers" ? " is-open" : ""}`}
+                                data-submenu-name="Providers"
+                                style={{ backgroundColor: "rgba(5, 26, 69, 0.58)" }}
+                            >
+                                <span
+                                    className="header-mobilemenu-menu-item-title"
+                                    onClick={() => toggleMenu("Providers")}
+                                >
+                                    <span className="header-mobilemenu-menu-item-icon-wrapper">
+                                        <img
+                                            className="header-mobilemenu-menu-item-icon"
+                                            src={ImgProvider}
+                                            alt="Proveedores"
+                                        />
+                                    </span>
+                                    <span className="header-mobilemenu-menu-item-text">
+                                        Proveedores
+                                    </span>
+                                </span>
+
+                                <ul
+                                    className="header-mobilemenu-menu-list"
+                                    style={{ backgroundColor: "rgba(5, 26, 69, 0.58)" }}
+                                >
+                                    {casinoMainCategories.map((item) => {
+                                        const hash = getCasinoHash(item);
+                                        return (
+                                            <li
+                                                key={hash}
+                                                className={`header-mobilemenu-menu-list-item${location.pathname === "/casino" && activeHash === String(hash) ? " active" : ""}`}
+                                            >
+                                                <a
+                                                    className="header-mobilemenu-menu-list-link"
+                                                    href="#"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        navigate(`/casino#${hash}`, { state: { provider: item } });
+                                                        onClose?.();
+                                                    }}
+                                                >
+                                                    {(item.image_local || item.image || item.image_url) && (
+                                                        <span className="header-mobilemenu-sub-icon-wrapper">
+                                                            <img
+                                                                className="header-mobilemenu-sub-icon"
+                                                                src={
+                                                                    item.image_local
+                                                                        ? contextData.cdnUrl + item.image_local
+                                                                        : item.image || item.image_url
+                                                                }
+                                                                alt={item.name}
+                                                            />
+                                                        </span>
+                                                    )}
+                                                    <span className="header-mobilemenu-sub-text">
+                                                        {item.name}
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                        )}
 
                         <div
                             className={`header-mobilemenu-menu-item${openMenuName === "Live Casino" ? " is-open" : ""}`}
@@ -169,7 +269,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, onClose, requestedMenuName, openSupport
                                 {liveCasinoCategories.map((item) => (
                                     <li
                                         key={item.code || item.table_name || item.id || item.name}
-                                        className="header-mobilemenu-menu-list-item"
+                                        className={`header-mobilemenu-menu-list-item${location.pathname === "/live-casino" && activeHash === getCasinoHash(item) ? " active" : ""}`}
                                     >
                                         <a
                                             className="header-mobilemenu-menu-list-link"
