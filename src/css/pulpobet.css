@@ -22,7 +22,6 @@ a {
 }
 
 .modal-header button {
-    background: url('close.39eaebfbe1906c30.webp') no-repeat 0 0;
     opacity: 1;
     width: 40px;
     height: 40px;
@@ -3941,7 +3940,6 @@ body.has-menu-open .header-mobilemenu {
 }
 
 .gc-badge-icon--mask-trophy {
-    mask: url("/assets/images/icons/trophy.svg") no-repeat center/contain;
     background-color: currentColor;
 }
 

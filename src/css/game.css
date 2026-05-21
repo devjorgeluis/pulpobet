@@ -444,7 +444,6 @@
     border-radius: 16px;
     background-color: #e5e5e5;
     cursor: pointer;
-    background-image: url('next-games.32404df6b1428b80.svg');
     background-position: center;
     background-repeat: no-repeat;
 }
@@ -454,7 +453,6 @@
 }
 
 .wrapper .header .next.dark-mode {
-    background-image: url('next-games-dark-mode.a92113683dbe3b46.svg');
     background-color: #36384a;
 }
 
@@ -470,7 +468,6 @@
     background-color: #e5e5e5;
     margin-right: 16px;
     cursor: pointer;
-    background-image: url('prev-games.d123c59b12ee2573.svg');
     background-position: center;
     background-repeat: no-repeat;
 }
@@ -480,7 +477,6 @@
 }
 
 .wrapper .header .prev.dark-mode {
-    background-image: url('prev-games-dark-mode.9f97d408ae25e288.svg');
     background-color: #36384a;
 }
 
@@ -544,14 +540,6 @@
     background-position: center;
     background-repeat: no-repeat;
     margin-right: 0.5rem;
-}
-
-.trending {
-    background-image: url('trending.f6d222dad013be60.svg');
-}
-
-.popular {
-    background-image: url('popular.4c3560279662f86e.svg');
 }
 
 .p-carousel-content {
@@ -1042,7 +1030,6 @@
     color: #fff;
     text-transform: uppercase;
     font-weight: 500;
-    background-image: url(/assets/images/icons/share.svg);
     background-position: left 12px center;
     background-repeat: no-repeat;
 }
