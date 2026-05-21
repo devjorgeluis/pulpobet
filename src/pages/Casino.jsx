@@ -531,6 +531,7 @@ const Casino = () => {
                           return (
                             <HotGameSlideshow
                               key={entry?.category?.id || catIndex}
+                              isMobile={isMobile}
                               games={entry.games}
                               name={entry?.category?.name}
                               title={entry?.category?.name}

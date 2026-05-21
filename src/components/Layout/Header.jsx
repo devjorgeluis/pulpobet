@@ -4,6 +4,7 @@ import { AppContext } from "../../AppContext";
 import { LayoutContext } from "./LayoutContext";
 import { callApi } from "../../utils/Utils";
 import SearchInput from "../SearchInput";
+import Sidebar from "./Sidebar";
 
 import ImgLogo from "/src/assets/img/logo.png";
 import ImgCasino from "/src/assets/img/casino.png";
@@ -102,25 +103,6 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
         return item.code === activeSubmenuCode;
     };
 
-    const handleProviderTagClick = (tag) => {
-        setSelectedProviderTag(tag.code);
-        setProviderSubmenuItems([]);
-
-        callApi(
-            contextData,
-            "GET",
-            `/get-page?page=${tag.code}`,
-            (result) => {
-                if (result && result.data && result.data.categories) {
-                    setProviderSubmenuItems(result.data.categories);
-                }
-            },
-            null,
-        );
-
-        navigate(`/casino#${tag.code}`);
-    };
-
     const getSubmenuKey = (item) => item.code || item.id || item.table_name || item.name;
 
     const handleTagClick = (tag) => {
@@ -215,7 +197,7 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
     };
 
     return (
-        <header className="ng-star-inserted">
+        <header>
             <app-header-top>
                 <div className="headertop-wrapper">
                     <div className="headertop">
@@ -224,7 +206,6 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                 rel="noopener"
                                 onClick={() => navigate("/")}
                                 title="Pulpo Mundialito"
-                                className="ng-star-inserted"
                             >
                                 <app-image>
                                     <picture>
@@ -339,7 +320,7 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                                                 title="Ingresar"
                                                 onClick={handleLoginClick}
                                             >
-                                                <span className="ng-star-inserted">Ingresar</span>
+                                                <span>Ingresar</span>
                                             </button>
                                         </app-button>
                                         <button className="button-support" onClick={() => { openSupportModal(false); }}>
@@ -434,6 +415,8 @@ const Header = ({ isLogin, userBalance, handleLoginClick, handleLogoutClick, isS
                     </div>
                 </div>
             </app-header-top>
+
+            <Sidebar />
         </header>
     );
 };

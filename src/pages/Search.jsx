@@ -204,7 +204,7 @@ const Search = () => {
           gameLauncher={selectedGameLauncher}
         />
       ) : (
-        <div className="page">
+        <div className="page container-fluid">
           <div className="wrapper dark">
             <main className="header-search-content">
               {(keyword || "").trim() !== "" && isSearching && (
@@ -226,23 +226,26 @@ const Search = () => {
                 </div>
               )}
 
-              <div className="header-search-results">
-                {games.map((game) => (
-                  <GameCard
-                    key={game.id}
-                    id={game.id}
-                    title={game.name}
-                    imageSrc={game.imageDataSrc}
-                    game={game}
-                    onClick={() => {
-                      if (isLogin) {
-                        launchGame(game, "slot", "modal");
-                      } else {
-                        handleLoginClick();
-                      }
-                    }}
-                  />
-                ))}
+              <div className="header-search-results slots-general-container">
+                <ul className="m-0">
+                  {games.map((game) => (
+                    <li key={game.id}>
+                      <GameCard
+                        id={game.id}
+                        title={game.name}
+                        imageSrc={game.imageDataSrc}
+                        game={game}
+                        onClick={() => {
+                          if (isLogin) {
+                            launchGame(game, "slot", "modal");
+                          } else {
+                            handleLoginClick();
+                          }
+                        }}
+                      />
+                    </li>
+                  ))}
+                </ul>
               </div>
             </main>
           </div>

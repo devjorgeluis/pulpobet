@@ -242,7 +242,7 @@ const Layout = () => {
                 />
 
                 {!isSportsPage && !isGameModalOpen && <Footer isSlotsOnly={isSlotsOnly} />}
-                {!isSportsPage && !isGameModalOpen && <MobileFooter isSlotsOnly={isSlotsOnly} />}
+                {!isSportsPage && !isGameModalOpen && <MobileFooter isLogin={isLogin} isSlotsOnly={isSlotsOnly} handleLoginClick={handleLoginClick} />}
             </NavigationContext.Provider>
         </LayoutContext.Provider>
     );

@@ -250,26 +250,28 @@ const SearchInput = ({ pageData }) => {
 
     return (
         <div className="header-search-wrapper" ref={wrapperRef}>
-            <input
-                ref={searchRef}
-                className="headertop-bottom-sidemenu-input"
-                type="text"
-                name="slots-search"
-                placeholder="Buscar juego"
-                onChange={(event) => {
-                    handleInputChange(event.target.value);
-                }}
-                onKeyUp={handleKeyUp}
-                onFocus={() => {
-                    if (txtSearch.trim() !== "") {
-                        if (!isSearchPage) {
-                            setIsOpen(true);
-                            updateOverlayTop();
+            {!(isSearchPage && contextData?.isMobile) && (
+                <input
+                    ref={searchRef}
+                    className="headertop-bottom-sidemenu-input"
+                    type="text"
+                    name="slots-search"
+                    placeholder="Buscar juego"
+                    onChange={(event) => {
+                        handleInputChange(event.target.value);
+                    }}
+                    onKeyUp={handleKeyUp}
+                    onFocus={() => {
+                        if (txtSearch.trim() !== "") {
+                            if (!isSearchPage) {
+                                setIsOpen(true);
+                                updateOverlayTop();
+                            }
                         }
-                    }
-                }}
-                value={txtSearch}
-            />
+                    }}
+                    value={txtSearch}
+                />
+            )}
 
             <div
                 id="header-search"
@@ -306,37 +308,36 @@ const SearchInput = ({ pageData }) => {
 
                             <div className="header-search-results">
                                 {searchResults.slice(0, defaultVisibleResults).map((game) => (
-                                    <div key={game.id} className="game-card">
-                                        <a
-                                            className="gc-container"
-                                            href="#"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleResultClick(game);
-                                            }}
-                                        >
-                                            <div className="gc-card">
-                                                <div className="gc-card-image">
-                                                    <img
-                                                        className="image"
-                                                        src={game.imageDataSrc}
-                                                        alt={game.name}
-                                                        loading="lazy"
-                                                    />
-                                                </div>
-
-                                                <div className="gc-hover">
-                                                    <div className="gc-hover-button-wrapper">
-                                                        <button className="btn purple btn-block btn-regular">
-                                                            Jugar
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                    <a
+                                        className="gc-container"
+                                        href="#"
+                                        key={game.id}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleResultClick(game);
+                                        }}
+                                    >
+                                        <div className="gc-card">
+                                            <div className="gc-card-image">
+                                                <img
+                                                    className="image"
+                                                    src={game.imageDataSrc}
+                                                    alt={game.name}
+                                                    loading="lazy"
+                                                />
                                             </div>
 
-                                            <p className="gc-name">{game.name}</p>
-                                        </a>
-                                    </div>
+                                            <div className="gc-hover">
+                                                <div className="gc-hover-button-wrapper">
+                                                    <button className="btn purple btn-block btn-regular">
+                                                        Jugar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <p className="gc-name" dark-mode="true">{game.name}</p>
+                                    </a>
                                 ))}
                             </div>
 

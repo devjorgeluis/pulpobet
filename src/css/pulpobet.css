@@ -1806,6 +1806,10 @@ body.has-menu-open .header-mobilemenu {
     margin-bottom: 12px;
 }
 
+.header-mobilemenu-menu-item.is-open {
+    max-height: unset;
+}
+
 .dark .header-mobilemenu-menu-item {
     border-bottom: 1px solid #36384A;
 }
