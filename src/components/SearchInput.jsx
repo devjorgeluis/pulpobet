@@ -246,7 +246,11 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
         }
 
         if (value.trim() === "") {
-            closeSearch();
+            if (searchDelayTimerRef.current) clearTimeout(searchDelayTimerRef.current);
+            setIsSearching(false);
+            setSearchResults([]);
+            setIsOpen(true);
+            updateOverlayTop();
             return;
         }
 
@@ -300,15 +304,6 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
                                 handleInputChange(event.target.value);
                             }}
                             onKeyUp={handleKeyUp}
-                            onFocus={() => {
-                                if (txtSearch.trim() !== "") {
-                                    if (!isSearchPage) {
-                                        setIsOpen(true);
-                                        updateOverlayTop();
-                                        performSearchWithDelay(txtSearch);
-                                    }
-                                }
-                            }}
                             value={txtSearch}
                         />
                     </div>
@@ -330,23 +325,16 @@ const SearchInput = ({ pageData, isLogin, handleLoginClick }) => {
                                     handleInputChange(event.target.value);
                                 }}
                                 onKeyUp={handleKeyUp}
-                                onFocus={() => {
-                                    if (txtSearch.trim() !== "") {
-                                        if (!isSearchPage) {
-                                            setIsOpen(true);
-                                            updateOverlayTop();
-                                            performSearchWithDelay(txtSearch);
-                                        }
-                                    }
-                                }}
                             />
                         </div>
 
                         {showSearchResults && (
                             <div className="header-search-result-block">
-                                <div className="header-search-result-text">
-                                    <strong>{searchResults.length} resultados</strong> encontrados para "{txtSearch}"
-                                </div>
+                                {searchResults.length > 0 && (
+                                    <div className="header-search-result-text">
+                                        <strong>{searchResults.length} resultados</strong> encontrados para "{txtSearch}"
+                                    </div>
+                                )}
 
                                 <div className="header-search-results">
                                     {searchResults.slice(0, defaultVisibleResults).map((game) => (

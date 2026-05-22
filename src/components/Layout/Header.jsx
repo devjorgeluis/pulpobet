@@ -205,12 +205,12 @@ const Header = ({ isLogin, isMobile, userBalance, handleLoginClick, handleLogout
             <app-header-top>
                 <div className="headertop-wrapper">
                     <div className="headertop">
-                                        <app-logo-image>
-                                            <a
-                                                rel="noopener"
-                                                onClick={() => { setIsGameModalOpen(false); navigate("/"); }}
-                                                title="Pulpo Mundialito"
-                                            >
+                        <app-logo-image>
+                            <a
+                                rel="noopener"
+                                onClick={() => { setIsGameModalOpen(false); navigate("/"); }}
+                                title="Pulpo Mundialito"
+                            >
                                 <app-image>
                                     <picture>
                                         <img
